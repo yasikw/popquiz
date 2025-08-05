@@ -1,19 +1,58 @@
+import { YoutubeTranscript } from 'youtube-transcript';
+
 export async function extractYouTubeSubtitles(url: string): Promise<string> {
   try {
+    console.log('Extracting YouTube subtitles from:', url);
+    
     // Extract video ID from URL
     const videoId = extractVideoId(url);
     if (!videoId) {
       throw new Error("無効なYouTube URLです");
     }
 
-    // YouTube Data API or transcript extraction would go here
-    // For now, returning a mock implementation that would be replaced
-    // with actual YouTube subtitle extraction using youtube-transcript or similar
+    console.log('Video ID:', videoId);
+
+    // Extract transcript using youtube-transcript
+    let transcript;
+    try {
+      transcript = await YoutubeTranscript.fetchTranscript(videoId, {
+        lang: 'ja' // Prefer Japanese
+      });
+    } catch (error) {
+      console.log('Japanese transcript not available, trying English...');
+      transcript = null;
+    }
+
+    if (!transcript || transcript.length === 0) {
+      // Try English if Japanese is not available
+      console.log('Attempting to fetch English transcript...');
+      const englishTranscript = await YoutubeTranscript.fetchTranscript(videoId, {
+        lang: 'en'
+      });
+      
+      if (!englishTranscript || englishTranscript.length === 0) {
+        throw new Error("この動画には字幕がありません");
+      }
+      
+      // Combine English transcript text
+      const combinedText = englishTranscript.map(item => item.text).join(' ');
+      console.log('English transcript extracted, length:', combinedText.length);
+      return combinedText;
+    }
+
+    // Combine transcript text
+    const combinedText = transcript.map(item => item.text).join(' ');
+    console.log('Japanese transcript extracted, length:', combinedText.length);
     
-    throw new Error("YouTube字幕抽出機能は実装中です。YouTubeのAPIキーとtranscript APIの設定が必要です。");
+    if (combinedText.trim().length < 50) {
+      throw new Error("字幕の内容が短すぎてクイズを作成できません");
+    }
+    
+    return combinedText;
     
   } catch (error) {
-    throw new Error(`YouTube字幕取得に失敗しました: ${error}`);
+    console.error('YouTube transcript extraction error:', error);
+    throw new Error(`YouTube字幕取得に失敗しました: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 
