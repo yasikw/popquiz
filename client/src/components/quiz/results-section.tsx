@@ -16,6 +16,24 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
   const quizResults = storedResults ? JSON.parse(storedResults) : null;
   console.log("ResultsSection: Parsed quiz results:", quizResults);
 
+  // Handle new quiz with PDF deletion
+  const handleNewQuiz = () => {
+    console.log('New quiz button clicked - will clear PDF file');
+    // Clear PDF from localStorage when starting new quiz
+    localStorage.removeItem('lastPdfFile');
+    localStorage.removeItem('lastContentType');
+    localStorage.removeItem('quizResults');
+    onNewQuiz();
+  };
+
+  // Handle retry quiz with PDF retention
+  const handleRetryQuiz = () => {
+    console.log('Retry quiz button clicked - will keep PDF file');
+    // Keep PDF file but clear quiz results
+    localStorage.removeItem('quizResults');
+    onRetryQuiz();
+  };
+
   // Fallback if no results found
   const results = quizResults || {
     score: 0,
@@ -155,7 +173,7 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-4 justify-center">
             <Button 
-              onClick={onRetryQuiz}
+              onClick={handleRetryQuiz}
               className="bg-blue-600 hover:bg-blue-700 text-white"
               data-testid="button-retry-quiz"
             >
@@ -172,7 +190,7 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
             </Button>
             <Button 
               variant="outline"
-              onClick={onNewQuiz}
+              onClick={handleNewQuiz}
               data-testid="button-new-quiz"
             >
               <span className="mr-2">➕</span>

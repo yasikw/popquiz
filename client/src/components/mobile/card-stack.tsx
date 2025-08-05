@@ -76,6 +76,17 @@ export default function CardStack({
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [textContent, setTextContent] = useState("");
 
+  // Check for existing PDF file on component mount
+  useEffect(() => {
+    const savedPdfFile = localStorage.getItem('lastPdfFile');
+    if (savedPdfFile) {
+      const pdfInfo = JSON.parse(savedPdfFile);
+      console.log('Found saved PDF file info:', pdfInfo);
+      // Note: We can't recreate the File object, but we can show the info
+      // The actual file will be handled differently for retries
+    }
+  }, []);
+
   // Set initial difficulty
   useEffect(() => {
     onDifficultyChange(difficulties[currentDifficultyIndex].id);
@@ -83,7 +94,15 @@ export default function CardStack({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      console.log('File selected:', selectedFile.name, selectedFile.size);
+      setFile(selectedFile);
+      // Store PDF file information for retention
+      localStorage.setItem('lastPdfFile', JSON.stringify({
+        name: selectedFile.name,
+        size: selectedFile.size,
+        type: selectedFile.type
+      }));
     }
   };
 
@@ -214,8 +233,34 @@ export default function CardStack({
                 <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm">
                   <i className="fas fa-check-circle text-green-600 mr-2"></i>
                   選択済み: {file.name} ({(file.size / 1024 / 1024).toFixed(1)}MB)
+                  <button 
+                    onClick={() => {
+                      setFile(null);
+                      localStorage.removeItem('lastPdfFile');
+                      // Reset file input
+                      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+                      if (fileInput) fileInput.value = '';
+                    }}
+                    className="ml-2 text-red-500 hover:text-red-700"
+                    type="button"
+                  >
+                    <i className="fas fa-times"></i>
+                  </button>
                 </div>
               )}
+              {!file && (() => {
+                const savedPdfFile = localStorage.getItem('lastPdfFile');
+                const pdfInfo = savedPdfFile ? JSON.parse(savedPdfFile) : null;
+                return pdfInfo ? (
+                  <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-sm">
+                    <i className="fas fa-info-circle text-blue-600 mr-2"></i>
+                    前回のPDF: {pdfInfo.name} ({(pdfInfo.size / 1024 / 1024).toFixed(1)}MB)
+                    <div className="text-xs text-blue-700 mt-1">
+                      「もう一度挑戦」でこのPDFを使用します
+                    </div>
+                  </div>
+                ) : null;
+              })()}
             </div>
           )}
 
