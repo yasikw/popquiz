@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { extractTextFromPDF, generateQuizFromText } from "./services/gemini";
+import { extractTextFromPDF, generateQuizFromText, generateQuizFromCachedPDF } from "./services/gemini";
 import { extractYouTubeSubtitles } from "./services/youtube";
 import { insertUserSchema, insertQuizSessionSchema, insertQuestionSchema } from "@shared/schema";
 import multer from "multer";

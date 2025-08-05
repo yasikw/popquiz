@@ -2,12 +2,9 @@ import { GoogleGenAI } from "@google/genai";
 import { type GeneratedQuiz } from "@shared/schema";
 import crypto from "crypto";
 
-// Initialize with timeout and retry options
+// Initialize Gemini AI
 const ai = new GoogleGenAI({ 
-  apiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || "",
-  fetchOptions: {
-    timeout: 45000, // Reduced to 45 second timeout
-  }
+  apiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || ""
 });
 
 // Cache for extracted text to avoid re-processing
@@ -111,7 +108,14 @@ export async function generateQuizFromText(
     // Use longer text for better questions but limit for API efficiency
     const textLimit = text.length > 4000 ? 4000 : text.length;
     
+    // Add timestamp to ensure different questions each time
+    const timestamp = Date.now();
+    const randomSeed = Math.floor(Math.random() * 10000);
+    
     const prompt = `以下のテキストから${difficultyPrompts[difficulty as keyof typeof difficultyPrompts]}の4択クイズを${questionCount}問作成してください。
+
+重要：毎回異なる観点や角度から問題を作成し、前回とは違う内容の問題にしてください。
+生成ID: ${timestamp}-${randomSeed}
 
 テキスト: ${text.substring(0, textLimit)}
 
@@ -121,7 +125,7 @@ JSON形式で回答してください。correctAnswerは0-3の数字です。`;
       model: "gemini-2.5-flash",
       config: {
         responseMimeType: "application/json",
-        temperature: 0.7, // Add some variation for different quizzes
+        temperature: 0.9, // Higher temperature for more variation
         responseSchema: {
           type: "object",
           properties: {
@@ -197,7 +201,7 @@ export async function generateQuizFromCachedPDF(pdfInfo: any, difficulty: string
     const cachedText = textCache.get(cacheKey)!;
     console.log('Found cached text, length:', cachedText.length);
     
-    // Generate quiz from cached text
+    // Generate quiz from cached text with higher temperature for variation
     return await generateQuizFromText(cachedText, difficulty, `PDFクイズ - ${pdfInfo.name}`, questionCount);
     
   } catch (error) {
