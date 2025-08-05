@@ -56,6 +56,24 @@ export async function extractYouTubeSubtitles(url: string): Promise<string> {
       }
     }
 
+    // Method 4: Try other available languages
+    if (!combinedText) {
+      const commonLanguages = ['ko', 'zh', 'de', 'fr', 'es', 'it', 'pt', 'ru', 'ar'];
+      for (const lang of commonLanguages) {
+        try {
+          console.log(`Trying ${lang} transcript...`);
+          transcript = await YoutubeTranscript.fetchTranscript(videoId, { lang });
+          if (transcript && transcript.length > 0) {
+            combinedText = transcript.map(item => item.text).join(' ');
+            console.log(`${lang} transcript found, length:`, combinedText.length);
+            break;
+          }
+        } catch (error) {
+          console.log(`${lang} transcript failed:`, error);
+        }
+      }
+    }
+
     // Check if we got any transcript
     if (!combinedText || combinedText.trim().length === 0) {
       throw new Error("この動画には利用可能な字幕がありません。字幕付きの動画をお試しください。");
@@ -82,7 +100,22 @@ export async function extractYouTubeSubtitles(url: string): Promise<string> {
 }
 
 function extractVideoId(url: string): string | null {
-  const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/;
-  const match = url.match(regex);
-  return match ? match[1] : null;
+  // Handle various YouTube URL formats
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=)([^&\n?#]+)/,
+    /(?:youtu\.be\/)([^&\n?#]+)/,
+    /(?:youtube\.com\/embed\/)([^&\n?#]+)/,
+    /(?:youtube\.com\/v\/)([^&\n?#]+)/
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match && match[1]) {
+      console.log(`Video ID extracted: ${match[1]} from URL: ${url}`);
+      return match[1];
+    }
+  }
+  
+  console.log(`No video ID found in URL: ${url}`);
+  return null;
 }
