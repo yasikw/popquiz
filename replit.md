@@ -4,13 +4,17 @@ This is an AI-powered Japanese language quiz application that generates interact
 
 ## Recent Changes (January 5, 2025)
 
-✓ Fixed critical "別の問題を出題" (different quiz) button functionality
+✓ Fixed critical "別の問題を出題" (different quiz) button functionality for both PDF and YouTube content
+✓ Implemented comprehensive YouTube caching system with video ID extraction and storage
+✓ Added generateQuizFromCachedYouTube function for consistent YouTube quiz regeneration
+✓ Enhanced quiz interface with balanced 3-column button layout (前の問題/スキップ/次の問題)
 ✓ Implemented comprehensive PDF cache key system for consistent content reuse
 ✓ Added advanced question variation system with focus area randomization
 ✓ Implemented fallback cache search with multiple matching strategies
 ✓ Enhanced AI temperature settings and similarity checking for question diversity
 ✓ Added detailed debugging and error handling for cache operations
 ✓ Resolved cache key generation inconsistencies between PDF processing and quiz generation
+✓ Fixed variable scoping issues and added extractVideoId helper function
 
 # User Preferences
 
