@@ -332,6 +332,18 @@ export default function CardStack({
                 className="mt-1"
                 data-testid="input-youtube"
               />
+              <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm">
+                <div className="flex items-start">
+                  <i className="fas fa-info-circle text-blue-600 mr-2 mt-0.5"></i>
+                  <div>
+                    <div className="font-medium text-blue-800 mb-1">字幕が必要です</div>
+                    <div className="text-blue-700">
+                      字幕（日本語または英語）付きのYouTube動画のみ対応しています。<br/>
+                      自動生成字幕も利用できます。
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 

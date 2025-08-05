@@ -12,43 +12,68 @@ export async function extractYouTubeSubtitles(url: string): Promise<string> {
 
     console.log('Video ID:', videoId);
 
-    // Extract transcript using youtube-transcript
-    let transcript;
+    // Try multiple approaches to get transcript
+    let transcript = null;
+    let combinedText = '';
+
+    // Method 1: Try Japanese transcript
     try {
-      transcript = await YoutubeTranscript.fetchTranscript(videoId, {
-        lang: 'ja' // Prefer Japanese
-      });
-    } catch (error) {
-      console.log('Japanese transcript not available, trying English...');
-      transcript = null;
-    }
-
-    if (!transcript || transcript.length === 0) {
-      // Try English if Japanese is not available
-      console.log('Attempting to fetch English transcript...');
-      const englishTranscript = await YoutubeTranscript.fetchTranscript(videoId, {
-        lang: 'en'
-      });
-      
-      if (!englishTranscript || englishTranscript.length === 0) {
-        throw new Error("この動画には字幕がありません");
+      console.log('Trying Japanese transcript...');
+      transcript = await YoutubeTranscript.fetchTranscript(videoId, { lang: 'ja' });
+      if (transcript && transcript.length > 0) {
+        combinedText = transcript.map(item => item.text).join(' ');
+        console.log('Japanese transcript found, length:', combinedText.length);
       }
-      
-      // Combine English transcript text
-      const combinedText = englishTranscript.map(item => item.text).join(' ');
-      console.log('English transcript extracted, length:', combinedText.length);
-      return combinedText;
+    } catch (error) {
+      console.log('Japanese transcript failed:', error);
     }
 
-    // Combine transcript text
-    const combinedText = transcript.map(item => item.text).join(' ');
-    console.log('Japanese transcript extracted, length:', combinedText.length);
-    
+    // Method 2: Try English transcript if Japanese failed
+    if (!combinedText) {
+      try {
+        console.log('Trying English transcript...');
+        transcript = await YoutubeTranscript.fetchTranscript(videoId, { lang: 'en' });
+        if (transcript && transcript.length > 0) {
+          combinedText = transcript.map(item => item.text).join(' ');
+          console.log('English transcript found, length:', combinedText.length);
+        }
+      } catch (error) {
+        console.log('English transcript failed:', error);
+      }
+    }
+
+    // Method 3: Try auto-generated transcript (any language)
+    if (!combinedText) {
+      try {
+        console.log('Trying auto-generated transcript...');
+        transcript = await YoutubeTranscript.fetchTranscript(videoId);
+        if (transcript && transcript.length > 0) {
+          combinedText = transcript.map(item => item.text).join(' ');
+          console.log('Auto-generated transcript found, length:', combinedText.length);
+        }
+      } catch (error) {
+        console.log('Auto-generated transcript failed:', error);
+      }
+    }
+
+    // Check if we got any transcript
+    if (!combinedText || combinedText.trim().length === 0) {
+      throw new Error("この動画には利用可能な字幕がありません。字幕付きの動画をお試しください。");
+    }
+
+    // Validate transcript length
     if (combinedText.trim().length < 50) {
-      throw new Error("字幕の内容が短すぎてクイズを作成できません");
+      throw new Error("字幕の内容が短すぎてクイズを作成できません。より長い動画をお試しください。");
     }
     
-    return combinedText;
+    // Clean up the text
+    const cleanedText = combinedText
+      .replace(/\[.*?\]/g, '') // Remove brackets like [Music], [Applause]
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .trim();
+    
+    console.log('Final transcript length:', cleanedText.length);
+    return cleanedText;
     
   } catch (error) {
     console.error('YouTube transcript extraction error:', error);
