@@ -106,6 +106,27 @@ export default function CardStack({
     }
   };
 
+  // Handle retry with previous PDF
+  const handleRetryQuiz = () => {
+    console.log('Retry quiz with previous PDF');
+    
+    // Check if we have saved PDF info
+    const savedPdfFile = localStorage.getItem('lastPdfFile');
+    if (!savedPdfFile) {
+      alert('前回のPDFファイル情報が見つかりません');
+      return;
+    }
+
+    // Clear previous results but keep the PDF info
+    localStorage.removeItem('quizResults');
+    
+    // Switch to PDF upload type
+    setCurrentUploadType(0); // PDF is index 0
+    
+    // Show alert to user to re-upload the file
+    alert('前回のPDFファイルを再度アップロードしてください');
+  };
+
   const handleQuizGeneration = async () => {
     const currentType = uploadTypes[currentUploadType].id;
     
@@ -368,14 +389,33 @@ export default function CardStack({
       </Card>
 
       {/* Generate Button */}
-      <Button
-        onClick={handleQuizGeneration}
-        className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white py-4 text-lg font-medium shadow-lg"
-        data-testid="button-generate-quiz"
-      >
-        <i className="fas fa-magic mr-2"></i>
-        AIクイズを生成
-      </Button>
+      <div className="space-y-3">
+        <Button
+          onClick={handleQuizGeneration}
+          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white py-4 text-lg font-medium shadow-lg"
+          data-testid="button-generate-quiz"
+        >
+          <i className="fas fa-magic mr-2"></i>
+          AIクイズを生成
+        </Button>
+        
+        {/* Retry Quiz Button - only show if we have saved PDF and no current file */}
+        {(() => {
+          const savedPdfFile = localStorage.getItem('lastPdfFile');
+          const pdfInfo = savedPdfFile ? JSON.parse(savedPdfFile) : null;
+          return pdfInfo && !file ? (
+            <Button 
+              onClick={handleRetryQuiz}
+              variant="outline"
+              className="w-full border-blue-500 text-blue-700 hover:bg-blue-50 py-3"
+              data-testid="button-retry-previous-quiz"
+            >
+              <span className="mr-2">🔄</span>
+              もう一度挑戦（{pdfInfo.name}）
+            </Button>
+          ) : null;
+        })()}
+      </div>
 
       {/* Stats Preview Card */}
       <Card className="bg-white shadow-lg border border-gray-200">
