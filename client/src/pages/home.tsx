@@ -44,24 +44,24 @@ export default function Home() {
           <>
             {/* Welcome Section */}
             <section className="mb-12">
-              <div className="glass-effect rounded-3xl p-8 text-white animate-float">
+              <div className="bg-white rounded-3xl p-8 text-gray-800 shadow-md border border-gray-200">
                 <div className="max-w-3xl">
                   <h2 className="text-3xl font-bold mb-4">AIで作る、あなた専用のクイズ学習</h2>
-                  <p className="text-white/80 text-lg mb-6">
+                  <p className="text-gray-600 text-lg mb-6">
                     PDFや動画からGemini AIが自動でクイズを生成。難易度選択で効率的な学習を実現します。
                   </p>
                   <div className="flex flex-wrap gap-4">
-                    <div className="flex items-center space-x-2 bg-white/10 rounded-full px-3 py-1">
-                      <i className="fas fa-file-pdf text-white/80"></i>
-                      <span className="text-sm">PDF対応</span>
+                    <div className="flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1">
+                      <i className="fas fa-file-pdf text-red-500"></i>
+                      <span className="text-sm text-gray-700">PDF対応</span>
                     </div>
-                    <div className="flex items-center space-x-2 bg-white/10 rounded-full px-3 py-1">
-                      <i className="fas fa-video text-white/80"></i>
-                      <span className="text-sm">YouTube字幕</span>
+                    <div className="flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1">
+                      <i className="fas fa-video text-red-600"></i>
+                      <span className="text-sm text-gray-700">YouTube字幕</span>
                     </div>
-                    <div className="flex items-center space-x-2 bg-white/10 rounded-full px-3 py-1">
-                      <i className="fas fa-brain text-white/80"></i>
-                      <span className="text-sm">AI自動生成</span>
+                    <div className="flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1">
+                      <i className="fas fa-brain text-blue-500"></i>
+                      <span className="text-sm text-gray-700">AI自動生成</span>
                     </div>
                   </div>
                 </div>

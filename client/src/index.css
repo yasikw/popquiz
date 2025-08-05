@@ -78,55 +78,17 @@
 }
 
 /* Custom animations for quiz app */
-@keyframes pulse-success {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-@keyframes slide-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes progress-fill {
-  0% {
-    stroke-dasharray: 0 283;
-  }
-  100% {
-    stroke-dasharray: 283 283;
-  }
-}
-
+/* Static animations disabled for clean UI */
 .animate-pulse-success {
-  animation: pulse-success 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* animation disabled for clean UI */
 }
 
-/* Remove slide animations for cleaner UI */
 .animate-slide-in {
-  /* animation: slide-in 0.3s ease-out; */
+  /* animation disabled for clean UI */
 }
 
 .animate-spin-slow {
-  animation: rotate 3s linear infinite;
+  /* animation disabled for clean UI */
 }
 
 /* Gradient backgrounds */
@@ -155,16 +117,7 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-/* Floating animation */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
+/* Floating animation disabled for clean UI */
 .animate-float {
-  animation: float 3s ease-in-out infinite;
+  /* animation disabled for clean UI */
 }
