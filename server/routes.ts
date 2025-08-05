@@ -56,6 +56,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/generate-quiz", upload.single('file'), async (req, res) => {
     try {
       const { contentType, difficulty = "intermediate", youtubeUrl, textContent, questionCount = "5" } = req.body;
+      console.log('Quiz generation request received with questionCount:', questionCount);
       
       let extractedText = "";
       let title = "AIクイズ";

@@ -35,6 +35,8 @@ export async function generateQuizFromText(
   questionCount: number = 5
 ): Promise<GeneratedQuiz> {
   try {
+    console.log('Gemini generateQuizFromText called with questionCount:', questionCount);
+    
     const difficultyPrompts = {
       beginner: "基本的な事実や概念を中心とした初級レベル",
       intermediate: "理解と応用が必要な中級レベル", 

@@ -92,9 +92,11 @@ export default function CardStack({
     
     // Get question count from settings
     const savedSettings = localStorage.getItem('quizSettings');
+    console.log('Raw saved settings:', savedSettings);
     const questionCount = savedSettings ? JSON.parse(savedSettings).questionCount || 5 : 5;
     
     console.log('Quiz generation started:', { currentType, selectedDifficulty, questionCount });
+    console.log('Parsed question count:', questionCount);
     
     if (currentType === 'pdf' && !file) {
       alert("PDFファイルを選択してください");
