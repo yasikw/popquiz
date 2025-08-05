@@ -1,6 +1,16 @@
 # Overview
 
-This is an AI-powered quiz application that generates interactive quizzes from various content sources including PDFs, text files, and YouTube videos. The app leverages Google's Gemini AI API to extract text from content and automatically generate multiple-choice questions with explanations. Built with a modern React frontend and Express backend, the application provides a comprehensive learning platform with user management, progress tracking, and performance analytics.
+This is an AI-powered Japanese language quiz application that generates interactive quizzes from various content sources including PDFs, text files, and YouTube videos. The app leverages Google's Gemini AI API to extract text from content and automatically generate multiple-choice questions with explanations. Built with a modern React frontend and Express backend, the application provides a comprehensive learning platform with user management, progress tracking, and performance analytics.
+
+## Recent Changes (January 5, 2025)
+
+✓ Fixed critical "別の問題を出題" (different quiz) button functionality
+✓ Implemented comprehensive PDF cache key system for consistent content reuse
+✓ Added advanced question variation system with focus area randomization
+✓ Implemented fallback cache search with multiple matching strategies
+✓ Enhanced AI temperature settings and similarity checking for question diversity
+✓ Added detailed debugging and error handling for cache operations
+✓ Resolved cache key generation inconsistencies between PDF processing and quiz generation
 
 # User Preferences
 
