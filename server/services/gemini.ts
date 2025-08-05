@@ -105,19 +105,35 @@ export async function generateQuizFromText(
       advanced: "分析的思考や専門知識が必要な上級レベル"
     };
 
-    // Use longer text for better questions but limit for API efficiency
-    const textLimit = text.length > 4000 ? 4000 : text.length;
+    // Create multiple text segments to vary focus areas
+    const segmentSize = Math.floor(text.length / 3);
+    const randomOffset = Math.floor(Math.random() * segmentSize);
+    const textStart = Math.min(randomOffset, text.length - 4000);
+    const textLimit = Math.min(textStart + 4000, text.length);
+    const selectedText = text.substring(textStart, textLimit);
     
-    // Add timestamp to ensure different questions each time
+    // Add strong randomization elements
     const timestamp = Date.now();
-    const randomSeed = Math.floor(Math.random() * 10000);
+    const randomSeed = Math.floor(Math.random() * 100000);
+    const focusAreas = [
+      "人物の詳細情報や経歴",
+      "時系列や年代順の出来事", 
+      "作品や業績に関する事実",
+      "関係性や影響について",
+      "背景や文脈に関する内容"
+    ];
+    const selectedFocus = focusAreas[Math.floor(Math.random() * focusAreas.length)];
     
     const prompt = `以下のテキストから${difficultyPrompts[difficulty as keyof typeof difficultyPrompts]}の4択クイズを${questionCount}問作成してください。
 
-重要：毎回異なる観点や角度から問題を作成し、前回とは違う内容の問題にしてください。
-生成ID: ${timestamp}-${randomSeed}
+【重要な指示】
+- 今回は特に「${selectedFocus}」に焦点を当てて問題を作成してください
+- 前回とは完全に異なる観点・角度・詳細レベルから問題を作成してください
+- 同じ事実でも異なる切り口で質問してください
+- 問題文の構造や問い方を変えてください
+- 生成ID: ${timestamp}-${randomSeed}
 
-テキスト: ${text.substring(0, textLimit)}
+テキスト: ${selectedText}
 
 JSON形式で回答してください。correctAnswerは0-3の数字です。`;
 
@@ -125,7 +141,7 @@ JSON形式で回答してください。correctAnswerは0-3の数字です。`;
       model: "gemini-2.5-flash",
       config: {
         responseMimeType: "application/json",
-        temperature: 0.9, // Higher temperature for more variation
+        temperature: 1.0, // Maximum temperature for maximum variation
         responseSchema: {
           type: "object",
           properties: {
@@ -185,6 +201,9 @@ JSON形式で回答してください。correctAnswerは0-3の数字です。`;
   }
 }
 
+// Store previous questions to avoid repetition
+const previousQuestions = new Map<string, string[]>();
+
 export async function generateQuizFromCachedPDF(pdfInfo: any, difficulty: string = "intermediate", questionCount: number = 5): Promise<GeneratedQuiz | null> {
   try {
     console.log('Attempting to generate quiz from cached PDF:', pdfInfo.name);
@@ -201,11 +220,68 @@ export async function generateQuizFromCachedPDF(pdfInfo: any, difficulty: string
     const cachedText = textCache.get(cacheKey)!;
     console.log('Found cached text, length:', cachedText.length);
     
-    // Generate quiz from cached text with higher temperature for variation
-    return await generateQuizFromText(cachedText, difficulty, `PDFクイズ - ${pdfInfo.name}`, questionCount);
+    // Try multiple times to get different questions
+    let attempts = 0;
+    const maxAttempts = 3;
+    
+    while (attempts < maxAttempts) {
+      attempts++;
+      console.log(`Generating quiz attempt ${attempts}/${maxAttempts}`);
+      
+      const quiz = await generateQuizFromText(cachedText, difficulty, `PDFクイズ - ${pdfInfo.name}`, questionCount);
+      
+      // Check if questions are different from previous ones
+      const currentQuestionTexts = quiz.questions.map(q => q.question);
+      const previousKey = `${cacheKey}-${difficulty}`;
+      const prevQuestions = previousQuestions.get(previousKey) || [];
+      
+      // If this is the first generation or questions are sufficiently different
+      if (prevQuestions.length === 0 || !areQuestionsSimilar(currentQuestionTexts, prevQuestions)) {
+        // Store current questions for future comparison
+        previousQuestions.set(previousKey, currentQuestionTexts);
+        console.log('Generated sufficiently different questions');
+        return quiz;
+      }
+      
+      console.log('Questions too similar to previous ones, retrying...');
+    }
+    
+    // If all attempts failed, still return the last quiz (better than nothing)
+    const finalQuiz = await generateQuizFromText(cachedText, difficulty, `PDFクイズ - ${pdfInfo.name}`, questionCount);
+    return finalQuiz;
     
   } catch (error) {
     console.error('Cached quiz generation error:', error);
     return null;
   }
+}
+
+// Helper function to check if questions are too similar
+function areQuestionsSimilar(current: string[], previous: string[]): boolean {
+  let similarCount = 0;
+  
+  for (const currentQ of current) {
+    for (const prevQ of previous) {
+      // Check if questions share significant portions (more than 50% similarity)
+      const similarity = calculateSimilarity(currentQ, prevQ);
+      if (similarity > 0.5) {
+        similarCount++;
+        break;
+      }
+    }
+  }
+  
+  // If more than half the questions are similar, consider them too similar
+  return similarCount > current.length / 2;
+}
+
+// Simple similarity calculation based on common words
+function calculateSimilarity(str1: string, str2: string): number {
+  const words1 = str1.toLowerCase().split(/\s+/);
+  const words2 = str2.toLowerCase().split(/\s+/);
+  
+  const commonWords = words1.filter(word => words2.includes(word));
+  const totalWords = Math.max(words1.length, words2.length);
+  
+  return commonWords.length / totalWords;
 }
