@@ -69,6 +69,7 @@ export default function Home() {
             onNewQuiz={handleNewQuiz}
             onRetryQuiz={() => setActiveSection("quiz")}
             onViewStats={() => setActiveSection("stats")}
+            onQuizGenerated={handleQuizGenerated}
           />
         )}
 

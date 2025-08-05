@@ -1,15 +1,18 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { type GeneratedQuiz } from "@shared/schema";
+import { useState } from "react";
 
 interface ResultsSectionProps {
   quiz: GeneratedQuiz;
   onNewQuiz: () => void;
   onRetryQuiz: () => void;
   onViewStats: () => void;
+  onQuizGenerated: (quiz: GeneratedQuiz) => void;
 }
 
-export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewStats }: ResultsSectionProps) {
+export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewStats, onQuizGenerated }: ResultsSectionProps) {
+  const [isGenerating, setIsGenerating] = useState(false);
   // Get actual quiz results from localStorage
   const storedResults = localStorage.getItem('quizResults');
   console.log("ResultsSection: Retrieved stored results:", storedResults);
@@ -38,21 +41,54 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
   const handleDifferentQuiz = async () => {
     console.log('Different quiz button clicked - generating new questions from same content');
     
-    // Check if we have the last content type and data
-    const lastContentType = localStorage.getItem('lastContentType');
+    // Check if we have saved PDF file info
     const savedPdfFile = localStorage.getItem('lastPdfFile');
-    
-    if (!lastContentType) {
-      alert('前回のコンテンツタイプが見つかりません');
+    if (!savedPdfFile) {
+      alert('前回のPDFファイル情報が見つかりません');
       return;
     }
 
+    const pdfInfo = JSON.parse(savedPdfFile);
+    
+    // Get settings for question count and difficulty
+    const savedSettings = localStorage.getItem('quizSettings');
+    const questionCount = savedSettings ? JSON.parse(savedSettings).questionCount || 5 : 5;
+    
     // Clear previous results
     localStorage.removeItem('quizResults');
     
-    // For now, redirect to retry which will generate different questions
-    // due to AI's natural variation
-    onRetryQuiz();
+    setIsGenerating(true);
+
+    try {
+      // Generate new quiz from cached PDF content
+      const response = await fetch('/api/generate-quiz-from-cache', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pdfInfo: pdfInfo,
+          difficulty: 'intermediate', // Default difficulty, could be made configurable
+          questionCount: questionCount
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('新しいクイズの生成に失敗しました');
+      }
+
+      const newQuiz = await response.json();
+      console.log('New quiz generated successfully:', newQuiz);
+      
+      // Call the parent component's quiz generated handler
+      onQuizGenerated(newQuiz);
+      
+    } catch (error) {
+      console.error('Different quiz generation error:', error);
+      alert(`新しいクイズの生成に失敗しました: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   // Fallback if no results found
@@ -203,11 +239,12 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
             </Button>
             <Button 
               onClick={handleDifferentQuiz}
-              className="bg-purple-600 hover:bg-purple-700 text-white"
+              disabled={isGenerating}
+              className="bg-purple-600 hover:bg-purple-700 text-white disabled:opacity-50"
               data-testid="button-different-quiz"
             >
-              <span className="mr-2">🎲</span>
-              別のクイズを出題
+              <span className="mr-2">{isGenerating ? '⏳' : '🎲'}</span>
+              {isGenerating ? '新しい問題を生成中...' : '別のクイズを出題'}
             </Button>
             <Button 
               variant="outline"
