@@ -62,6 +62,13 @@ const difficulties = [
   }
 ];
 
+// Helper function to extract video ID from YouTube URL
+const extractVideoId = (url: string): string => {
+  const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : '';
+};
+
 export default function CardStack({ 
   onQuizGenerated, 
   selectedDifficulty, 
@@ -162,12 +169,12 @@ export default function CardStack({
   };
 
   const handleQuizGeneration = async () => {
-    const currentType = uploadTypes[currentUploadType].id;
-    
     // Get question count from settings
     const savedSettings = localStorage.getItem('quizSettings');
     console.log('Raw saved settings:', savedSettings);
     const questionCount = savedSettings ? JSON.parse(savedSettings).questionCount || 5 : 5;
+    
+    const currentType = uploadTypes[currentUploadType].id;
     
     console.log('Quiz generation started:', { currentType, selectedDifficulty, questionCount });
     console.log('Parsed question count:', questionCount);
@@ -224,8 +231,26 @@ export default function CardStack({
 
       const quiz = await response.json();
       console.log('Quiz generated successfully:', quiz);
+      
       // Store content type for later use in quiz results
-      localStorage.setItem('lastContentType', uploadTypes[currentUploadType].id);
+      localStorage.setItem('lastContentType', currentType);
+      
+      // Store content-specific info for different quiz generation
+      if (currentType === 'pdf' && file) {
+        localStorage.setItem('lastPdfFile', JSON.stringify({
+          name: file.name,
+          size: file.size,
+          type: file.type
+        }));
+      } else if (currentType === 'youtube' && youtubeUrl) {
+        // Extract video ID from YouTube URL and store it
+        const videoId = extractVideoId(youtubeUrl);
+        localStorage.setItem('savedYouTubeInfo', JSON.stringify({
+          videoId: videoId,
+          url: youtubeUrl
+        }));
+      }
+      
       onQuizGenerated(quiz);
     } catch (error) {
       console.error('Quiz generation error:', error);

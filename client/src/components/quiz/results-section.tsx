@@ -40,37 +40,51 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
   // Handle different quiz with same content
   const handleDifferentQuiz = async () => {
     console.log('Different quiz button clicked - generating new questions from same content');
-    
-    // Check if we have saved PDF file info
-    const savedPdfFile = localStorage.getItem('lastPdfFile');
-    if (!savedPdfFile) {
-      alert('前回のPDFファイル情報が見つかりません');
-      return;
-    }
-
-    const pdfInfo = JSON.parse(savedPdfFile);
-    
-    // Get settings for question count and difficulty
-    const savedSettings = localStorage.getItem('quizSettings');
-    const questionCount = savedSettings ? JSON.parse(savedSettings).questionCount || 5 : 5;
-    
-    // Clear previous results
-    localStorage.removeItem('quizResults');
-    
     setIsGenerating(true);
-
+    
     try {
-      // Generate new quiz from cached PDF content
+      // Get quiz settings
+      const savedSettings = localStorage.getItem('quizSettings');
+      const settings = savedSettings ? JSON.parse(savedSettings) : { difficulty: 'intermediate', questionCount: 5 };
+      
+      // Check what type of content we're dealing with
+      const lastContentType = localStorage.getItem('lastContentType');
+      let requestBody: any = {
+        difficulty: settings.defaultDifficulty || 'intermediate',
+        questionCount: settings.questionCount || 5,
+      };
+      
+      if (lastContentType === 'pdf') {
+        // Get the stored PDF file info
+        const savedPdfFile = localStorage.getItem('lastPdfFile');
+        if (!savedPdfFile) {
+          throw new Error('PDFファイル情報が見つかりません');
+        }
+        
+        const pdfInfo = JSON.parse(savedPdfFile);
+        requestBody.pdfInfo = pdfInfo;
+      } else if (lastContentType === 'youtube') {
+        // Get the stored YouTube video ID
+        const savedYouTubeInfo = localStorage.getItem('savedYouTubeInfo');
+        if (!savedYouTubeInfo) {
+          throw new Error('YouTube動画情報が見つかりません');
+        }
+        
+        const youtubeInfo = JSON.parse(savedYouTubeInfo);
+        requestBody.youtubeVideoId = youtubeInfo.videoId;
+      } else {
+        throw new Error('サポートされていないコンテンツタイプです');
+      }
+      
+      // Clear previous results
+      localStorage.removeItem('quizResults');
+      
       const response = await fetch('/api/generate-quiz-from-cache', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          pdfInfo: pdfInfo,
-          difficulty: 'intermediate', // Default difficulty, could be made configurable
-          questionCount: questionCount
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {

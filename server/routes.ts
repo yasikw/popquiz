@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { extractTextFromPDF, generateQuizFromText, generateQuizFromCachedPDF, getCacheStatus } from "./services/gemini";
+import { extractTextFromPDF, generateQuizFromText, generateQuizFromCachedPDF, generateQuizFromCachedYouTube, getCacheStatus } from "./services/gemini";
 import { extractYouTubeSubtitles } from "./services/youtube";
 import { insertUserSchema, insertQuizSessionSchema, insertQuestionSchema } from "@shared/schema";
 import multer from "multer";
@@ -52,28 +52,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Quiz generation from cached PDF content
+  // Quiz generation from cached content (PDF or YouTube)
   app.post("/api/generate-quiz-from-cache", async (req, res) => {
     try {
-      const { pdfInfo, difficulty = "intermediate", questionCount = 5 } = req.body;
+      const { pdfInfo, youtubeVideoId, difficulty = "intermediate", questionCount = 5 } = req.body;
       
-      if (!pdfInfo) {
-        return res.status(400).json({ message: "PDF情報が必要です" });
+      if (!pdfInfo && !youtubeVideoId) {
+        return res.status(400).json({ message: "PDF情報またはYouTube動画IDが必要です" });
       }
 
-      console.log('Generating quiz from cached PDF:', pdfInfo.name);
-      console.log('Received PDF info:', pdfInfo);
-      
       // Debug cache status
       const cacheStatus = getCacheStatus();
       console.log('Cache status:', cacheStatus);
       
-      // Try to generate quiz from cached text
-      const quiz = await generateQuizFromCachedPDF(pdfInfo, difficulty, parseInt(questionCount));
+      let quiz = null;
+      
+      if (pdfInfo) {
+        console.log('Generating quiz from cached PDF:', pdfInfo.name);
+        console.log('Received PDF info:', pdfInfo);
+        quiz = await generateQuizFromCachedPDF(pdfInfo, difficulty, parseInt(questionCount));
+      } else if (youtubeVideoId) {
+        console.log('Generating quiz from cached YouTube video:', youtubeVideoId);
+        quiz = await generateQuizFromCachedYouTube(youtubeVideoId, difficulty, parseInt(questionCount));
+      }
       
       if (!quiz) {
         return res.status(404).json({ 
-          message: "キャッシュされたPDFコンテンツが見つかりません",
+          message: "キャッシュされたコンテンツが見つかりません",
           cacheStatus: cacheStatus
         });
       }

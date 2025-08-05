@@ -10,6 +10,11 @@ const ai = new GoogleGenAI({
 // Cache for extracted text to avoid re-processing
 const textCache = new Map<string, string>();
 
+// Generate cache key for YouTube videos
+function generateYouTubeCacheKey(videoId: string): string {
+  return crypto.createHash('md5').update(`youtube-${videoId}`).digest('hex');
+}
+
 // Debug function to show cache status
 export function getCacheStatus() {
   return {
@@ -26,6 +31,13 @@ function generateCacheKey(pdfInfo: any): string {
 export async function extractTextFromYouTubeWithGemini(videoId: string, originalUrl: string): Promise<string> {
   try {
     console.log('Starting comprehensive YouTube content analysis for video:', videoId);
+    
+    // Check cache first
+    const cacheKey = generateYouTubeCacheKey(videoId);
+    if (textCache.has(cacheKey)) {
+      console.log('Using cached YouTube content for video:', videoId);
+      return textCache.get(cacheKey)!;
+    }
     
     // Extract information from URL first to understand the topic
     const urlAnalysisPrompt = `YouTube動画URL: ${originalUrl}
@@ -112,6 +124,9 @@ URLやタイトルの表面的な情報だけでなく、その分野で学ぶ�
       .replace(/\n\s*\n\s*\n/g, '\n\n') // Remove excessive newlines
       .replace(/\s+/g, ' ') // Normalize whitespace
       .trim();
+    
+    // Cache the result
+    textCache.set(cacheKey, cleanedContent);
     
     console.log('Final processed content length:', cleanedContent.length);
     return cleanedContent;
@@ -420,4 +435,61 @@ function calculateSimilarity(str1: string, str2: string): number {
   const totalWords = Math.max(words1.length, words2.length);
   
   return commonWords.length / totalWords;
+}
+
+export async function generateQuizFromCachedYouTube(videoId: string, difficulty: string = "intermediate", questionCount: number = 5): Promise<GeneratedQuiz | null> {
+  try {
+    console.log('Attempting to generate quiz from cached YouTube content for video:', videoId);
+    
+    // Generate cache key
+    const cacheKey = generateYouTubeCacheKey(videoId);
+    console.log('Generated YouTube cache key:', cacheKey);
+    
+    // Debug: Show all cached keys
+    console.log('Available cache keys:', Array.from(textCache.keys()));
+    
+    // Check if we have cached text
+    if (!textCache.has(cacheKey)) {
+      console.log('No cached text found for YouTube video:', videoId);
+      console.log('Cache key not found:', cacheKey);
+      return null;
+    }
+    
+    const cachedText = textCache.get(cacheKey)!;
+    console.log('Found cached YouTube text, length:', cachedText.length);
+    
+    // Try multiple times to get different questions
+    let attempts = 0;
+    const maxAttempts = 3;
+    
+    while (attempts < maxAttempts) {
+      attempts++;
+      console.log(`Generating YouTube quiz attempt ${attempts}/${maxAttempts}`);
+      
+      const quiz = await generateQuizFromText(cachedText, difficulty, "YouTube動画クイズ", questionCount);
+      
+      // Check if questions are different from previous ones
+      const currentQuestionTexts = quiz.questions.map(q => q.question);
+      const previousKey = `${cacheKey}-${difficulty}`;
+      const prevQuestions = previousQuestions.get(previousKey) || [];
+      
+      // If this is the first generation or questions are sufficiently different
+      if (prevQuestions.length === 0 || !areQuestionsSimilar(currentQuestionTexts, prevQuestions)) {
+        // Store current questions for future comparison
+        previousQuestions.set(previousKey, currentQuestionTexts);
+        console.log('Generated sufficiently different YouTube questions');
+        return quiz;
+      }
+      
+      console.log('YouTube questions too similar to previous ones, retrying...');
+    }
+    
+    // If all attempts failed, still return the last quiz (better than nothing)
+    const finalQuiz = await generateQuizFromText(cachedText, difficulty, "YouTube動画クイズ", questionCount);
+    return finalQuiz;
+    
+  } catch (error) {
+    console.error('Cached YouTube quiz generation error:', error);
+    return null;
+  }
 }
