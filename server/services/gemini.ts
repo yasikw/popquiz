@@ -40,26 +40,14 @@ export async function generateQuizFromText(
       advanced: "分析的思考や専門知識が必要な上級レベル"
     };
 
-    const prompt = `以下のコンテンツから${difficultyPrompts[difficulty as keyof typeof difficultyPrompts]}の4択クイズを10問作成してください。
-各問題には正解とわかりやすい解説も含めてください。
+    const prompt = `以下のテキストから${difficultyPrompts[difficulty as keyof typeof difficultyPrompts]}の4択クイズを5問作成してください。
 
-コンテンツ:
-${text}
+テキスト: ${text.substring(0, 2000)}
 
-以下のJSON形式で回答してください:
-{
-  "questions": [
-    {
-      "question": "問題文",
-      "options": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
-      "correctAnswer": 0,
-      "explanation": "詳細な解説"
-    }
-  ]
-}`;
+JSON形式で回答してください。correctAnswerは0-3の数字です。`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-pro",
+      model: "gemini-2.5-flash",
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -73,9 +61,7 @@ ${text}
                   question: { type: "string" },
                   options: { 
                     type: "array",
-                    items: { type: "string" },
-                    minItems: 4,
-                    maxItems: 4
+                    items: { type: "string" }
                   },
                   correctAnswer: { type: "number" },
                   explanation: { type: "string" }
@@ -91,11 +77,27 @@ ${text}
     });
 
     const rawJson = response.text;
+    console.log("Gemini raw response:", rawJson);
+    
     if (!rawJson) {
       throw new Error("AIからの応答が空です");
     }
 
-    const data = JSON.parse(rawJson);
+    // JSONパースを安全に実行
+    let data;
+    try {
+      data = JSON.parse(rawJson);
+    } catch (parseError) {
+      console.error("JSON parse error:", parseError);
+      console.error("Raw response that failed to parse:", rawJson);
+      throw new Error(`JSONパースエラー: ${parseError}`);
+    }
+    
+    // データ構造を検証
+    if (!data || !data.questions || !Array.isArray(data.questions)) {
+      console.error("Invalid data structure:", data);
+      throw new Error("レスポンスの構造が無効です");
+    }
     
     return {
       questions: data.questions,
