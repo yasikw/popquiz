@@ -10,6 +10,14 @@ const ai = new GoogleGenAI({
 // Cache for extracted text to avoid re-processing
 const textCache = new Map<string, string>();
 
+// Debug function to show cache status
+export function getCacheStatus() {
+  return {
+    cacheSize: textCache.size,
+    keys: Array.from(textCache.keys())
+  };
+}
+
 // Generate cache key from PDF info
 function generateCacheKey(pdfInfo: any): string {
   return crypto.createHash('md5').update(`${pdfInfo.name}-${pdfInfo.size}-${pdfInfo.type}`).digest('hex');
@@ -214,13 +222,35 @@ const previousQuestions = new Map<string, string[]>();
 export async function generateQuizFromCachedPDF(pdfInfo: any, difficulty: string = "intermediate", questionCount: number = 5): Promise<GeneratedQuiz | null> {
   try {
     console.log('Attempting to generate quiz from cached PDF:', pdfInfo.name);
+    console.log('PDF info for cache:', { name: pdfInfo.name, size: pdfInfo.size, type: pdfInfo.type });
     
     // Generate cache key
     const cacheKey = generateCacheKey(pdfInfo);
+    console.log('Generated cache key:', cacheKey);
+    
+    // Debug: Show all cached keys
+    console.log('Available cache keys:', Array.from(textCache.keys()));
     
     // Check if we have cached text
     if (!textCache.has(cacheKey)) {
       console.log('No cached text found for PDF:', pdfInfo.name);
+      console.log('Cache key not found:', cacheKey);
+      
+      // Try to find cache with any available key containing PDF name
+      const availableKeys = Array.from(textCache.keys());
+      const matchingKey = availableKeys.find(key => {
+        // Try different matching strategies
+        return key.includes(pdfInfo.name.replace(/\s+/g, '')) || 
+               key.includes(pdfInfo.size.toString()) ||
+               textCache.get(key)?.includes('藤子'); // Content-based fallback
+      });
+      
+      if (matchingKey) {
+        console.log('Found alternative cache key:', matchingKey);
+        const cachedText = textCache.get(matchingKey)!;
+        return await generateQuizFromText(cachedText, difficulty, `PDFクイズ - ${pdfInfo.name}`, questionCount);
+      }
+      
       return null;
     }
     

@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { extractTextFromPDF, generateQuizFromText, generateQuizFromCachedPDF } from "./services/gemini";
+import { extractTextFromPDF, generateQuizFromText, generateQuizFromCachedPDF, getCacheStatus } from "./services/gemini";
 import { extractYouTubeSubtitles } from "./services/youtube";
 import { insertUserSchema, insertQuizSessionSchema, insertQuestionSchema } from "@shared/schema";
 import multer from "multer";
@@ -62,12 +62,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       console.log('Generating quiz from cached PDF:', pdfInfo.name);
+      console.log('Received PDF info:', pdfInfo);
+      
+      // Debug cache status
+      const cacheStatus = getCacheStatus();
+      console.log('Cache status:', cacheStatus);
       
       // Try to generate quiz from cached text
       const quiz = await generateQuizFromCachedPDF(pdfInfo, difficulty, parseInt(questionCount));
       
       if (!quiz) {
-        return res.status(404).json({ message: "キャッシュされたPDFコンテンツが見つかりません" });
+        return res.status(404).json({ 
+          message: "キャッシュされたPDFコンテンツが見つかりません",
+          cacheStatus: cacheStatus
+        });
       }
       
       res.json(quiz);
