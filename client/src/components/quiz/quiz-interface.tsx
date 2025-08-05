@@ -275,12 +275,12 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
 
             {/* Quiz Controls */}
             <div className="pt-6 border-t border-gray-200">
-              <div className="flex flex-wrap gap-2 justify-between items-center">
+              <div className="grid grid-cols-3 gap-3 items-center">
                 <Button
                   variant="outline"
                   onClick={handlePreviousQuestion}
                   disabled={currentQuestionIndex === 0}
-                  className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 text-sm px-3 py-2 flex-shrink-0"
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 text-sm px-3 py-2 w-full justify-center"
                   data-testid="button-previous"
                 >
                   <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -289,26 +289,25 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
                   前の問題
                 </Button>
                 
-                <div className="flex gap-2 flex-shrink-0">
-                  <Button
-                    variant="outline"
-                    onClick={handleSkipQuestion}
-                    className="border-gray-300 text-gray-700 hover:bg-gray-50 text-sm px-3 py-2"
-                    data-testid="button-skip"
-                  >
-                    スキップ
-                  </Button>
-                  <Button
-                    onClick={handleNextQuestion}
-                    className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white border-0 shadow-lg px-4 py-2 rounded-xl font-semibold text-sm"
-                    data-testid="button-next"
-                  >
-                    {currentQuestionIndex === quiz.questions.length - 1 ? "完了" : "次の問題"}
-                    <svg className="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </Button>
-                </div>
+                <Button
+                  variant="outline"
+                  onClick={handleSkipQuestion}
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50 text-sm px-3 py-2 w-full justify-center"
+                  data-testid="button-skip"
+                >
+                  スキップ
+                </Button>
+                
+                <Button
+                  onClick={handleNextQuestion}
+                  className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white border-0 shadow-lg px-3 py-2 rounded-xl font-semibold text-sm w-full justify-center"
+                  data-testid="button-next"
+                >
+                  {currentQuestionIndex === quiz.questions.length - 1 ? "完了" : "次の問題"}
+                  <svg className="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                  </svg>
+                </Button>
               </div>
             </div>
           </CardContent>
