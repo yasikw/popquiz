@@ -10,59 +10,76 @@ interface ResultsSectionProps {
 }
 
 export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewStats }: ResultsSectionProps) {
-  // Mock results data - in real app this would come from completed quiz
-  const mockResults = {
-    score: 8,
+  // Get actual quiz results from localStorage
+  const storedResults = localStorage.getItem('quizResults');
+  const quizResults = storedResults ? JSON.parse(storedResults) : null;
+
+  // Fallback if no results found
+  const results = quizResults || {
+    score: 0,
     totalQuestions: quiz.questions.length,
-    percentage: 80,
-    timeSpent: "4:32",
-    ranking: "B+",
+    percentage: 0,
+    totalTimeSpent: 0,
+    detailedResults: quiz.questions.map((question, index) => ({
+      question: question.question,
+      userAnswer: null,
+      correctAnswer: question.correctAnswer,
+      isCorrect: false,
+      timeSpent: 0,
+      explanation: question.explanation,
+    }))
   };
 
-  const mockDetailedResults = quiz.questions.map((question, index) => ({
-    question: question.question,
-    userAnswer: index % 4, // Mock user answers
-    correctAnswer: question.correctAnswer,
-    isCorrect: (index % 4) === question.correctAnswer,
-    timeSpent: Math.floor(Math.random() * 40) + 20, // 20-60 seconds
-    explanation: question.explanation,
-  }));
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  const getRanking = (percentage: number) => {
+    if (percentage >= 90) return "A+";
+    if (percentage >= 80) return "A";
+    if (percentage >= 70) return "B+";
+    if (percentage >= 60) return "B";
+    if (percentage >= 50) return "C";
+    return "D";
+  };
 
   return (
     <section className="mb-12">
       <Card className="shadow-lg">
         <CardContent className="p-8">
           <div className="text-center mb-8">
-            <div className="bg-success rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-              <i className="fas fa-trophy text-white text-3xl"></i>
+            <div className="bg-yellow-500 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+              <span className="text-white text-3xl">🏆</span>
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-2">クイズ完了！</h3>
             <p className="text-gray-600">お疲れ様でした。結果をご確認ください。</p>
           </div>
 
           {/* Score Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-2 gap-6 mb-8">
             <div className="text-center">
-              <div className="text-3xl font-bold text-primary" data-testid="score-correct">
-                {mockResults.score}
+              <div className="text-3xl font-bold text-blue-600" data-testid="score-correct">
+                {results.score}
               </div>
-              <div className="text-sm text-gray-600">正解数 / {mockResults.totalQuestions}問</div>
+              <div className="text-sm text-gray-600">正解数 / {results.totalQuestions}問</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-accent" data-testid="score-percentage">
-                {mockResults.percentage}
+              <div className="text-3xl font-bold text-green-600" data-testid="score-percentage">
+                {results.percentage}%
               </div>
-              <div className="text-sm text-gray-600">正答率 (%)</div>
+              <div className="text-sm text-gray-600">正答率</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-success" data-testid="score-time">
-                {mockResults.timeSpent}
+              <div className="text-3xl font-bold text-purple-600" data-testid="score-time">
+                {formatTime(results.totalTimeSpent)}
               </div>
               <div className="text-sm text-gray-600">所要時間</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600" data-testid="score-ranking">
-                {mockResults.ranking}
+              <div className="text-3xl font-bold text-orange-600" data-testid="score-ranking">
+                {getRanking(results.percentage)}
               </div>
               <div className="text-sm text-gray-600">評価</div>
             </div>
@@ -72,19 +89,28 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
           <div className="mb-8">
             <h4 className="text-lg font-semibold text-gray-900 mb-4">問題別詳細結果</h4>
             <div className="space-y-4 max-h-96 overflow-y-auto">
-              {mockDetailedResults.map((result, index) => (
+              {results.detailedResults.map((result: any, index: number) => (
                 <Card key={index} className="border border-gray-200">
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center space-x-3">
-                        <div
-                          className={`w-8 h-8 rounded-full text-white flex items-center justify-center text-sm font-medium ${
-                            result.isCorrect ? "bg-success" : "bg-error"
-                          }`}
-                        >
-                          <i className={`fas ${result.isCorrect ? "fa-check" : "fa-times"}`}></i>
-                        </div>
+                        {result.isCorrect ? (
+                          <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-sm font-medium">
+                            ✓
+                          </div>
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center text-sm font-medium">
+                            ✗
+                          </div>
+                        )}
                         <span className="font-medium">問題 {index + 1}</span>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          result.isCorrect 
+                            ? "bg-green-100 text-green-800" 
+                            : "bg-red-100 text-red-800"
+                        }`}>
+                          {result.isCorrect ? "正解" : "不正解"}
+                        </span>
                       </div>
                       <span className="text-sm text-gray-500">回答時間: {result.timeSpent}秒</span>
                     </div>
@@ -92,14 +118,22 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
                     <p className="text-sm text-gray-700 mb-2">{result.question}</p>
                     
                     <div className="text-xs text-gray-600 mb-2">
-                      <span className="text-success">
-                        正解: {String.fromCharCode(65 + result.correctAnswer)} ({quiz.questions[index].options[result.correctAnswer]})
+                      <span className="text-green-600 font-medium">
+                        正解: {String.fromCharCode(65 + result.correctAnswer)} - {quiz.questions[index].options[result.correctAnswer]}
                       </span>
-                      {!result.isCorrect && (
+                      {!result.isCorrect && result.userAnswer !== null && (
                         <>
-                          {" ・ "}
-                          <span className="text-error">
-                            あなたの回答: {String.fromCharCode(65 + result.userAnswer)} ({quiz.questions[index].options[result.userAnswer]})
+                          <br />
+                          <span className="text-red-600 font-medium">
+                            あなたの回答: {String.fromCharCode(65 + result.userAnswer)} - {quiz.questions[index].options[result.userAnswer]}
+                          </span>
+                        </>
+                      )}
+                      {result.userAnswer === null && (
+                        <>
+                          <br />
+                          <span className="text-gray-500 font-medium">
+                            あなたの回答: 未回答
                           </span>
                         </>
                       )}
@@ -120,10 +154,10 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
           <div className="flex flex-wrap gap-4 justify-center">
             <Button 
               onClick={onRetryQuiz}
-              className="bg-primary hover:bg-blue-700"
+              className="bg-blue-600 hover:bg-blue-700 text-white"
               data-testid="button-retry-quiz"
             >
-              <i className="fas fa-redo mr-2"></i>
+              <span className="mr-2">🔄</span>
               もう一度挑戦
             </Button>
             <Button 
@@ -131,7 +165,7 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
               onClick={onViewStats}
               data-testid="button-view-stats"
             >
-              <i className="fas fa-chart-bar mr-2"></i>
+              <span className="mr-2">📊</span>
               統計を見る
             </Button>
             <Button 
@@ -139,7 +173,7 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
               onClick={onNewQuiz}
               data-testid="button-new-quiz"
             >
-              <i className="fas fa-plus mr-2"></i>
+              <span className="mr-2">➕</span>
               新しいクイズ
             </Button>
           </div>

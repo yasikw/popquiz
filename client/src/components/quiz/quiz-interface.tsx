@@ -19,6 +19,9 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
   );
   const [timeLeft, setTimeLeft] = useState(60); // 60 seconds per question
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
+  const [questionTimes, setQuestionTimes] = useState<number[]>(
+    new Array(quiz.questions.length).fill(0)
+  );
 
   const currentQuestion = quiz.questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
@@ -49,6 +52,12 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
   };
 
   const handleNextQuestion = () => {
+    // Record time spent on current question
+    const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
+    const newTimes = [...questionTimes];
+    newTimes[currentQuestionIndex] = timeSpent;
+    setQuestionTimes(newTimes);
+
     if (currentQuestionIndex < quiz.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
@@ -70,7 +79,12 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
   };
 
   const handleQuizComplete = () => {
-    // Calculate score
+    // Record final question time
+    const finalTimeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
+    const finalTimes = [...questionTimes];
+    finalTimes[currentQuestionIndex] = finalTimeSpent;
+
+    // Calculate score and detailed results
     const score = userAnswers.reduce((total: number, answer, index) => {
       if (answer !== null && answer === quiz.questions[index].correctAnswer) {
         return total + 1;
@@ -78,7 +92,29 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
       return total;
     }, 0);
 
-    console.log("Quiz completed with score:", score);
+    const detailedResults = quiz.questions.map((question, index) => ({
+      question: question.question,
+      userAnswer: userAnswers[index],
+      correctAnswer: question.correctAnswer,
+      isCorrect: userAnswers[index] !== null && userAnswers[index] === question.correctAnswer,
+      timeSpent: finalTimes[index] || 0,
+      explanation: question.explanation,
+    }));
+
+    const totalTime = finalTimes.reduce((sum, time) => sum + time, 0);
+    const quizResults = {
+      score,
+      totalQuestions: quiz.questions.length,
+      percentage: Math.round((score / quiz.questions.length) * 100),
+      totalTimeSpent: totalTime,
+      detailedResults
+    };
+
+    console.log("Quiz completed with results:", quizResults);
+    
+    // Store results in localStorage or pass to parent
+    localStorage.setItem('quizResults', JSON.stringify(quizResults));
+    
     onQuizCompleted();
   };
 
