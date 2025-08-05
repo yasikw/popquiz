@@ -111,10 +111,12 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     };
 
     console.log("Quiz completed with results:", quizResults);
+    console.log("Storing results in localStorage...");
     
     // Store results in localStorage or pass to parent
     localStorage.setItem('quizResults', JSON.stringify(quizResults));
     
+    console.log("Calling onQuizCompleted callback...");
     onQuizCompleted();
   };
 

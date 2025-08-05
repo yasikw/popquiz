@@ -23,6 +23,7 @@ export default function Home() {
   };
 
   const handleQuizCompleted = () => {
+    console.log("handleQuizCompleted called, switching to results section");
     setActiveSection("results");
   };
 

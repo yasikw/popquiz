@@ -12,7 +12,9 @@ interface ResultsSectionProps {
 export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewStats }: ResultsSectionProps) {
   // Get actual quiz results from localStorage
   const storedResults = localStorage.getItem('quizResults');
+  console.log("ResultsSection: Retrieved stored results:", storedResults);
   const quizResults = storedResults ? JSON.parse(storedResults) : null;
+  console.log("ResultsSection: Parsed quiz results:", quizResults);
 
   // Fallback if no results found
   const results = quizResults || {
