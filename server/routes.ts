@@ -52,6 +52,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Quiz generation from cached PDF content
+  app.post("/api/generate-quiz-from-cache", async (req, res) => {
+    try {
+      const { pdfInfo, difficulty = "intermediate", questionCount = 5 } = req.body;
+      
+      if (!pdfInfo) {
+        return res.status(400).json({ message: "PDF情報が必要です" });
+      }
+
+      console.log('Generating quiz from cached PDF:', pdfInfo.name);
+      
+      // Try to generate quiz from cached text
+      const quiz = await generateQuizFromCachedPDF(pdfInfo, difficulty, parseInt(questionCount));
+      
+      if (!quiz) {
+        return res.status(404).json({ message: "キャッシュされたPDFコンテンツが見つかりません" });
+      }
+      
+      res.json(quiz);
+    } catch (error) {
+      console.error('Cached quiz generation error:', error);
+      res.status(500).json({ 
+        message: "キャッシュからのクイズ生成に失敗しました", 
+        error: error instanceof Error ? error.message : "Unknown error" 
+      });
+    }
+  });
+
   // Unified quiz generation endpoint
   app.post("/api/generate-quiz", upload.single('file'), async (req, res) => {
     try {

@@ -13,6 +13,11 @@ const ai = new GoogleGenAI({
 // Cache for extracted text to avoid re-processing
 const textCache = new Map<string, string>();
 
+// Generate cache key from PDF info
+function generateCacheKey(pdfInfo: any): string {
+  return crypto.createHash('md5').update(`${pdfInfo.name}-${pdfInfo.size}-${pdfInfo.type}`).digest('hex');
+}
+
 export async function extractTextFromPDF(pdfBuffer: Buffer): Promise<string> {
   try {
     console.log('PDF extraction started, buffer size:', pdfBuffer.length);
@@ -173,5 +178,30 @@ JSON形式で回答してください。correctAnswerは0-3の数字です。`;
     };
   } catch (error) {
     throw new Error(`クイズ生成に失敗しました: ${error}`);
+  }
+}
+
+export async function generateQuizFromCachedPDF(pdfInfo: any, difficulty: string = "intermediate", questionCount: number = 5): Promise<GeneratedQuiz | null> {
+  try {
+    console.log('Attempting to generate quiz from cached PDF:', pdfInfo.name);
+    
+    // Generate cache key
+    const cacheKey = generateCacheKey(pdfInfo);
+    
+    // Check if we have cached text
+    if (!textCache.has(cacheKey)) {
+      console.log('No cached text found for PDF:', pdfInfo.name);
+      return null;
+    }
+    
+    const cachedText = textCache.get(cacheKey)!;
+    console.log('Found cached text, length:', cachedText.length);
+    
+    // Generate quiz from cached text
+    return await generateQuizFromText(cachedText, difficulty, `PDFクイズ - ${pdfInfo.name}`, questionCount);
+    
+  } catch (error) {
+    console.error('Cached quiz generation error:', error);
+    return null;
   }
 }
