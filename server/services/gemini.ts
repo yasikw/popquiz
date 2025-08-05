@@ -1,12 +1,29 @@
 import { GoogleGenAI } from "@google/genai";
 import { type GeneratedQuiz } from "@shared/schema";
 
+// Initialize with timeout and retry options
 const ai = new GoogleGenAI({ 
-  apiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || "" 
+  apiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || "",
+  fetchOptions: {
+    timeout: 60000, // 60 second timeout
+  }
 });
 
 export async function extractTextFromPDF(pdfBuffer: Buffer): Promise<string> {
   try {
+    console.log('PDF extraction started, buffer size:', pdfBuffer.length);
+    
+    // Check if API key is available
+    if (!process.env.GEMINI_API_KEY && !process.env.GOOGLE_API_KEY) {
+      throw new Error('Gemini API key not found in environment variables');
+    }
+
+    // Check file size (Gemini has limits on file size)
+    const maxSize = 20 * 1024 * 1024; // 20MB limit
+    if (pdfBuffer.length > maxSize) {
+      throw new Error(`PDFファイルが大きすぎます。${Math.round(maxSize/1024/1024)}MB以下のファイルを選択してください。`);
+    }
+
     const contents = [
       {
         inlineData: {
@@ -17,13 +34,29 @@ export async function extractTextFromPDF(pdfBuffer: Buffer): Promise<string> {
       "このPDFファイルからテキストを抽出してください。内容をそのまま日本語で返してください。",
     ];
 
+    console.log('Sending PDF to Gemini API for text extraction...');
+    
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-pro",
+      model: "gemini-2.5-flash",
       contents: contents,
     });
 
+    console.log('PDF text extraction completed successfully');
     return response.text || "";
   } catch (error) {
+    console.error('PDF extraction error details:', error);
+    
+    // More specific error handling
+    if (error instanceof Error) {
+      if (error.message.includes('fetch failed')) {
+        throw new Error(`ネットワークエラー: Gemini APIに接続できません。インターネット接続を確認してください。`);
+      } else if (error.message.includes('API key')) {
+        throw new Error(`API認証エラー: Gemini APIキーが正しく設定されていません。`);
+      } else if (error.message.includes('quota') || error.message.includes('limit')) {
+        throw new Error(`API制限エラー: Gemini APIの利用制限に達しました。しばらく待ってから再試行してください。`);
+      }
+    }
+    
     throw new Error(`PDFテキスト抽出に失敗しました: ${error}`);
   }
 }
@@ -36,6 +69,12 @@ export async function generateQuizFromText(
 ): Promise<GeneratedQuiz> {
   try {
     console.log('Gemini generateQuizFromText called with questionCount:', questionCount);
+    console.log('Text length:', text.length, 'characters');
+    
+    // Check if API key is available
+    if (!process.env.GEMINI_API_KEY && !process.env.GOOGLE_API_KEY) {
+      throw new Error('Gemini API key not found in environment variables');
+    }
     
     const difficultyPrompts = {
       beginner: "基本的な事実や概念を中心とした初級レベル",
