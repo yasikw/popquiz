@@ -1,8 +1,8 @@
-import { Innertube } from 'youtubei.js';
+import { extractTextFromYouTubeWithGemini } from './gemini';
 
 export async function extractYouTubeSubtitles(url: string): Promise<string> {
   try {
-    console.log('Extracting YouTube subtitles from:', url);
+    console.log('Extracting YouTube content from:', url);
     
     // Extract video ID from URL
     const videoId = extractVideoId(url);
@@ -12,71 +12,26 @@ export async function extractYouTubeSubtitles(url: string): Promise<string> {
 
     console.log('Video ID:', videoId);
 
-    // Initialize YouTube internal API
-    const youtube = await Innertube.create();
-    
+    // Try to get YouTube video thumbnail and extract text using Gemini Vision
     try {
-      // Get video info
-      console.log('Getting video info...');
-      const info = await youtube.getInfo(videoId);
+      console.log('Using Gemini Vision to extract content from YouTube video...');
+      const extractedText = await extractTextFromYouTubeWithGemini(videoId, url);
       
-      if (!info) {
-        throw new Error("動画情報を取得できませんでした");
-      }
-
-      console.log('Video title:', info.basic_info?.title || 'Unknown');
-      
-      // Get transcript/captions
-      console.log('Getting transcript...');
-      const transcriptData = await info.getTranscript();
-      
-      if (!transcriptData || !transcriptData.content) {
-        throw new Error("この動画には字幕がありません");
-      }
-
-      // Extract text from transcript segments
-      let combinedText = '';
-      if (transcriptData.content.body && transcriptData.content.body.initial_segments) {
-        const segments = transcriptData.content.body.initial_segments;
-        combinedText = segments
-          .map((segment: any) => {
-            if (segment.snippet && segment.snippet.text) {
-              return segment.snippet.text;
-            }
-            return '';
-          })
-          .filter((text: string) => text.trim().length > 0)
-          .join(' ');
-      }
-
-      console.log('Raw transcript length:', combinedText.length);
-
-      if (!combinedText || combinedText.trim().length === 0) {
-        throw new Error("字幕の内容を抽出できませんでした");
-      }
-
-      // Validate transcript length
-      if (combinedText.trim().length < 50) {
-        throw new Error("字幕の内容が短すぎてクイズを作成できません。より長い動画をお試しください。");
+      if (extractedText && extractedText.length > 50) {
+        console.log('Successfully extracted text using Gemini Vision, length:', extractedText.length);
+        return extractedText;
+      } else {
+        throw new Error("動画から十分なテキストコンテンツを抽出できませんでした");
       }
       
-      // Clean up the text
-      const cleanedText = combinedText
-        .replace(/\[.*?\]/g, '') // Remove brackets like [Music], [Applause]
-        .replace(/\s+/g, ' ') // Normalize whitespace
-        .trim();
-      
-      console.log('Final transcript length:', cleanedText.length);
-      return cleanedText;
-      
-    } catch (apiError) {
-      console.log('YouTube API error:', apiError);
-      throw new Error("この動画の字幕を取得できませんでした。字幕付きの動画をお試しください。");
+    } catch (geminiError) {
+      console.log('Gemini extraction failed:', geminiError);
+      throw new Error("この動画からコンテンツを抽出できませんでした。テキストが含まれる動画をお試しください。");
     }
     
   } catch (error) {
-    console.error('YouTube transcript extraction error:', error);
-    throw new Error(`YouTube字幕取得に失敗しました: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('YouTube content extraction error:', error);
+    throw new Error(`YouTube動画の処理に失敗しました: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 

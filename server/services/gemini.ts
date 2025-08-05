@@ -23,6 +23,118 @@ function generateCacheKey(pdfInfo: any): string {
   return crypto.createHash('md5').update(`${pdfInfo.name}-${pdfInfo.size}-${pdfInfo.type}`).digest('hex');
 }
 
+export async function extractTextFromYouTubeWithGemini(videoId: string, originalUrl: string): Promise<string> {
+  try {
+    console.log('Starting Gemini-based YouTube content extraction for video:', videoId);
+    
+    // Get multiple thumbnail images from YouTube
+    const thumbnailUrls = [
+      `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+      `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+      `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
+    ];
+    
+    let extractedContent = '';
+    
+    // Try to extract text from thumbnails using Gemini Vision
+    for (const thumbnailUrl of thumbnailUrls) {
+      try {
+        console.log('Fetching thumbnail:', thumbnailUrl);
+        const response = await fetch(thumbnailUrl);
+        
+        if (!response.ok) {
+          console.log('Thumbnail fetch failed:', response.status);
+          continue;
+        }
+        
+        const imageBuffer = await response.arrayBuffer();
+        const base64Image = Buffer.from(imageBuffer).toString('base64');
+        
+        console.log('Analyzing thumbnail with Gemini Vision...');
+        
+        const analysisPrompt = `この画像はYouTube動画のサムネイルです。画像に含まれる全ての日本語と英語のテキストを抽出し、学習コンテンツとして使用できるよう整理してください。
+
+以下の内容を含めて分析してください：
+1. タイトルやキャプション
+2. 表示されている文字やテキスト
+3. 画像から推測できる動画の内容や主題
+4. 学習に役立つ情報や知識
+
+元のURL: ${originalUrl}
+
+抽出したテキストと分析内容を日本語で詳しく説明してください。`;
+
+        const contents = [
+          {
+            inlineData: {
+              data: base64Image,
+              mimeType: "image/jpeg",
+            },
+          },
+          analysisPrompt
+        ];
+
+        const result = await ai.models.generateContent({
+          model: "gemini-2.5-pro",
+          contents: contents,
+        });
+
+        const analysisText = result.text || '';
+        console.log('Gemini analysis result length:', analysisText.length);
+        
+        if (analysisText && analysisText.length > 100) {
+          extractedContent += analysisText + '\n\n';
+          break; // Use the first successful extraction
+        }
+        
+      } catch (thumbnailError) {
+        console.log('Thumbnail analysis failed:', thumbnailError);
+        continue;
+      }
+    }
+    
+    // If thumbnail analysis didn't work, try a different approach
+    if (!extractedContent || extractedContent.length < 100) {
+      console.log('Thumbnail analysis insufficient, trying video description analysis...');
+      
+      const descriptionPrompt = `YouTube動画URL: ${originalUrl}
+
+この動画について、以下の情報を基に学習用のコンテンツを生成してください：
+
+1. 動画のタイトルから推測される内容
+2. 一般的にこのような動画で扱われるトピック
+3. 学習者が知っておくべき関連知識
+4. この分野の基本的な概念や用語
+
+日本語で詳しく説明し、クイズ作成に適した学習コンテンツとして整理してください。`;
+
+      const result = await ai.models.generateContent({
+        model: "gemini-2.5-pro",
+        contents: descriptionPrompt,
+      });
+
+      extractedContent = result.text || '';
+      console.log('Generated content based on URL, length:', extractedContent.length);
+    }
+    
+    if (!extractedContent || extractedContent.trim().length < 50) {
+      throw new Error("動画から学習コンテンツを生成できませんでした");
+    }
+    
+    // Clean and format the extracted content
+    const cleanedContent = extractedContent
+      .replace(/\n\s*\n/g, '\n') // Remove extra newlines
+      .trim();
+    
+    console.log('Final extracted content length:', cleanedContent.length);
+    return cleanedContent;
+    
+  } catch (error) {
+    console.error('Gemini YouTube extraction error:', error);
+    throw new Error(`Gemini を使用した動画解析に失敗しました: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
 export async function extractTextFromPDF(pdfBuffer: Buffer, pdfInfo?: any): Promise<string> {
   try {
     console.log('PDF extraction started, buffer size:', pdfBuffer.length);
