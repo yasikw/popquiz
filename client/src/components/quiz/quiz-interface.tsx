@@ -22,9 +22,23 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
   const [questionTimes, setQuestionTimes] = useState<number[]>(
     new Array(quiz.questions.length).fill(0)
   );
+  const [autoNext, setAutoNext] = useState(false);
+  const [timeLimit, setTimeLimit] = useState(60);
 
   const currentQuestion = quiz.questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
+
+  // Load quiz settings on mount
+  useEffect(() => {
+    const savedSettings = localStorage.getItem('quizSettings');
+    if (savedSettings) {
+      const settings = JSON.parse(savedSettings);
+      setAutoNext(settings.autoNext ?? false);
+      setTimeLimit(settings.timeLimit || 60);
+      setTimeLeft(settings.timeLimit || 60);
+      console.log('Quiz settings loaded:', { autoNext: settings.autoNext, timeLimit: settings.timeLimit });
+    }
+  }, []);
 
   // Timer effect
   useEffect(() => {
@@ -39,16 +53,25 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
 
   // Reset timer and start time when question changes
   useEffect(() => {
-    setTimeLeft(60);
+    setTimeLeft(timeLimit);
     setQuestionStartTime(Date.now());
     setSelectedAnswer(userAnswers[currentQuestionIndex]);
-  }, [currentQuestionIndex]);
+  }, [currentQuestionIndex, timeLimit]);
 
   const handleAnswerSelect = (answerIndex: number) => {
     setSelectedAnswer(answerIndex);
     const newAnswers = [...userAnswers];
     newAnswers[currentQuestionIndex] = answerIndex;
     setUserAnswers(newAnswers);
+    
+    console.log('Answer selected:', answerIndex, 'Auto next enabled:', autoNext);
+    
+    // Auto advance to next question if enabled
+    if (autoNext) {
+      setTimeout(() => {
+        handleNextQuestion();
+      }, 1000); // Wait 1 second to show selection, then advance
+    }
   };
 
   const handleNextQuestion = () => {
