@@ -236,38 +236,7 @@ export default function CardStack({
     }
   };
 
-  // Handle same quiz (load previous quiz results)
-  const handleSameQuiz = () => {
-    console.log('Same quiz button clicked');
-    
-    // Check if we have previous quiz results
-    const savedResults = localStorage.getItem('quizResults');
-    if (!savedResults) {
-      alert('前回のクイズ結果が見つかりません');
-      return;
-    }
 
-    try {
-      const results = JSON.parse(savedResults);
-      // Reconstruct the quiz from saved results
-      const quiz = {
-        questions: results.detailedResults.map((result: any, index: number) => ({
-          question: result.question,
-          options: result.options || [`選択肢1`, `選択肢2`, `選択肢3`, `選択肢4`], // Fallback if options not saved
-          correctAnswer: result.correctAnswer,
-          explanation: result.explanation
-        })),
-        difficulty: 'intermediate', // Default difficulty
-        title: '前回のクイズ'
-      };
-      
-      console.log('Reconstructed quiz from previous results:', quiz);
-      onQuizGenerated(quiz);
-    } catch (error) {
-      console.error('Error reconstructing quiz:', error);
-      alert('前回のクイズを復元できませんでした');
-    }
-  };
 
   const renderUploadTypeSelector = () => {
     const currentType = uploadTypes[currentUploadType];
@@ -466,33 +435,7 @@ export default function CardStack({
           AIクイズを生成
         </Button>
         
-        {/* Retry Quiz Buttons - only show if we have saved PDF and no current file */}
-        {(() => {
-          const savedPdfFile = localStorage.getItem('lastPdfFile');
-          const pdfInfo = savedPdfFile ? JSON.parse(savedPdfFile) : null;
-          return pdfInfo && !file ? (
-            <div className="space-y-2">
-              <Button 
-                onClick={handleSameQuiz}
-                variant="outline"
-                className="w-full border-green-500 text-green-700 hover:bg-green-50 py-3"
-                data-testid="button-same-quiz"
-              >
-                <span className="mr-2">🔁</span>
-                同じ問題をもう一度（{pdfInfo.name}）
-              </Button>
-              <Button 
-                onClick={handleRetryQuiz}
-                variant="outline"
-                className="w-full border-blue-500 text-blue-700 hover:bg-blue-50 py-3"
-                data-testid="button-retry-previous-quiz"
-              >
-                <span className="mr-2">🎲</span>
-                別の問題を出題（{pdfInfo.name}）
-              </Button>
-            </div>
-          ) : null;
-        })()}
+
       </div>
 
       {/* Stats Preview Card */}
