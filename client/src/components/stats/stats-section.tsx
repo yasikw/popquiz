@@ -114,53 +114,53 @@ export default function StatsSection({ userId }: StatsSectionProps) {
             <h4 className="text-lg font-semibold text-gray-800 mb-4">学習サマリー</h4>
             <div className="space-y-6">
               <div className="flex justify-between items-center">
-                <span className="text-white/80">総合スコア</span>
-                <span className="text-2xl font-bold gradient-text" data-testid="total-score">
+                <span className="text-gray-600">総合スコア</span>
+                <span className="text-2xl font-bold text-blue-600" data-testid="total-score">
                   {displayStats.totalScore}
                 </span>
               </div>
               
               <div className="flex justify-between items-center">
-                <span className="text-white/80">完了したクイズ</span>
-                <span className="text-lg font-semibold text-white" data-testid="completed-quizzes">
+                <span className="text-gray-600">完了したクイズ</span>
+                <span className="text-lg font-semibold text-gray-800" data-testid="completed-quizzes">
                   {displayStats.completedQuizzes}
                 </span>
               </div>
               
               <div className="flex justify-between items-center">
-                <span className="text-white/80">平均正答率</span>
-                <span className="text-lg font-semibold text-cyan-400" data-testid="average-accuracy">
+                <span className="text-gray-600">平均正答率</span>
+                <span className="text-lg font-semibold text-purple-600" data-testid="average-accuracy">
                   {displayStats.averageAccuracy}%
                 </span>
               </div>
 
-              <div className="pt-4 border-t border-white/20">
-                <h5 className="font-medium text-white mb-3">難易度別成績</h5>
+              <div className="pt-4 border-t border-gray-300">
+                <h5 className="font-medium text-gray-800 mb-3">難易度別成績</h5>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-green-400 rounded-full shadow-sm"></div>
-                      <span className="text-sm text-white/80">初級</span>
+                      <div className="w-3 h-3 bg-green-500 rounded-full shadow-sm"></div>
+                      <span className="text-sm text-gray-600">初級</span>
                     </div>
-                    <span className="text-sm font-medium text-white" data-testid="beginner-accuracy">
+                    <span className="text-sm font-medium text-gray-800" data-testid="beginner-accuracy">
                       {displayStats.beginnerAccuracy}%
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-orange-400 rounded-full shadow-sm"></div>
-                      <span className="text-sm text-white/80">中級</span>
+                      <div className="w-3 h-3 bg-orange-500 rounded-full shadow-sm"></div>
+                      <span className="text-sm text-gray-600">中級</span>
                     </div>
-                    <span className="text-sm font-medium text-white" data-testid="intermediate-accuracy">
+                    <span className="text-sm font-medium text-gray-800" data-testid="intermediate-accuracy">
                       {displayStats.intermediateAccuracy}%
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-purple-400 rounded-full shadow-sm"></div>
-                      <span className="text-sm text-white/80">上級</span>
+                      <div className="w-3 h-3 bg-purple-500 rounded-full shadow-sm"></div>
+                      <span className="text-sm text-gray-600">上級</span>
                     </div>
-                    <span className="text-sm font-medium text-white" data-testid="advanced-accuracy">
+                    <span className="text-sm font-medium text-gray-800" data-testid="advanced-accuracy">
                       {displayStats.advancedAccuracy}%
                     </span>
                   </div>
@@ -172,13 +172,13 @@ export default function StatsSection({ userId }: StatsSectionProps) {
       </div>
 
       {/* Recent Quiz History */}
-      <Card className="mt-8 glass-effect border-white/20 shadow-xl">
+      <Card className="mt-8 bg-white border border-gray-200 shadow-md">
         <CardContent className="p-6">
-          <h4 className="text-lg font-semibold text-white mb-4">最近のクイズ履歴</h4>
+          <h4 className="text-lg font-semibold text-gray-800 mb-4">最近のクイズ履歴</h4>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-white/20">
-                <tr className="text-left text-white/80">
+              <thead className="border-b border-gray-300">
+                <tr className="text-left text-gray-600">
                   <th className="pb-3">日時</th>
                   <th className="pb-3">コンテンツ</th>
                   <th className="pb-3">難易度</th>
@@ -187,9 +187,9 @@ export default function StatsSection({ userId }: StatsSectionProps) {
                   <th className="pb-3">スコア</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/10">
+              <tbody className="divide-y divide-gray-200">
                 {displaySessions.map((session) => (
-                  <tr key={session.id} className="hover:bg-white/5 text-white/90">
+                  <tr key={session.id} className="hover:bg-gray-50 text-gray-800">
                     <td className="py-3" data-testid={`session-date-${session.id}`}>
                       {session.completedAt.toLocaleDateString('ja-JP')} {session.completedAt.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
                     </td>
@@ -207,7 +207,7 @@ export default function StatsSection({ userId }: StatsSectionProps) {
                     <td className="py-3" data-testid={`session-time-${session.id}`}>
                       {formatTime(session.timeSpent)}
                     </td>
-                    <td className="py-3 font-medium text-cyan-400" data-testid={`session-score-${session.id}`}>
+                    <td className="py-3 font-medium text-blue-600" data-testid={`session-score-${session.id}`}>
                       {Math.round((session.score / session.totalQuestions) * 100)}
                     </td>
                   </tr>
