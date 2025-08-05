@@ -1,4 +1,4 @@
-import { YoutubeTranscript } from 'youtube-transcript';
+import { Innertube } from 'youtubei.js';
 
 export async function extractYouTubeSubtitles(url: string): Promise<string> {
   try {
@@ -12,59 +12,67 @@ export async function extractYouTubeSubtitles(url: string): Promise<string> {
 
     console.log('Video ID:', videoId);
 
-    // Try multiple approaches to get transcript
-    let transcript = null;
-    let combinedText = '';
-
-    // Try to get available transcript languages first
+    // Initialize YouTube internal API
+    const youtube = await Innertube.create();
+    
     try {
-      console.log('Attempting to get any available transcript...');
-      transcript = await YoutubeTranscript.fetchTranscript(videoId);
-      if (transcript && transcript.length > 0) {
-        combinedText = transcript.map(item => item.text).join(' ');
-        console.log('Default transcript found, length:', combinedText.length);
-      }
-    } catch (error) {
-      console.log('Default transcript failed, trying specific languages...', error);
+      // Get video info
+      console.log('Getting video info...');
+      const info = await youtube.getInfo(videoId);
       
-      // If default fails, try specific languages from the error message
-      const availableLanguages = ['ja', 'en', 'ar', 'de', 'ru', 'fr', 'ko', 'pt', 'th', 'es', 'it', 'hi', 'id', 'vi', 'zh-Hant'];
-      
-      for (const lang of availableLanguages) {
-        if (combinedText) break; // Stop if we found one
-        
-        try {
-          console.log(`Trying specific language: ${lang}`);
-          transcript = await YoutubeTranscript.fetchTranscript(videoId, { lang });
-          if (transcript && transcript.length > 0) {
-            combinedText = transcript.map(item => item.text).join(' ');
-            console.log(`Successfully got ${lang} transcript, length:`, combinedText.length);
-            break;
-          }
-        } catch (langError) {
-          console.log(`Language ${lang} failed:`, langError.message);
-        }
+      if (!info) {
+        throw new Error("動画情報を取得できませんでした");
       }
-    }
 
-    // Check if we got any transcript
-    if (!combinedText || combinedText.trim().length === 0) {
-      throw new Error("この動画の字幕を取得できませんでした。他の動画をお試しいただくか、PDFやテキストファイルをご利用ください。");
-    }
+      console.log('Video title:', info.basic_info?.title || 'Unknown');
+      
+      // Get transcript/captions
+      console.log('Getting transcript...');
+      const transcriptData = await info.getTranscript();
+      
+      if (!transcriptData || !transcriptData.content) {
+        throw new Error("この動画には字幕がありません");
+      }
 
-    // Validate transcript length
-    if (combinedText.trim().length < 50) {
-      throw new Error("字幕の内容が短すぎてクイズを作成できません。より長い動画をお試しください。");
+      // Extract text from transcript segments
+      let combinedText = '';
+      if (transcriptData.content.body && transcriptData.content.body.initial_segments) {
+        const segments = transcriptData.content.body.initial_segments;
+        combinedText = segments
+          .map((segment: any) => {
+            if (segment.snippet && segment.snippet.text) {
+              return segment.snippet.text;
+            }
+            return '';
+          })
+          .filter((text: string) => text.trim().length > 0)
+          .join(' ');
+      }
+
+      console.log('Raw transcript length:', combinedText.length);
+
+      if (!combinedText || combinedText.trim().length === 0) {
+        throw new Error("字幕の内容を抽出できませんでした");
+      }
+
+      // Validate transcript length
+      if (combinedText.trim().length < 50) {
+        throw new Error("字幕の内容が短すぎてクイズを作成できません。より長い動画をお試しください。");
+      }
+      
+      // Clean up the text
+      const cleanedText = combinedText
+        .replace(/\[.*?\]/g, '') // Remove brackets like [Music], [Applause]
+        .replace(/\s+/g, ' ') // Normalize whitespace
+        .trim();
+      
+      console.log('Final transcript length:', cleanedText.length);
+      return cleanedText;
+      
+    } catch (apiError) {
+      console.log('YouTube API error:', apiError);
+      throw new Error("この動画の字幕を取得できませんでした。字幕付きの動画をお試しください。");
     }
-    
-    // Clean up the text
-    const cleanedText = combinedText
-      .replace(/\[.*?\]/g, '') // Remove brackets like [Music], [Applause]
-      .replace(/\s+/g, ' ') // Normalize whitespace
-      .trim();
-    
-    console.log('Final transcript length:', cleanedText.length);
-    return cleanedText;
     
   } catch (error) {
     console.error('YouTube transcript extraction error:', error);
