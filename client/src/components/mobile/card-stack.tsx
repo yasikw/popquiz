@@ -336,10 +336,10 @@ export default function CardStack({
                 <div className="flex items-start">
                   <i className="fas fa-info-circle text-blue-600 mr-2 mt-0.5"></i>
                   <div>
-                    <div className="font-medium text-blue-800 mb-1">字幕が必要です</div>
+                    <div className="font-medium text-blue-800 mb-1">AIが動画内容を分析</div>
                     <div className="text-blue-700">
-                      字幕（日本語または英語）付きのYouTube動画のみ対応しています。<br/>
-                      自動生成字幕も利用できます。
+                      AIが動画の内容を分析して学習コンテンツを生成します。<br/>
+                      教育的な内容の動画が最適です。
                     </div>
                   </div>
                 </div>

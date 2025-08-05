@@ -25,113 +25,100 @@ function generateCacheKey(pdfInfo: any): string {
 
 export async function extractTextFromYouTubeWithGemini(videoId: string, originalUrl: string): Promise<string> {
   try {
-    console.log('Starting Gemini-based YouTube content extraction for video:', videoId);
+    console.log('Starting comprehensive YouTube content analysis for video:', videoId);
     
-    // Get multiple thumbnail images from YouTube
-    const thumbnailUrls = [
-      `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
-      `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
-      `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
-    ];
-    
-    let extractedContent = '';
-    
-    // Try to extract text from thumbnails using Gemini Vision
-    for (const thumbnailUrl of thumbnailUrls) {
-      try {
-        console.log('Fetching thumbnail:', thumbnailUrl);
-        const response = await fetch(thumbnailUrl);
-        
-        if (!response.ok) {
-          console.log('Thumbnail fetch failed:', response.status);
-          continue;
-        }
-        
-        const imageBuffer = await response.arrayBuffer();
-        const base64Image = Buffer.from(imageBuffer).toString('base64');
-        
-        console.log('Analyzing thumbnail with Gemini Vision...');
-        
-        const analysisPrompt = `この画像はYouTube動画のサムネイルです。画像に含まれる全ての日本語と英語のテキストを抽出し、学習コンテンツとして使用できるよう整理してください。
+    // Extract information from URL first to understand the topic
+    const urlAnalysisPrompt = `YouTube動画URL: ${originalUrl}
 
-以下の内容を含めて分析してください：
-1. タイトルやキャプション
-2. 表示されている文字やテキスト
-3. 画像から推測できる動画の内容や主題
-4. 学習に役立つ情報や知識
+このURLから動画の主題や分野を特定し、その分野に関する包括的な学習コンテンツを生成してください。
+URLやタイトルの表面的な情報だけでなく、その分野で学ぶべき深い内容に焦点を当ててください。
 
-元のURL: ${originalUrl}
+以下の要素を含む詳細な学習コンテンツを作成してください：
 
-抽出したテキストと分析内容を日本語で詳しく説明してください。`;
+1. **基本概念と定義**
+   - 重要な用語とその意味
+   - 基礎的な原理や法則
 
-        const contents = [
-          {
-            inlineData: {
-              data: base64Image,
-              mimeType: "image/jpeg",
-            },
-          },
-          analysisPrompt
-        ];
+2. **歴史的背景と発展**
+   - 時系列的な重要な出来事
+   - 影響を与えた人物や要因
 
-        const result = await ai.models.generateContent({
-          model: "gemini-2.5-pro",
-          contents: contents,
-        });
+3. **詳細な事実と情報**
+   - 具体的な数値、日付、名前
+   - 関連する詳しい説明
 
-        const analysisText = result.text || '';
-        console.log('Gemini analysis result length:', analysisText.length);
-        
-        if (analysisText && analysisText.length > 100) {
-          extractedContent += analysisText + '\n\n';
-          break; // Use the first successful extraction
-        }
-        
-      } catch (thumbnailError) {
-        console.log('Thumbnail analysis failed:', thumbnailError);
-        continue;
+4. **応用と現代への影響**
+   - 現在への影響や意義
+   - 実例や応用事例
+
+5. **関連分野との繋がり**
+   - 他の分野との関係性
+   - 派生的な知識
+
+この分野を深く理解するために必要な包括的で詳細な学習コンテンツを日本語で提供してください。
+表面的な情報ではなく、学術的で実用的な深い知識を含めてください。`;
+
+    console.log('Generating comprehensive content analysis...');
+    const result = await ai.models.generateContent({
+      model: "gemini-2.5-pro",
+      contents: urlAnalysisPrompt,
+      config: {
+        temperature: 0.3, // Lower temperature for more factual content
       }
-    }
+    });
+
+    let extractedContent = result.text || '';
+    console.log('Generated comprehensive content length:', extractedContent.length);
     
-    // If thumbnail analysis didn't work, try a different approach
-    if (!extractedContent || extractedContent.length < 100) {
-      console.log('Thumbnail analysis insufficient, trying video description analysis...');
+    // If the content is insufficient, try to get more specific information
+    if (!extractedContent || extractedContent.length < 200) {
+      console.log('Initial content insufficient, generating specific topic content...');
       
-      const descriptionPrompt = `YouTube動画URL: ${originalUrl}
+      const specificPrompt = `YouTube動画のURL: ${originalUrl}
 
-この動画について、以下の情報を基に学習用のコンテンツを生成してください：
+この動画で扱われていると推測される主題について、クイズ作成に適した詳細で具体的な学習コンテンツを生成してください。
 
-1. 動画のタイトルから推測される内容
-2. 一般的にこのような動画で扱われるトピック
-3. 学習者が知っておくべき関連知識
-4. この分野の基本的な概念や用語
+重要な指示：
+- 抽象的な説明ではなく、具体的な事実、数値、名前、日付を多く含む
+- クイズの問題として出題できる明確な情報を提供
+- 「〜について」「〜に関して」のような曖昧な表現を避ける
+- 検証可能で正確な情報に基づく内容
 
-日本語で詳しく説明し、クイズ作成に適した学習コンテンツとして整理してください。`;
+例：「この人物は○○年に△△を発明した」「この出来事は××年××月に起こった」など
 
-      const result = await ai.models.generateContent({
+詳細で具体的な学習コンテンツを日本語で提供してください。`;
+
+      const specificResult = await ai.models.generateContent({
         model: "gemini-2.5-pro",
-        contents: descriptionPrompt,
+        contents: specificPrompt,
+        config: {
+          temperature: 0.2, // Even lower temperature for specific facts
+        }
       });
 
-      extractedContent = result.text || '';
-      console.log('Generated content based on URL, length:', extractedContent.length);
+      const specificContent = specificResult.text || '';
+      if (specificContent && specificContent.length > extractedContent.length) {
+        extractedContent = specificContent;
+      }
+      console.log('Generated specific content length:', specificContent.length);
     }
     
-    if (!extractedContent || extractedContent.trim().length < 50) {
-      throw new Error("動画から学習コンテンツを生成できませんでした");
+    if (!extractedContent || extractedContent.trim().length < 100) {
+      throw new Error("動画の内容から十分な学習コンテンツを生成できませんでした");
     }
     
     // Clean and format the extracted content
     const cleanedContent = extractedContent
-      .replace(/\n\s*\n/g, '\n') // Remove extra newlines
+      .replace(/\n\s*\n\s*\n/g, '\n\n') // Remove excessive newlines
+      .replace(/\s+/g, ' ') // Normalize whitespace
       .trim();
     
-    console.log('Final extracted content length:', cleanedContent.length);
+    console.log('Final processed content length:', cleanedContent.length);
     return cleanedContent;
     
   } catch (error) {
-    console.error('Gemini YouTube extraction error:', error);
-    throw new Error(`Gemini を使用した動画解析に失敗しました: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('YouTube content analysis error:', error);
+    throw new Error(`動画内容の分析に失敗しました: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 
