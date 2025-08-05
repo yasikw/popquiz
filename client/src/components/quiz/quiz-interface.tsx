@@ -59,16 +59,32 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
   }, [currentQuestionIndex, timeLimit]);
 
   const handleAnswerSelect = (answerIndex: number) => {
+    console.log('Answer selection started:', {
+      selectedAnswer: answerIndex,
+      currentQuestionIndex,
+      questionText: currentQuestion.question.substring(0, 50) + '...'
+    });
+    
     setSelectedAnswer(answerIndex);
     const newAnswers = [...userAnswers];
     newAnswers[currentQuestionIndex] = answerIndex;
     setUserAnswers(newAnswers);
     
-    console.log('Answer selected:', answerIndex, 'Auto next enabled:', autoNext, 'Current question:', currentQuestionIndex);
+    console.log('Answer recorded:', {
+      answerIndex,
+      currentQuestionIndex,
+      newAnswers: newAnswers.map((ans, idx) => ({
+        questionIndex: idx,
+        selectedAnswer: ans,
+        isCurrentQuestion: idx === currentQuestionIndex
+      }))
+    });
     
     // Auto advance to next question if enabled
     if (autoNext) {
+      console.log('Auto-advance starting in 1 second...');
       setTimeout(() => {
+        console.log('Auto-advance executing with answers:', newAnswers);
         // Pass the updated answers to ensure latest state
         handleNextQuestionWithAnswers(newAnswers);
       }, 1000); // Wait 1 second to show selection, then advance
@@ -116,8 +132,15 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     const finalTimes = [...currentTimes];
     finalTimes[currentQuestionIndex] = finalTimeSpent;
 
-    console.log("Quiz completing with final answers:", finalAnswers);
-    console.log("Final times:", finalTimes);
+    console.log("=== Quiz Completion Debug ===");
+    console.log("Final answers array:", finalAnswers);
+    console.log("Questions and answers verification:");
+    quiz.questions.forEach((question, index) => {
+      console.log(`Q${index + 1}: ${question.question.substring(0, 40)}...`);
+      console.log(`  User selected: ${finalAnswers[index]} (${finalAnswers[index] !== null ? question.options[finalAnswers[index]] : 'No answer'})`);
+      console.log(`  Correct answer: ${question.correctAnswer} (${question.options[question.correctAnswer]})`);
+      console.log(`  Is correct: ${finalAnswers[index] !== null && finalAnswers[index] === question.correctAnswer}`);
+    });
 
     // Calculate score and detailed results
     const score = finalAnswers.reduce((total: number, answer, index) => {
@@ -145,13 +168,12 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
       detailedResults
     };
 
-    console.log("Quiz completed with results:", quizResults);
-    console.log("Storing results in localStorage...");
+    console.log("Final quiz results:", quizResults);
+    console.log("=== End Quiz Completion Debug ===");
     
     // Store results in localStorage or pass to parent
     localStorage.setItem('quizResults', JSON.stringify(quizResults));
     
-    console.log("Calling onQuizCompleted callback...");
     onQuizCompleted();
   };
 
