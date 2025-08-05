@@ -52,6 +52,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Unified quiz generation endpoint
+  app.post("/api/generate-quiz", upload.single('file'), async (req, res) => {
+    try {
+      const { contentType, difficulty = "intermediate", youtubeUrl, textContent } = req.body;
+      
+      let extractedText = "";
+      let title = "AIクイズ";
+
+      if (contentType === 'pdf') {
+        if (!req.file) {
+          return res.status(400).json({ message: "PDFファイルが必要です" });
+        }
+        title = "PDFクイズ";
+        extractedText = await extractTextFromPDF(req.file.buffer);
+      } else if (contentType === 'text') {
+        if (!textContent) {
+          return res.status(400).json({ message: "テキスト内容が必要です" });
+        }
+        title = "テキストクイズ";
+        extractedText = textContent;
+      } else if (contentType === 'youtube') {
+        if (!youtubeUrl) {
+          return res.status(400).json({ message: "YouTube URLが必要です" });
+        }
+        title = "YouTube動画クイズ";
+        extractedText = await extractYouTubeSubtitles(youtubeUrl);
+      } else {
+        return res.status(400).json({ message: "無効なコンテンツタイプです" });
+      }
+      
+      if (!extractedText.trim()) {
+        return res.status(400).json({ message: "コンテンツからテキストを抽出できませんでした" });
+      }
+
+      const quiz = await generateQuizFromText(extractedText, difficulty, title);
+      res.json(quiz);
+    } catch (error) {
+      console.error('Quiz generation error:', error);
+      res.status(500).json({ 
+        message: "クイズ生成に失敗しました", 
+        error: error instanceof Error ? error.message : "Unknown error" 
+      });
+    }
+  });
+
   // Content processing and quiz generation
   app.post("/api/process-pdf", upload.single('pdf'), async (req, res) => {
     try {

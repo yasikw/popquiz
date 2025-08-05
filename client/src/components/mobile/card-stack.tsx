@@ -90,6 +90,8 @@ export default function CardStack({
   const handleQuizGeneration = async () => {
     const currentType = uploadTypes[currentUploadType].id;
     
+    console.log('Quiz generation started:', { currentType, selectedDifficulty });
+    
     if (currentType === 'pdf' && !file) {
       alert("PDFファイルを選択してください");
       return;
@@ -112,30 +114,39 @@ export default function CardStack({
       if (currentType === 'pdf' && file) {
         formData.append('file', file);
         formData.append('contentType', 'pdf');
+        console.log('PDF file added:', file.name, file.size);
       } else if (currentType === 'youtube' && youtubeUrl) {
         formData.append('youtubeUrl', youtubeUrl);
         formData.append('contentType', 'youtube');
+        console.log('YouTube URL added:', youtubeUrl);
       } else if (currentType === 'text' && textContent) {
         formData.append('textContent', textContent);
         formData.append('contentType', 'text');
+        console.log('Text content added, length:', textContent.length);
       }
       
       formData.append('difficulty', selectedDifficulty);
 
+      console.log('Sending request to /api/generate-quiz');
       const response = await fetch('/api/generate-quiz', {
         method: 'POST',
         body: formData,
       });
 
+      console.log('Response status:', response.status);
+
       if (!response.ok) {
-        throw new Error('クイズ生成に失敗しました');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Server error:', errorData);
+        throw new Error(errorData.message || `HTTP ${response.status}: クイズ生成に失敗しました`);
       }
 
       const quiz = await response.json();
+      console.log('Quiz generated successfully:', quiz);
       onQuizGenerated(quiz);
     } catch (error) {
       console.error('Quiz generation error:', error);
-      alert('クイズ生成に失敗しました。もう一度お試しください。');
+      alert(`クイズ生成に失敗しました: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
       setLoadingMessage("");
@@ -190,6 +201,12 @@ export default function CardStack({
                 className="mt-1"
                 data-testid="input-file"
               />
+              {file && (
+                <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm">
+                  <i className="fas fa-check-circle text-green-600 mr-2"></i>
+                  選択済み: {file.name} ({(file.size / 1024 / 1024).toFixed(1)}MB)
+                </div>
+              )}
             </div>
           )}
 
