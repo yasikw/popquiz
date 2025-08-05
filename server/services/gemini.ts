@@ -31,7 +31,8 @@ export async function extractTextFromPDF(pdfBuffer: Buffer): Promise<string> {
 export async function generateQuizFromText(
   text: string, 
   difficulty: string, 
-  title: string
+  title: string,
+  questionCount: number = 5
 ): Promise<GeneratedQuiz> {
   try {
     const difficultyPrompts = {
@@ -40,7 +41,7 @@ export async function generateQuizFromText(
       advanced: "分析的思考や専門知識が必要な上級レベル"
     };
 
-    const prompt = `以下のテキストから${difficultyPrompts[difficulty as keyof typeof difficultyPrompts]}の4択クイズを5問作成してください。
+    const prompt = `以下のテキストから${difficultyPrompts[difficulty as keyof typeof difficultyPrompts]}の4択クイズを${questionCount}問作成してください。
 
 テキスト: ${text.substring(0, 2000)}
 

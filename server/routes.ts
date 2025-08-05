@@ -55,7 +55,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Unified quiz generation endpoint
   app.post("/api/generate-quiz", upload.single('file'), async (req, res) => {
     try {
-      const { contentType, difficulty = "intermediate", youtubeUrl, textContent } = req.body;
+      const { contentType, difficulty = "intermediate", youtubeUrl, textContent, questionCount = "5" } = req.body;
       
       let extractedText = "";
       let title = "AIクイズ";
@@ -86,7 +86,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "コンテンツからテキストを抽出できませんでした" });
       }
 
-      const quiz = await generateQuizFromText(extractedText, difficulty, title);
+      const quiz = await generateQuizFromText(extractedText, difficulty, title, parseInt(questionCount));
       res.json(quiz);
     } catch (error) {
       console.error('Quiz generation error:', error);
@@ -104,7 +104,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "PDFファイルが必要です" });
       }
 
-      const { difficulty = "intermediate", title = "PDFクイズ" } = req.body;
+      const { difficulty = "intermediate", title = "PDFクイズ", questionCount = "5" } = req.body;
       
       // Extract text from PDF using Gemini Vision
       const extractedText = await extractTextFromPDF(req.file.buffer);
@@ -114,7 +114,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Generate quiz from extracted text
-      const quiz = await generateQuizFromText(extractedText, difficulty, title);
+      const quiz = await generateQuizFromText(extractedText, difficulty, title, parseInt(questionCount));
       
       res.json(quiz);
     } catch (error) {
@@ -128,14 +128,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "テキストファイルが必要です" });
       }
 
-      const { difficulty = "intermediate", title = "テキストクイズ" } = req.body;
+      const { difficulty = "intermediate", title = "テキストクイズ", questionCount = "5" } = req.body;
       const text = req.file.buffer.toString('utf-8');
       
       if (!text.trim()) {
         return res.status(400).json({ message: "ファイルが空です" });
       }
 
-      const quiz = await generateQuizFromText(text, difficulty, title);
+      const quiz = await generateQuizFromText(text, difficulty, title, parseInt(questionCount));
       
       res.json(quiz);
     } catch (error) {
@@ -145,7 +145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/process-youtube", async (req, res) => {
     try {
-      const { url, difficulty = "intermediate", title = "YouTube動画クイズ" } = req.body;
+      const { url, difficulty = "intermediate", title = "YouTube動画クイズ", questionCount = "5" } = req.body;
       
       if (!url) {
         return res.status(400).json({ message: "YouTube URLが必要です" });
@@ -159,7 +159,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Generate quiz from subtitles
-      const quiz = await generateQuizFromText(subtitles, difficulty, title);
+      const quiz = await generateQuizFromText(subtitles, difficulty, title, parseInt(questionCount));
       
       res.json(quiz);
     } catch (error) {

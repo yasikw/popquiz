@@ -90,7 +90,11 @@ export default function CardStack({
   const handleQuizGeneration = async () => {
     const currentType = uploadTypes[currentUploadType].id;
     
-    console.log('Quiz generation started:', { currentType, selectedDifficulty });
+    // Get question count from settings
+    const savedSettings = localStorage.getItem('quizSettings');
+    const questionCount = savedSettings ? JSON.parse(savedSettings).questionCount || 5 : 5;
+    
+    console.log('Quiz generation started:', { currentType, selectedDifficulty, questionCount });
     
     if (currentType === 'pdf' && !file) {
       alert("PDFファイルを選択してください");
@@ -126,6 +130,7 @@ export default function CardStack({
       }
       
       formData.append('difficulty', selectedDifficulty);
+      formData.append('questionCount', questionCount.toString());
 
       console.log('Sending request to /api/generate-quiz');
       const response = await fetch('/api/generate-quiz', {

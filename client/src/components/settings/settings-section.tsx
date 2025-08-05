@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,18 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
   const [questionCount, setQuestionCount] = useState("10");
   const [autoNext, setAutoNext] = useState(true);
   const { toast } = useToast();
+
+  // Load settings from localStorage on component mount
+  useEffect(() => {
+    const savedSettings = localStorage.getItem('quizSettings');
+    if (savedSettings) {
+      const settings = JSON.parse(savedSettings);
+      setDefaultDifficulty(settings.defaultDifficulty || "intermediate");
+      setTimeLimit(settings.timeLimit?.toString() || "60");
+      setQuestionCount(settings.questionCount?.toString() || "10");
+      setAutoNext(settings.autoNext ?? true);
+    }
+  }, []);
 
   const handleSaveUserSettings = async () => {
     if (!user) {
@@ -50,7 +62,15 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
   };
 
   const handleSaveQuizSettings = () => {
-    // In a real app, this would save to local storage or user preferences
+    // Save quiz settings to localStorage
+    const settings = {
+      defaultDifficulty,
+      timeLimit: parseInt(timeLimit),
+      questionCount: parseInt(questionCount),
+      autoNext
+    };
+    localStorage.setItem('quizSettings', JSON.stringify(settings));
+    
     toast({
       title: "成功",
       description: "クイズ設定を保存しました",
