@@ -1,0 +1,244 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useToast } from "@/hooks/use-toast";
+import { updateUser } from "@/lib/api";
+import { type User } from "@shared/schema";
+
+interface SettingsSectionProps {
+  user: User | null;
+  onUserUpdate: (user: User) => void;
+}
+
+export default function SettingsSection({ user, onUserUpdate }: SettingsSectionProps) {
+  const [username, setUsername] = useState(user?.username || "");
+  const [email, setEmail] = useState(user?.email || "");
+  const [defaultDifficulty, setDefaultDifficulty] = useState("intermediate");
+  const [timeLimit, setTimeLimit] = useState("60");
+  const [questionCount, setQuestionCount] = useState("10");
+  const [autoNext, setAutoNext] = useState(true);
+  const { toast } = useToast();
+
+  const handleSaveUserSettings = async () => {
+    if (!user) {
+      toast({
+        title: "エラー",
+        description: "ユーザーが見つかりません",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const updatedUser = await updateUser(user.id, { username, email });
+      onUserUpdate(updatedUser);
+      toast({
+        title: "成功",
+        description: "ユーザー設定を保存しました",
+      });
+    } catch (error) {
+      toast({
+        title: "エラー",
+        description: "設定の保存に失敗しました",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleSaveQuizSettings = () => {
+    // In a real app, this would save to local storage or user preferences
+    toast({
+      title: "成功",
+      description: "クイズ設定を保存しました",
+    });
+  };
+
+  const handleExportData = () => {
+    toast({
+      title: "準備中",
+      description: "データエクスポート機能は準備中です",
+    });
+  };
+
+  const handleImportData = () => {
+    toast({
+      title: "準備中", 
+      description: "データインポート機能は準備中です",
+    });
+  };
+
+  const handleClearData = () => {
+    toast({
+      title: "確認",
+      description: "データ削除機能は準備中です",
+    });
+  };
+
+  return (
+    <section className="mb-12">
+      <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">設定</h3>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* User Settings */}
+        <Card className="bg-white border border-gray-200 shadow-md">
+          <CardContent className="p-6">
+            <h4 className="text-lg font-semibold text-gray-800 mb-4">ユーザー設定</h4>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="username" className="text-sm font-medium text-gray-700">
+                  ユーザー名
+                </Label>
+                <Input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500"
+                  data-testid="input-username"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                  メールアドレス
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500"
+                  data-testid="input-email"
+                />
+              </div>
+
+              <Button 
+                onClick={handleSaveUserSettings}
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0 shadow-md"
+                data-testid="button-save-user-settings"
+              >
+                設定を保存
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Quiz Settings */}
+        <Card className="bg-white border border-gray-200 shadow-md">
+          <CardContent className="p-6">
+            <h4 className="text-lg font-semibold text-gray-800 mb-4">クイズ設定</h4>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm font-medium text-gray-700">デフォルト難易度</Label>
+                <Select value={defaultDifficulty} onValueChange={setDefaultDifficulty}>
+                  <SelectTrigger className="bg-gray-50 border-gray-300 text-gray-800" data-testid="select-default-difficulty">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-gray-200">
+                    <SelectItem value="beginner" className="text-gray-800 hover:bg-gray-100">初級</SelectItem>
+                    <SelectItem value="intermediate" className="text-gray-800 hover:bg-gray-100">中級</SelectItem>
+                    <SelectItem value="advanced" className="text-gray-800 hover:bg-gray-100">上級</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="time-limit" className="text-sm font-medium text-gray-700">
+                  1問あたりの制限時間（秒）
+                </Label>
+                <Input
+                  id="time-limit"
+                  type="number"
+                  value={timeLimit}
+                  onChange={(e) => setTimeLimit(e.target.value)}
+                  min="30"
+                  max="120"
+                  className="bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500"
+                  data-testid="input-time-limit"
+                />
+              </div>
+
+              <div>
+                <Label className="text-sm font-medium text-gray-700">問題数</Label>
+                <Select value={questionCount} onValueChange={setQuestionCount}>
+                  <SelectTrigger className="bg-gray-50 border-gray-300 text-gray-800" data-testid="select-question-count">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-gray-200">
+                    <SelectItem value="5" className="text-gray-800 hover:bg-gray-100">5問</SelectItem>
+                    <SelectItem value="10" className="text-gray-800 hover:bg-gray-100">10問</SelectItem>
+                    <SelectItem value="15" className="text-gray-800 hover:bg-gray-100">15問</SelectItem>
+                    <SelectItem value="20" className="text-gray-800 hover:bg-gray-100">20問</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <Checkbox
+                  id="auto-next"
+                  checked={autoNext}
+                  onCheckedChange={(checked) => setAutoNext(checked as boolean)}
+                  className="border-gray-300 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                  data-testid="checkbox-auto-next"
+                />
+                <Label htmlFor="auto-next" className="text-sm text-gray-700">
+                  回答後自動で次の問題に進む
+                </Label>
+              </div>
+
+              <Button 
+                onClick={handleSaveQuizSettings}
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white border-0 shadow-md"
+                data-testid="button-save-quiz-settings"
+              >
+                設定を保存
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Data Management */}
+      <Card className="mt-8 bg-white border border-gray-200 shadow-md">
+        <CardContent className="p-6">
+          <h4 className="text-lg font-semibold text-gray-800 mb-4">データ管理</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Button
+              variant="outline"
+              onClick={handleExportData}
+              className="flex items-center justify-center space-x-2 bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100 hover:border-gray-400"
+              data-testid="button-export-data"
+            >
+              <i className="fas fa-download"></i>
+              <span>データをエクスポート</span>
+            </Button>
+            
+            <Button
+              variant="outline" 
+              onClick={handleImportData}
+              className="flex items-center justify-center space-x-2 bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100 hover:border-gray-400"
+              data-testid="button-import-data"
+            >
+              <i className="fas fa-upload"></i>
+              <span>データをインポート</span>
+            </Button>
+            
+            <Button
+              variant="outline"
+              onClick={handleClearData}
+              className="flex items-center justify-center space-x-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0 shadow-md"
+              data-testid="button-clear-data"
+            >
+              <i className="fas fa-trash"></i>
+              <span>全データを削除</span>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </section>
+  );
+}
