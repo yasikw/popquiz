@@ -1,17 +1,30 @@
 import { GoogleGenAI } from "@google/genai";
 import { type GeneratedQuiz } from "@shared/schema";
+import crypto from "crypto";
 
 // Initialize with timeout and retry options
 const ai = new GoogleGenAI({ 
   apiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || "",
   fetchOptions: {
-    timeout: 60000, // 60 second timeout
+    timeout: 45000, // Reduced to 45 second timeout
   }
 });
+
+// Cache for extracted text to avoid re-processing
+const textCache = new Map<string, string>();
 
 export async function extractTextFromPDF(pdfBuffer: Buffer): Promise<string> {
   try {
     console.log('PDF extraction started, buffer size:', pdfBuffer.length);
+    
+    // Create cache key from buffer hash
+    const cacheKey = crypto.createHash('md5').update(pdfBuffer).digest('hex');
+    
+    // Check cache first
+    if (textCache.has(cacheKey)) {
+      console.log('Using cached PDF text extraction');
+      return textCache.get(cacheKey)!;
+    }
     
     // Check if API key is available
     if (!process.env.GEMINI_API_KEY && !process.env.GOOGLE_API_KEY) {
@@ -19,7 +32,7 @@ export async function extractTextFromPDF(pdfBuffer: Buffer): Promise<string> {
     }
 
     // Check file size (Gemini has limits on file size)
-    const maxSize = 20 * 1024 * 1024; // 20MB limit
+    const maxSize = 15 * 1024 * 1024; // Reduced to 15MB limit for faster processing
     if (pdfBuffer.length > maxSize) {
       throw new Error(`PDFファイルが大きすぎます。${Math.round(maxSize/1024/1024)}MB以下のファイルを選択してください。`);
     }
@@ -39,10 +52,18 @@ export async function extractTextFromPDF(pdfBuffer: Buffer): Promise<string> {
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: contents,
+      config: {
+        temperature: 0.1, // Lower temperature for more consistent extraction
+      }
     });
 
     console.log('PDF text extraction completed successfully');
-    return response.text || "";
+    const extractedText = response.text || "";
+    
+    // Cache the result
+    textCache.set(cacheKey, extractedText);
+    
+    return extractedText;
   } catch (error) {
     console.error('PDF extraction error details:', error);
     
@@ -82,9 +103,12 @@ export async function generateQuizFromText(
       advanced: "分析的思考や専門知識が必要な上級レベル"
     };
 
+    // Use longer text for better questions but limit for API efficiency
+    const textLimit = text.length > 4000 ? 4000 : text.length;
+    
     const prompt = `以下のテキストから${difficultyPrompts[difficulty as keyof typeof difficultyPrompts]}の4択クイズを${questionCount}問作成してください。
 
-テキスト: ${text.substring(0, 2000)}
+テキスト: ${text.substring(0, textLimit)}
 
 JSON形式で回答してください。correctAnswerは0-3の数字です。`;
 
@@ -92,6 +116,7 @@ JSON形式で回答してください。correctAnswerは0-3の数字です。`;
       model: "gemini-2.5-flash",
       config: {
         responseMimeType: "application/json",
+        temperature: 0.7, // Add some variation for different quizzes
         responseSchema: {
           type: "object",
           properties: {

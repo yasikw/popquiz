@@ -34,6 +34,27 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
     onRetryQuiz();
   };
 
+  // Handle different quiz with same content
+  const handleDifferentQuiz = async () => {
+    console.log('Different quiz button clicked - generating new questions from same content');
+    
+    // Check if we have the last content type and data
+    const lastContentType = localStorage.getItem('lastContentType');
+    const savedPdfFile = localStorage.getItem('lastPdfFile');
+    
+    if (!lastContentType) {
+      alert('前回のコンテンツタイプが見つかりません');
+      return;
+    }
+
+    // Clear previous results
+    localStorage.removeItem('quizResults');
+    
+    // For now, redirect to retry which will generate different questions
+    // due to AI's natural variation
+    onRetryQuiz();
+  };
+
   // Fallback if no results found
   const results = quizResults || {
     score: 0,
@@ -171,7 +192,7 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-4 justify-center">
+          <div className="flex flex-wrap gap-3 justify-center">
             <Button 
               onClick={handleRetryQuiz}
               className="bg-blue-600 hover:bg-blue-700 text-white"
@@ -179,6 +200,14 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
             >
               <span className="mr-2">🔄</span>
               もう一度挑戦
+            </Button>
+            <Button 
+              onClick={handleDifferentQuiz}
+              className="bg-purple-600 hover:bg-purple-700 text-white"
+              data-testid="button-different-quiz"
+            >
+              <span className="mr-2">🎲</span>
+              別のクイズを出題
             </Button>
             <Button 
               variant="outline"
