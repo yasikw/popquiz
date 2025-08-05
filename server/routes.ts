@@ -94,7 +94,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(400).json({ message: "PDFファイルが必要です" });
         }
         title = "PDFクイズ";
-        extractedText = await extractTextFromPDF(req.file.buffer);
+        // Create PDF info for caching
+        const pdfFileInfo = {
+          name: req.file.originalname,
+          size: req.file.size,
+          type: req.file.mimetype
+        };
+        extractedText = await extractTextFromPDF(req.file.buffer, pdfFileInfo);
       } else if (contentType === 'text') {
         if (!textContent) {
           return res.status(400).json({ message: "テキスト内容が必要です" });
@@ -135,8 +141,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const { difficulty = "intermediate", title = "PDFクイズ", questionCount = "5" } = req.body;
       
+      // Create PDF info for caching
+      const pdfFileInfo = {
+        name: req.file.originalname,
+        size: req.file.size,
+        type: req.file.mimetype
+      };
+      
       // Extract text from PDF using Gemini Vision
-      const extractedText = await extractTextFromPDF(req.file.buffer);
+      const extractedText = await extractTextFromPDF(req.file.buffer, pdfFileInfo);
       
       if (!extractedText.trim()) {
         return res.status(400).json({ message: "PDFからテキストを抽出できませんでした" });

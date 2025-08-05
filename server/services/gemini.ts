@@ -15,12 +15,19 @@ function generateCacheKey(pdfInfo: any): string {
   return crypto.createHash('md5').update(`${pdfInfo.name}-${pdfInfo.size}-${pdfInfo.type}`).digest('hex');
 }
 
-export async function extractTextFromPDF(pdfBuffer: Buffer): Promise<string> {
+export async function extractTextFromPDF(pdfBuffer: Buffer, pdfInfo?: any): Promise<string> {
   try {
     console.log('PDF extraction started, buffer size:', pdfBuffer.length);
     
-    // Create cache key from buffer hash
-    const cacheKey = crypto.createHash('md5').update(pdfBuffer).digest('hex');
+    // Create cache key - use PDF info if available, otherwise buffer hash
+    let cacheKey: string;
+    if (pdfInfo) {
+      cacheKey = generateCacheKey(pdfInfo);
+      console.log('Using PDF info cache key:', cacheKey);
+    } else {
+      cacheKey = crypto.createHash('md5').update(pdfBuffer).digest('hex');
+      console.log('Using buffer hash cache key:', cacheKey);
+    }
     
     // Check cache first
     if (textCache.has(cacheKey)) {
