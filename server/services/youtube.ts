@@ -16,67 +16,40 @@ export async function extractYouTubeSubtitles(url: string): Promise<string> {
     let transcript = null;
     let combinedText = '';
 
-    // Method 1: Try Japanese transcript
+    // Try to get available transcript languages first
     try {
-      console.log('Trying Japanese transcript...');
-      transcript = await YoutubeTranscript.fetchTranscript(videoId, { lang: 'ja' });
+      console.log('Attempting to get any available transcript...');
+      transcript = await YoutubeTranscript.fetchTranscript(videoId);
       if (transcript && transcript.length > 0) {
         combinedText = transcript.map(item => item.text).join(' ');
-        console.log('Japanese transcript found, length:', combinedText.length);
+        console.log('Default transcript found, length:', combinedText.length);
       }
     } catch (error) {
-      console.log('Japanese transcript failed:', error);
-    }
-
-    // Method 2: Try English transcript if Japanese failed
-    if (!combinedText) {
-      try {
-        console.log('Trying English transcript...');
-        transcript = await YoutubeTranscript.fetchTranscript(videoId, { lang: 'en' });
-        if (transcript && transcript.length > 0) {
-          combinedText = transcript.map(item => item.text).join(' ');
-          console.log('English transcript found, length:', combinedText.length);
-        }
-      } catch (error) {
-        console.log('English transcript failed:', error);
-      }
-    }
-
-    // Method 3: Try auto-generated transcript (any language)
-    if (!combinedText) {
-      try {
-        console.log('Trying auto-generated transcript...');
-        transcript = await YoutubeTranscript.fetchTranscript(videoId);
-        if (transcript && transcript.length > 0) {
-          combinedText = transcript.map(item => item.text).join(' ');
-          console.log('Auto-generated transcript found, length:', combinedText.length);
-        }
-      } catch (error) {
-        console.log('Auto-generated transcript failed:', error);
-      }
-    }
-
-    // Method 4: Try other available languages
-    if (!combinedText) {
-      const commonLanguages = ['ko', 'zh', 'de', 'fr', 'es', 'it', 'pt', 'ru', 'ar'];
-      for (const lang of commonLanguages) {
+      console.log('Default transcript failed, trying specific languages...', error);
+      
+      // If default fails, try specific languages from the error message
+      const availableLanguages = ['ja', 'en', 'ar', 'de', 'ru', 'fr', 'ko', 'pt', 'th', 'es', 'it', 'hi', 'id', 'vi', 'zh-Hant'];
+      
+      for (const lang of availableLanguages) {
+        if (combinedText) break; // Stop if we found one
+        
         try {
-          console.log(`Trying ${lang} transcript...`);
+          console.log(`Trying specific language: ${lang}`);
           transcript = await YoutubeTranscript.fetchTranscript(videoId, { lang });
           if (transcript && transcript.length > 0) {
             combinedText = transcript.map(item => item.text).join(' ');
-            console.log(`${lang} transcript found, length:`, combinedText.length);
+            console.log(`Successfully got ${lang} transcript, length:`, combinedText.length);
             break;
           }
-        } catch (error) {
-          console.log(`${lang} transcript failed:`, error);
+        } catch (langError) {
+          console.log(`Language ${lang} failed:`, langError.message);
         }
       }
     }
 
     // Check if we got any transcript
     if (!combinedText || combinedText.trim().length === 0) {
-      throw new Error("この動画には利用可能な字幕がありません。字幕付きの動画をお試しください。");
+      throw new Error("この動画の字幕を取得できませんでした。他の動画をお試しいただくか、PDFやテキストファイルをご利用ください。");
     }
 
     // Validate transcript length
