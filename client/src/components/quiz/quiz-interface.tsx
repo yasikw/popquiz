@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import CircularProgress from "@/components/ui/circular-progress";
 import { type GeneratedQuiz } from "@shared/schema";
+import { submitQuizResults } from "@/lib/api";
 
 interface QuizInterfaceProps {
   quiz: GeneratedQuiz;
@@ -126,7 +127,7 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     handleQuizCompleteWithData(userAnswers, questionTimes);
   };
 
-  const handleQuizCompleteWithData = (finalAnswers: (number | null)[], currentTimes: number[]) => {
+  const handleQuizCompleteWithData = async (finalAnswers: (number | null)[], currentTimes: number[]) => {
     // Record final question time
     const finalTimeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
     const finalTimes = [...currentTimes];
@@ -171,8 +172,23 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     console.log("Final quiz results:", quizResults);
     console.log("=== End Quiz Completion Debug ===");
     
-    // Store results in localStorage or pass to parent
+    // Store results in localStorage for immediate display
     localStorage.setItem('quizResults', JSON.stringify(quizResults));
+    
+    // Save to database if user is logged in
+    if (userId && userId !== "anonymous") {
+      try {
+        // Add content type based on current context
+        const quizWithContentType = {
+          ...quiz,
+          contentType: localStorage.getItem('lastContentType') || 'text'
+        };
+        await submitQuizResults(userId, quizWithContentType, quizResults);
+        console.log("Quiz results saved to database");
+      } catch (error) {
+        console.warn("Error saving quiz results:", error);
+      }
+    }
     
     onQuizCompleted();
   };

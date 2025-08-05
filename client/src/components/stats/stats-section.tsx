@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { getUserStats, getUserSessions } from "@/lib/api";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface StatsSectionProps {
   userId?: string;
@@ -19,51 +20,77 @@ export default function StatsSection({ userId }: StatsSectionProps) {
     enabled: !!userId,
   });
 
-  // Mock data for demonstration
-  const mockStats = {
-    totalScore: 850,
-    completedQuizzes: 12,
-    averageAccuracy: 78,
-    beginnerAccuracy: 85,
-    intermediateAccuracy: 72,
-    advancedAccuracy: 65,
+  // Calculate real statistics from sessions
+  const calculateStats = (sessions: any[]) => {
+    if (!sessions || sessions.length === 0) {
+      return {
+        totalScore: 0,
+        completedQuizzes: 0,
+        averageAccuracy: 0,
+        beginnerAccuracy: 0,
+        intermediateAccuracy: 0,
+        advancedAccuracy: 0,
+      };
+    }
+
+    const totalScore = sessions.reduce((sum, session) => sum + session.score, 0);
+    const completedQuizzes = sessions.length;
+    
+    const difficultyGroups = {
+      beginner: sessions.filter(s => s.difficulty === 'beginner'),
+      intermediate: sessions.filter(s => s.difficulty === 'intermediate'),
+      advanced: sessions.filter(s => s.difficulty === 'advanced'),
+    };
+
+    const calculateAccuracy = (sessionsGroup: any[]) => {
+      if (sessionsGroup.length === 0) return 0;
+      const totalAccuracy = sessionsGroup.reduce((sum, session) => 
+        sum + (session.score / session.totalQuestions * 100), 0);
+      return Math.round(totalAccuracy / sessionsGroup.length);
+    };
+
+    const beginnerAccuracy = calculateAccuracy(difficultyGroups.beginner);
+    const intermediateAccuracy = calculateAccuracy(difficultyGroups.intermediate);
+    const advancedAccuracy = calculateAccuracy(difficultyGroups.advanced);
+    
+    const overallAccuracy = sessions.reduce((sum, session) => 
+      sum + (session.score / session.totalQuestions * 100), 0) / sessions.length;
+
+    return {
+      totalScore,
+      completedQuizzes,
+      averageAccuracy: Math.round(overallAccuracy),
+      beginnerAccuracy,
+      intermediateAccuracy,
+      advancedAccuracy,
+    };
   };
 
-  const mockSessions = [
-    {
-      id: "1",
-      title: "JavaScript基礎.pdf",
-      difficulty: "intermediate",
-      score: 8,
-      totalQuestions: 10,
-      timeSpent: 272, // in seconds
-      completedAt: new Date("2024-01-15T14:30:00"),
-      contentType: "pdf"
-    },
-    {
-      id: "2", 
-      title: "React入門動画",
-      difficulty: "beginner",
-      score: 9,
-      totalQuestions: 10,
-      timeSpent: 195,
-      completedAt: new Date("2024-01-14T16:45:00"),
-      contentType: "youtube"
-    },
-    {
-      id: "3",
-      title: "設計パターン.txt", 
-      difficulty: "advanced",
-      score: 6,
-      totalQuestions: 10,
-      timeSpent: 400,
-      completedAt: new Date("2024-01-13T10:20:00"),
-      contentType: "text"
-    }
-  ];
+  // Prepare chart data
+  const prepareChartData = (sessions: any[]) => {
+    if (!sessions || sessions.length === 0) return [];
+    
+    return sessions
+      .slice(-10) // Last 10 sessions
+      .map((session, index) => ({
+        session: `#${index + 1}`,
+        accuracy: Math.round((session.score / session.totalQuestions) * 100),
+        score: session.score,
+        date: new Date(session.completedAt).toLocaleDateString('ja-JP'),
+      }));
+  };
 
-  const displayStats = stats || mockStats;
-  const displaySessions = sessions || mockSessions;
+  const displayStats = sessions ? calculateStats(sessions) : stats || {
+    totalScore: 0,
+    completedQuizzes: 0,
+    averageAccuracy: 0,
+    beginnerAccuracy: 0,
+    intermediateAccuracy: 0,
+    advancedAccuracy: 0,
+  };
+  
+  const displaySessions = sessions || [];
+  const chartData = prepareChartData(displaySessions);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -94,16 +121,56 @@ export default function StatsSection({ userId }: StatsSectionProps) {
       <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">学習統計</h3>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Performance Chart Placeholder */}
+        {/* Performance Chart */}
         <Card className="bg-white border border-gray-200 shadow-md">
           <CardContent className="p-6">
             <h4 className="text-lg font-semibold text-gray-800 mb-4">成績の推移</h4>
-            <div className="h-64 bg-gray-50 rounded-xl flex items-center justify-center">
-              <div className="text-center text-gray-500">
-                <i className="fas fa-chart-line text-4xl mb-2"></i>
-                <p>成績推移チャート</p>
-                <p className="text-sm">(Chart.js実装予定)</p>
-              </div>
+            <div className="h-64">
+              {chartData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis 
+                      dataKey="session" 
+                      stroke="#6b7280"
+                      fontSize={12}
+                    />
+                    <YAxis 
+                      domain={[0, 100]}
+                      stroke="#6b7280"
+                      fontSize={12}
+                    />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: '#f9fafb',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px'
+                      }}
+                      labelFormatter={(label) => `セッション ${label}`}
+                      formatter={(value: any, name: string) => [
+                        name === 'accuracy' ? `${value}%` : value,
+                        name === 'accuracy' ? '正答率' : 'スコア'
+                      ]}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="accuracy" 
+                      stroke="#3b82f6" 
+                      strokeWidth={3}
+                      dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
+                      activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 2 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full bg-gray-50 rounded-xl flex items-center justify-center">
+                  <div className="text-center text-gray-500">
+                    <i className="fas fa-chart-line text-4xl mb-2"></i>
+                    <p>クイズを完了すると</p>
+                    <p className="text-sm">成績の推移が表示されます</p>
+                  </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -188,30 +255,42 @@ export default function StatsSection({ userId }: StatsSectionProps) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {displaySessions.map((session) => (
-                  <tr key={session.id} className="hover:bg-gray-50 text-gray-800">
-                    <td className="py-3" data-testid={`session-date-${session.id}`}>
-                      {session.completedAt.toLocaleDateString('ja-JP')} {session.completedAt.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
-                    </td>
-                    <td className="py-3" data-testid={`session-title-${session.id}`}>
-                      {session.title}
-                    </td>
-                    <td className="py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs ${getDifficultyColor(session.difficulty)}`}>
-                        {getDifficultyLabel(session.difficulty)}
-                      </span>
-                    </td>
-                    <td className="py-3" data-testid={`session-accuracy-${session.id}`}>
-                      {Math.round((session.score / session.totalQuestions) * 100)}%
-                    </td>
-                    <td className="py-3" data-testid={`session-time-${session.id}`}>
-                      {formatTime(session.timeSpent)}
-                    </td>
-                    <td className="py-3 font-medium text-blue-600" data-testid={`session-score-${session.id}`}>
-                      {Math.round((session.score / session.totalQuestions) * 100)}
+                {displaySessions.length > 0 ? (
+                  displaySessions.slice(0, 10).map((session) => (
+                    <tr key={session.id} className="hover:bg-gray-50 text-gray-800">
+                      <td className="py-3" data-testid={`session-date-${session.id}`}>
+                        {new Date(session.completedAt).toLocaleDateString('ja-JP')} {new Date(session.completedAt).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
+                      </td>
+                      <td className="py-3" data-testid={`session-title-${session.id}`}>
+                        {session.title}
+                      </td>
+                      <td className="py-3">
+                        <span className={`px-2 py-1 rounded-full text-xs ${getDifficultyColor(session.difficulty)}`}>
+                          {getDifficultyLabel(session.difficulty)}
+                        </span>
+                      </td>
+                      <td className="py-3" data-testid={`session-accuracy-${session.id}`}>
+                        {Math.round((session.score / session.totalQuestions) * 100)}%
+                      </td>
+                      <td className="py-3" data-testid={`session-time-${session.id}`}>
+                        {formatTime(session.timeSpent)}
+                      </td>
+                      <td className="py-3 font-medium text-blue-600" data-testid={`session-score-${session.id}`}>
+                        {session.score}/{session.totalQuestions}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="py-8 text-center text-gray-500">
+                      <div className="flex flex-col items-center">
+                        <i className="fas fa-history text-2xl mb-2"></i>
+                        <p>まだクイズを完了していません</p>
+                        <p className="text-sm">ホーム画面でクイズを開始してください</p>
+                      </div>
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

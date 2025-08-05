@@ -119,3 +119,13 @@ export async function updateUserStats(userId: string, stats: Partial<UserStats>)
   const response = await apiRequest("PUT", `/api/users/${userId}/stats`, stats);
   return response.json() as Promise<UserStats>;
 }
+
+// Submit quiz results
+export async function submitQuizResults(userId: string, quizData: any, results: any) {
+  const response = await apiRequest("POST", "/api/quiz-results", {
+    userId,
+    quizData,
+    results,
+  });
+  return response.json();
+}

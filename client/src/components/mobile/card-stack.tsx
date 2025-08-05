@@ -150,6 +150,8 @@ export default function CardStack({
 
       const quiz = await response.json();
       console.log('Quiz generated successfully:', quiz);
+      // Store content type for later use in quiz results
+      localStorage.setItem('lastContentType', currentType.id);
       onQuizGenerated(quiz);
     } catch (error) {
       console.error('Quiz generation error:', error);

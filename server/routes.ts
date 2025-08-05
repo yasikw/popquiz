@@ -255,6 +255,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Quiz session endpoints
+  app.post("/api/quiz-sessions", async (req, res) => {
+    try {
+      const sessionData = insertQuizSessionSchema.parse(req.body);
+      const session = await storage.createQuizSession(sessionData);
+      res.json(session);
+    } catch (error) {
+      res.status(400).json({ message: "クイズセッション作成に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.post("/api/quiz-sessions/:sessionId/questions", async (req, res) => {
+    try {
+      const questions = req.body.map((q: any) => insertQuestionSchema.parse({
+        ...q,
+        sessionId: req.params.sessionId
+      }));
+      const createdQuestions = await storage.createQuestions(questions);
+      res.json(createdQuestions);
+    } catch (error) {
+      res.status(400).json({ message: "質問作成に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.get("/api/users/:userId/sessions", async (req, res) => {
+    try {
+      const sessions = await storage.getUserQuizSessions(req.params.userId);
+      res.json(sessions);
+    } catch (error) {
+      res.status(500).json({ message: "セッション取得に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.get("/api/users/:userId/stats", async (req, res) => {
+    try {
+      const stats = await storage.getUserStats(req.params.userId);
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ message: "統計取得に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  // Submit quiz results
+  app.post("/api/quiz-results", async (req, res) => {
+    try {
+      const { userId, quizData, results } = req.body;
+      
+      // Create quiz session
+      const sessionData = {
+        userId,
+        title: quizData.title,
+        difficulty: quizData.difficulty,
+        contentType: quizData.contentType || "text",
+        score: results.score,
+        totalQuestions: results.totalQuestions,
+        timeSpent: results.totalTimeSpent,
+      };
+      
+      const session = await storage.createQuizSession(sessionData);
+      
+      // Create questions with user answers
+      const questionsData = results.detailedResults.map((result: any) => ({
+        sessionId: session.id,
+        questionText: result.question,
+        options: quizData.questions.find((q: any) => q.question === result.question)?.options || [],
+        correctAnswer: result.correctAnswer,
+        explanation: result.explanation,
+        userAnswer: result.userAnswer,
+        timeSpent: result.timeSpent,
+      }));
+      
+      await storage.createQuestions(questionsData);
+      
+      res.json({ sessionId: session.id, message: "結果を保存しました" });
+    } catch (error) {
+      res.status(400).json({ message: "結果保存に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

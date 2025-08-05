@@ -12,6 +12,7 @@ export interface IStorage {
   createQuizSession(session: InsertQuizSession): Promise<QuizSession>;
   getQuizSession(id: string): Promise<QuizSession | undefined>;
   getUserQuizSessions(userId: string): Promise<QuizSession[]>;
+  getUserSessions(userId: string): Promise<QuizSession[]>;
 
   // Question operations
   createQuestions(questions: InsertQuestion[]): Promise<Question[]>;
@@ -101,6 +102,10 @@ export class MemStorage implements IStorage {
     return Array.from(this.quizSessions.values())
       .filter(session => session.userId === userId)
       .sort((a, b) => b.completedAt.getTime() - a.completedAt.getTime());
+  }
+
+  async getUserSessions(userId: string): Promise<QuizSession[]> {
+    return this.getUserQuizSessions(userId);
   }
 
   async createQuestions(insertQuestions: InsertQuestion[]): Promise<Question[]> {
