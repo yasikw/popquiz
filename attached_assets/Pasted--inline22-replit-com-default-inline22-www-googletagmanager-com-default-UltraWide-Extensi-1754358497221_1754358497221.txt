@@ -1,0 +1,1194 @@
+ ## inline22 : replit.com default
+ ## inline22 : www.googletagmanager.com default
+ UltraWide Extension Loaded!
+ ## inline22 : td.doubleclick.net default
+ UltraWide Extension Loaded!
+_app-b6b5f109f17183de.js:13 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+_app-b6b5f109f17183de.js:13 [LaunchDarkly] LaunchDarkly client initialized
+ ## inline22 : js.stripe.com default
+ UltraWide Extension Loaded!
+subtitle.js:3928 env Object
+subtitle.js:4010 local lang ja
+subtitle.js:7642 auth:init isAuth undefined
+subtitle.js:7741 Getted userconfig from local Object
+subtitle.js:7741 Getted userconfig from local Object
+UltraWide.bundle.js:1 UltraWide Extension Loaded!
+LaiVchatbot:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+subtitle.js:4013 ## useLocalInfo Object uuid
+subtitle.js:4013 ## 2useLocalInfo Object
+content.js:1 Uncaught (in promise) The message port closed before a response was received.
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+ ## inline22 : js.stripe.com default
+ ## inline22 : m.stripe.network default
+UltraWide.bundle.js:1 UltraWide Extension Loaded!
+UltraWide.bundle.js:1 UltraWide Extension Loaded!
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+framework-9bfc368571c1b99b.js:1 Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Unrecognized feature: 'battery'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Unrecognized feature: 'layout-animations'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Unrecognized feature: 'navigation-override'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Unrecognized feature: 'oversized-images'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Unrecognized feature: 'publickey-credentials'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Unrecognized feature: 'speaker-selection'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Unrecognized feature: 'unoptimized-images'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Unrecognized feature: 'unsized-media'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Unrecognized feature: 'pointer-lock'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-9bfc368571c1b99b.js:1
+framework-9bfc368571c1b99b.js:1 Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-9bfc368571c1b99b.js:1
+subtitle.js:7741 Getted userconfig from local Object
+ ## inline22 : td.doubleclick.net default
+ UltraWide Extension Loaded!
+/t/maiss:1 Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users. Avoid using aria-hidden on a focused element or its ancestor. Consider using the inert attribute instead, which will also prevent focus. For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+Element with focus: <div.cm-content cm-lineWrapping>
+Ancestor with aria-hidden: <div. useView_view__C2mnv css-17qdd0f Surface_surfaceRoot__TeA2u> null
+subtitle.js:7741 Getted userconfig from local Object
+ ## inline22 : td.doubleclick.net default
+ UltraWide Extension Loaded!
+api-edge.cognitive.microsofttranslator.com/translate?api-version=3.0&includeSentenceLength=true&from=&to=en&:1  Failed to load resource: the server responded with a status of 401 ()
+DocuQuery:1 Access to fetch at 'https://sp.replit.com/v1/m' from origin 'https://replit.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+sp.replit.com/v1/m:1  Failed to load resource: net::ERR_FAILED
+_app-b6b5f109f17183de.js:13 Error sending segment performance metrics TypeError: Failed to fetch
+    at _app-b6b5f109f17183de.js:13:9046
+    at _app-b6b5f109f17183de.js:1:131016
+    at o (_app-b6b5f109f17183de.js:20:43777)
+    at o (sdk.min.js:1:23763)
+    at t.<anonymous> (remote-metrics.ts:138:12)
+    at tslib.es6.js:103:23
+    at Object.next (tslib.es6.js:108:37)
+    at tslib.es6.js:80:8
+    at new Promise (<anonymous>)
+    at u (tslib.es6.js:72:27)
+    at t.send (sdk.min.js:1:22021)
+    at t.<anonymous> (remote-metrics.ts:125:16)
+    at tslib.es6.js:103:23
+    at Object.next (tslib.es6.js:108:37)
+    at tslib.es6.js:80:8
+    at new Promise (<anonymous>)
+    at u (tslib.es6.js:72:27)
+    at t.flush (sdk.min.js:1:21754)
+    at l (remote-metrics.ts:83:14)
+    at n (_app-b6b5f109f17183de.js:13:2959)
+（匿名） @ _app-b6b5f109f17183de.js:13
+api-edge.cognitive.microsofttranslator.com/translate?api-version=3.0&includeSentenceLength=true&from=&to=en&:1  Failed to load resource: the server responded with a status of 401 ()
+api-edge.cognitive.microsofttranslator.com/translate?api-version=3.0&includeSentenceLength=true&from=&to=en&:1  Failed to load resource: the server responded with a status of 401 ()
+content.js:1 Uncaught (in promise) The message port closed before a response was received.
+api-edge.cognitive.microsofttranslator.com/translate?api-version=3.0&includeSentenceLength=true&from=&to=en&:1  Failed to load resource: the server responded with a status of 401 ()
+content.js:1 Uncaught (in promise) The message port closed before a response was received.
+api-edge.cognitive.microsofttranslator.com/translate?api-version=3.0&includeSentenceLength=true&from=&to=en&:1  Failed to load resource: the server responded with a status of 401 ()
+api-edge.cognitive.microsofttranslator.com/translate?api-version=3.0&includeSentenceLength=true&from=&to=en&:1  Failed to load resource: the server responded with a status of 401 ()
+subtitle.js:7741 Getted userconfig from local Object
+chrome-extension://ponokiofkijoolhebggofhhibnafebna/js/rtcinjector.js:705 ## inline22 : bf4326cb-fa10-4d74-9417-5b054799971a-00-13syu5bhwn6m5.riker.replit.dev default
+workspace_iframe.html:32 Unrecognized feature: 'ambient-light-sensor'.
+workspace_iframe.html:32 Unrecognized feature: 'battery'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-not-rendered'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-out-of-viewport'.
+workspace_iframe.html:32 Unrecognized feature: 'layout-animations'.
+workspace_iframe.html:32 Unrecognized feature: 'legacy-image-formats'.
+workspace_iframe.html:32 Unrecognized feature: 'navigation-override'.
+workspace_iframe.html:32 Unrecognized feature: 'oversized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'publickey-credentials'.
+workspace_iframe.html:32 Unrecognized feature: 'speaker-selection'.
+workspace_iframe.html:32 Unrecognized feature: 'unoptimized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+chrome-extension://ponokiofkijoolhebggofhhibnafebna/js/rtcinjector.js:705 ## inline22 : bf4326cb-fa10-4d74-9417-5b054799971a-00-13syu5bhwn6m5.riker.replit.dev default
+chrome-extension://lngfncacljheahfpahadgipefkbagpdl/UltraWide.bundle.js:1 UltraWide Extension Loaded!
+chrome-extension://lngfncacljheahfpahadgipefkbagpdl/UltraWide.bundle.js:1 UltraWide Extension Loaded!
+eruda.js:2 Raw saved settings: {"defaultDifficulty":"intermediate","timeLimit":60,"questionCount":10,"autoNext":true}
+eruda.js:2 Quiz generation started: Object
+eruda.js:2 Parsed question count: 10
+eruda.js:2 Text content added, length: 9
+eruda.js:2 Sending request to /api/generate-quiz
+eruda.js:2 Response status: 200
+eruda.js:2 Quiz generated successfully: Object
+eruda.js:2 Quiz completed with results: Object
+eruda.js:2 Storing results in localStorage...
+eruda.js:2 Calling onQuizCompleted callback...
+eruda.js:2 handleQuizCompleted called, switching to results section
+eruda.js:2 ResultsSection: Retrieved stored results: {"score":8,"totalQuestions":10,"percentage":80,"totalTimeSpent":51,"detailedResults":[{"question":"ドラえもんの誕生日はいつでしょう？","userAnswer":0,"correctAnswer":0,"isCorrect":true,"timeSpent":9,"explanation":"ドラえもんの誕生日は2112年9月3日です。"},{"question":"ドラえもんが最も苦手とするものは何でしょう？","userAnswer":0,"correctAnswer":0,"isCorrect":true,"timeSpent":3,"explanation":"ドラえもんは耳をネズミにかじられた経験から、ネズミが大の苦手です。"},{"question":"ドラえもんがのび太の元へやってきた理由は何でしょう？","userAnswer":0,"correctAnswer":0,"isCorrect":true,"timeSpent":4,"explanation":"のび太のひ孫であるセワシが、のび太の悲惨な未来を変えるため、ドラえもんを送り込みました。"},{"question":"ドラえもんのひみつ道具「どこでもドア」で、どこでもドアを開けてから行きたい場所を心に思い浮かべる必要がありますが、他にも使用条件があります。それは何でしょう？","userAnswer":0,"correctAnswer":2,"isCorrect":false,"timeSpent":15,"explanation":"どこでもドアは、開けた場所から約10万キロメートル以内（地球を半周できる程度）の場所にしか移動できません。"},{"question":"ドラえもんの体が青いのはなぜでしょう？","userAnswer":1,"correctAnswer":1,"isCorrect":true,"timeSpent":4,"explanation":"元々は黄色のボディでしたが、耳をネズミにかじられてしまい、そのショックで泣き続けた結果、メッキが剥がれて青い色になりました。"},{"question":"のび太の未来のお嫁さんは誰でしょう？","userAnswer":0,"correctAnswer":0,"isCorrect":true,"timeSpent":3,"explanation":"のび太は最終的に源静香と結婚します。"},{"question":"「タイムマシン」は主に何のために使われますか？","userAnswer":0,"correctAnswer":0,"isCorrect":true,"timeSpent":7,"explanation":"タイムマシンは、過去や未来へ移動するためのひみつ道具です。"},{"question":"ドラえもんの妹の名前は何でしょう？","userAnswer":null,"correctAnswer":0,"isCorrect":false,"timeSpent":0,"explanation":"ドラえもんの妹はドラミちゃんです。"},{"question":"のび太が最も苦手とすることは何でしょう？","userAnswer":0,"correctAnswer":0,"isCorrect":true,"timeSpent":3,"explanation":"のび太は勉強も運動も苦手で、よくテストで0点を取ったり、ジャイアンにいじめられたりします。"},{"question":"ドラえもんの動力源は何でしょう？","userAnswer":0,"correctAnswer":0,"isCorrect":true,"timeSpent":3,"explanation":"ドラえもんは原子力で動くロボットとされています。"}]}
+eruda.js:2 ResultsSection: Parsed quiz results: Object
+eruda.js:2 Raw saved settings: {"defaultDifficulty":"intermediate","timeLimit":60,"questionCount":10,"autoNext":true}
+eruda.js:2 Quiz generation started: Object
+eruda.js:2 Parsed question count: 10
+eruda.js:2 Text content added, length: 9
+eruda.js:2 Sending request to /api/generate-quiz
+eruda.js:2 Response status: 200
+eruda.js:2 Quiz generated successfully: Object
+rtcinjector.js:705 ## inline22 : www.google.com default
+UltraWide.bundle.js:1 UltraWide Extension Loaded!
+eruda.js:2 Quiz completed with results: Object
+eruda.js:2 Storing results in localStorage...
+eruda.js:2 Calling onQuizCompleted callback...
+eruda.js:2 handleQuizCompleted called, switching to results section
+eruda.js:2 ResultsSection: Retrieved stored results: {"score":5,"totalQuestions":10,"percentage":50,"totalTimeSpent":102,"detailedResults":[{"question":"もしもボックスを使用する際に、その効果が永続的ではなく、特定の条件で終了する場合がありますが、それはどのような条件に該当しますか？","userAnswer":2,"correctAnswer":1,"isCorrect":false,"timeSpent":12,"explanation":"「もしもボックス」の効果は、通常は使用者が電話を切るか、自動的に24時間で終了します。質問では「永続的ではなく、特定の条件で終了する」とあるため、自動終了条件である「使用後24時間が経過した場合」が最も適切な選択肢です。"},{"question":"どこでもドアには移動距離の物理的な限界があります。一般的に、その移動可能な最大距離はどれくらいとされていますか？","userAnswer":2,"correctAnswer":1,"isCorrect":false,"timeSpent":14,"explanation":"どこでもドアは、地球上のどこへでも行ける便利な道具ですが、実は約1000キロメートルという移動距離の物理的な限界が設定されています。それ以上の距離を移動する際は、複数のドアを連結するか、他の道具と併用する必要があります。"},{"question":"ドラえもんがロボット学校を卒業した際の成績は、特にお世辞にも良いとは言えませんでしたが、彼のロボットとしての正式な型式番号は何でしょうか？","userAnswer":2,"correctAnswer":1,"isCorrect":false,"timeSpent":7,"explanation":"ドラえもんの正式な型式番号は「MS-903」です。これはロボット学校時代の設定や、一部の公式資料に記載されている情報で、彼の量産型ロボットとしての識別子です。"},{"question":"タイムふろしきは物体を過去や未来の状態に戻すことができる道具ですが、この道具が持つ「生命体」に対する特別な制約、あるいは効果の限界は何ですか？","userAnswer":2,"correctAnswer":1,"isCorrect":false,"timeSpent":16,"explanation":"タイムふろしきは生命体にも使用可能で、例えば人間を赤ん坊に戻したり、老人を若返らせたりすることができます。しかし、その効果は肉体的な変化に留まり、対象者の記憶、人格、知性といった精神的な要素は変化しないという特徴があります。"},{"question":"ジャイアンこと剛田武の家業は剛田商店ですが、彼の妹であるジャイ子には、彼が唯一頭が上がらない存在とされる家族が他にいます。それは誰ですか？","userAnswer":1,"correctAnswer":0,"isCorrect":false,"timeSpent":18,"explanation":"ジャイアンが唯一頭が上がらない存在は彼の母親です。ジャイアンは普段乱暴ですが、母親には完全に逆らえず、母親の命令には素直に従うのが常です。"},{"question":"野比のび太の子孫であるセワシが、ドラえもんをのび太の元へ送り届けた主な目的は何でしたか？","userAnswer":1,"correctAnswer":1,"isCorrect":true,"timeSpent":5,"explanation":"セワシがドラえもんをのび太の元へ送ったのは、のび太が残した莫大な借金が子孫にまで影響し、セワシの代まで貧乏が続いていたためです。ドラえもんを通じてのび太の人生をより良い方向へ導き、未来を変えることが目的でした。"},{"question":"ドラえもんが未来からやってきた当初、のび太の未来の妻はジャイ子であるとされていましたが、これはどのような理由で変更されたのでしょうか？","userAnswer":0,"correctAnswer":0,"isCorrect":true,"timeSpent":12,"explanation":"ドラえもんが未来から来た際、のび太の結婚相手はジャイ子という未来が示されていましたが、ドラえもんがのび太の教育係として介入し、のび太の性格や能力が向上した結果、しずかちゃんと結婚できる未来へと変化しました。これは、ドラえもんの最も重要な使命の一つでした。"},{"question":"ドラえもんの耳が失われたのはどのような事故が原因でしたか？","userAnswer":0,"correctAnswer":0,"isCorrect":true,"timeSpent":5,"explanation":"ドラえもんの耳は、製造途中で工場に侵入したネズミ型ロボットに噛みちぎられてしまいました。この事故が、彼がネズミを極度に嫌うようになった原因とされています。"},{"question":"ドラえもんの世界において、時間犯罪を取り締まり、歴史の改変を防ぐ役割を担っている組織の名称は何ですか？","userAnswer":1,"correctAnswer":1,"isCorrect":true,"timeSpent":6,"explanation":"ドラえもんの世界で時間犯罪を取り締まり、歴史の改変を防ぐ役割を担っているのは「タイムパトロール」です。彼らは様々なタイムマシンを駆使し、未来からの干渉や過去の改変を監視しています。"},{"question":"骨川スネ夫は裕福で自慢屋ですが、彼が特筆すべき才能としてしばしば披露する、非常に優れた技術は何ですか？","userAnswer":1,"correctAnswer":1,"isCorrect":true,"timeSpent":7,"explanation":"骨川スネ夫は、趣味として非常に精巧なプラモデルを制作する技術を持っています。彼の部屋には多くの自慢のプラモデルが飾られており、その腕前はのび太やジャイアンを感心させるほどです。"}]}
+eruda.js:2 ResultsSection: Parsed quiz results: Object
+eruda.js:2 Raw saved settings: {"defaultDifficulty":"intermediate","timeLimit":60,"questionCount":10,"autoNext":true}
+eruda.js:2 Quiz generation started: {currentType: 'pdf', selectedDifficulty: 'beginner', questionCount: 10}
+eruda.js:2 Parsed question count: 10
+eruda.js:2 PDF file added: 藤子不二雄 - Wikipedia.pdf 4274228
+eruda.js:2 Sending request to /api/generate-quiz
+eruda.js:2 Response status: 200
+eruda.js:2 Quiz generated successfully: {questions: Array(10), difficulty: 'beginner', title: 'PDFクイズ'}
+eruda.js:2 Quiz completed with results: {score: 8, totalQuestions: 10, percentage: 80, totalTimeSpent: 86, detailedResults: Array(10)}
+eruda.js:2 Storing results in localStorage...
+eruda.js:2 Calling onQuizCompleted callback...
+eruda.js:2 handleQuizCompleted called, switching to results section
+eruda.js:2 ResultsSection: Retrieved stored results: {"score":8,"totalQuestions":10,"percentage":80,"totalTimeSpent":86,"detailedResults":[{"question":"藤子不二雄とは何ですか？","userAnswer":2,"correctAnswer":2,"isCorrect":true,"timeSpent":36,"explanation":"藤子不二雄は、藤本弘と安孫子素雄の共同ペンネームです。"},{"question":"「藤子不二雄」というペンネームを使用していた二人の漫画家は誰ですか？","userAnswer":2,"correctAnswer":2,"isCorrect":true,"timeSpent":4,"explanation":"藤子不二雄は、藤本弘と安孫子素雄の共同ペンネームです。"},{"question":"藤子不二雄が1951年にプロデビューした際に最初に使用したペンネームは何でしたか？","userAnswer":1,"correctAnswer":2,"isCorrect":false,"timeSpent":3,"explanation":"1951年に本名の連名「あびこもとお・ふじもとひろし」でプロデビューしました。"},{"question":"「藤子不二雄」のペンネームが正式に使い始められたのは何年7月ですか？","userAnswer":1,"correctAnswer":1,"isCorrect":true,"timeSpent":4,"explanation":"1953年7月にペンネームを「藤子不二雄」としました。"},{"question":"藤子不二雄の共同作品で、最初にテレビアニメ化され大ブレイクした作品は何ですか？","userAnswer":2,"correctAnswer":2,"isCorrect":true,"timeSpent":3,"explanation":"1965年に合作『オバケのQ太郎』がテレビアニメ化され大ブレイクしました。"},{"question":"1988年の独立後、藤本弘が主に使用したペンネームは何ですか？","userAnswer":2,"correctAnswer":2,"isCorrect":true,"timeSpent":8,"explanation":"藤本は1989年から「藤子・F・不二雄」のペンネームで活動を続けました。"},{"question":"次の作品のうち、藤本弘（藤子・F・不二雄）の単独作品として挙げられているのはどれですか？","userAnswer":2,"correctAnswer":2,"isCorrect":true,"timeSpent":5,"explanation":"藤本単独作として『ドラえもん』が挙げられています。"},{"question":"次の作品のうち、安孫子素雄（藤子不二雄Ⓐ）の単独作品として挙げられているのはどれですか？","userAnswer":3,"correctAnswer":3,"isCorrect":true,"timeSpent":4,"explanation":"安孫子単独作として『忍者ハットリくん』が挙げられています。"},{"question":"藤本弘の自画像の特徴として記述されているのは何ですか？","userAnswer":1,"correctAnswer":1,"isCorrect":true,"timeSpent":15,"explanation":"藤本弘の自画像の特徴はベレー帽、パイプ、長身です。"},{"question":"安孫子素雄の自画像の特徴として記述されているのは何ですか？","userAnswer":0,"correctAnswer":3,"isCorrect":false,"timeSpent":4,"explanation":"安孫子素雄の自画像の特徴は眼鏡です。"}]}
+eruda.js:2 ResultsSection: Parsed quiz results: {score: 8, totalQuestions: 10, percentage: 80, totalTimeSpent: 86, detailedResults: Array(10)}
+subtitle.js:7741 Getted userconfig from local {userConfig: {…}}
+eruda.js:2 [vite] server connection lost. Polling for restart...
+rtcinjector.js:705 ## inline22 : bf4326cb-fa10-4d74-9417-5b054799971a-00-13syu5bhwn6m5.riker.replit.dev default
+workspace_iframe.html:32 Unrecognized feature: 'ambient-light-sensor'.
+workspace_iframe.html:32 Unrecognized feature: 'battery'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-not-rendered'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-out-of-viewport'.
+workspace_iframe.html:32 Unrecognized feature: 'layout-animations'.
+workspace_iframe.html:32 Unrecognized feature: 'legacy-image-formats'.
+workspace_iframe.html:32 Unrecognized feature: 'navigation-override'.
+workspace_iframe.html:32 Unrecognized feature: 'oversized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'publickey-credentials'.
+workspace_iframe.html:32 Unrecognized feature: 'speaker-selection'.
+workspace_iframe.html:32 Unrecognized feature: 'unoptimized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+rtcinjector.js:705 ## inline22 : bf4326cb-fa10-4d74-9417-5b054799971a-00-13syu5bhwn6m5.riker.replit.dev default
+UltraWide.bundle.js:1 UltraWide Extension Loaded!
+UltraWide.bundle.js:1 UltraWide Extension Loaded!
+eruda.js:2 [vite] server connection lost. Polling for restart...
+rtcinjector.js:705 ## inline22 : bf4326cb-fa10-4d74-9417-5b054799971a-00-13syu5bhwn6m5.riker.replit.dev default
+workspace_iframe.html:32 Unrecognized feature: 'ambient-light-sensor'.
+workspace_iframe.html:32 Unrecognized feature: 'battery'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-not-rendered'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-out-of-viewport'.
+workspace_iframe.html:32 Unrecognized feature: 'layout-animations'.
+workspace_iframe.html:32 Unrecognized feature: 'legacy-image-formats'.
+workspace_iframe.html:32 Unrecognized feature: 'navigation-override'.
+workspace_iframe.html:32 Unrecognized feature: 'oversized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'publickey-credentials'.
+workspace_iframe.html:32 Unrecognized feature: 'speaker-selection'.
+workspace_iframe.html:32 Unrecognized feature: 'unoptimized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+rtcinjector.js:705 ## inline22 : bf4326cb-fa10-4d74-9417-5b054799971a-00-13syu5bhwn6m5.riker.replit.dev default
+UltraWide.bundle.js:1 UltraWide Extension Loaded!
+UltraWide.bundle.js:1 UltraWide Extension Loaded!
+Console.js:61 Raw saved settings: {"defaultDifficulty":"intermediate","timeLimit":60,"questionCount":5,"autoNext":true}
+Console.js:61 Quiz generation started: {currentType: 'text', selectedDifficulty: 'beginner', questionCount: 5}
+Console.js:61 Parsed question count: 5
+Console.js:61 Text content added, length: 12
+Console.js:61 Sending request to /api/generate-quiz
+Console.js:61 Response status: 200
+Console.js:61 Quiz generated successfully: {questions: Array(5), difficulty: 'beginner', title: 'テキストクイズ'}
+Console.js:61 Quiz settings loaded: {autoNext: true, timeLimit: 60}
+Console.js:61 Answer selected: 1 Auto next enabled: true
+Console.js:61 Answer selected: 1 Auto next enabled: true
+Console.js:61 Answer selected: 2 Auto next enabled: true
+Console.js:61 Answer selected: 1 Auto next enabled: true
+Console.js:61 Answer selected: 1 Auto next enabled: true
+Console.js:61 Quiz completed with results: {score: 4, totalQuestions: 5, percentage: 80, totalTimeSpent: 18, detailedResults: Array(5)}
+Console.js:61 Storing results in localStorage...
+Console.js:61 Calling onQuizCompleted callback...
+Console.js:61 handleQuizCompleted called, switching to results section
+Console.js:61 ResultsSection: Retrieved stored results: {"score":4,"totalQuestions":5,"percentage":80,"totalTimeSpent":18,"detailedResults":[{"question":"初代「機動戦士ガンダム」の主人公の名前は何でしょう？","userAnswer":1,"correctAnswer":1,"isCorrect":true,"timeSpent":3,"explanation":"初代「機動戦士ガンダム」の主人公は、連邦軍のパイロットであるアムロ・レイです。"},{"question":"初代「機動戦士ガンダム」でアムロ・レイが主に搭乗したモビルスーツの名称は何でしょう？","userAnswer":1,"correctAnswer":1,"isCorrect":true,"timeSpent":4,"explanation":"アムロ・レイが搭乗した白いモビルスーツは、RX-78-2 ガンダムです。"},{"question":"初代「機動戦士ガンダム」に登場する、赤いモビルスーツに乗る仮面のライバルの名前は何でしょう？","userAnswer":2,"correctAnswer":2,"isCorrect":true,"timeSpent":3,"explanation":"「赤い彗星」の異名を持つシャア・アズナブルは、アムロの最大のライバルです。"},{"question":"初代「機動戦士ガンダム」の物語の中心となる、地球連邦軍と戦う独立勢力の名称は何でしょう？","userAnswer":1,"correctAnswer":1,"isCorrect":true,"timeSpent":5,"explanation":"地球連邦軍とジオン公国との間で「一年戦争」が繰り広げられました。"},{"question":"初代「機動戦士ガンダム」が日本で初めてテレビ放送されたのは西暦何年でしょう？","userAnswer":null,"correctAnswer":1,"isCorrect":false,"timeSpent":3,"explanation":"「機動戦士ガンダム」は1979年に放送が開始され、その後のロボットアニメに大きな影響を与えました。"}]}
+Console.js:61 ResultsSection: Parsed quiz results: {score: 4, totalQuestions: 5, percentage: 80, totalTimeSpent: 18, detailedResults: Array(5)}
+content.js:1 Uncaught (in promise) The message port closed before a response was received.
+（匿名） @ content.js:1

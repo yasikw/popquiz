@@ -64,17 +64,22 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     newAnswers[currentQuestionIndex] = answerIndex;
     setUserAnswers(newAnswers);
     
-    console.log('Answer selected:', answerIndex, 'Auto next enabled:', autoNext);
+    console.log('Answer selected:', answerIndex, 'Auto next enabled:', autoNext, 'Current question:', currentQuestionIndex);
     
     // Auto advance to next question if enabled
     if (autoNext) {
       setTimeout(() => {
-        handleNextQuestion();
+        // Pass the updated answers to ensure latest state
+        handleNextQuestionWithAnswers(newAnswers);
       }, 1000); // Wait 1 second to show selection, then advance
     }
   };
 
   const handleNextQuestion = () => {
+    handleNextQuestionWithAnswers(userAnswers);
+  };
+
+  const handleNextQuestionWithAnswers = (currentAnswers: (number | null)[]) => {
     // Record time spent on current question
     const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
     const newTimes = [...questionTimes];
@@ -84,7 +89,7 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     if (currentQuestionIndex < quiz.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      handleQuizComplete();
+      handleQuizCompleteWithData(currentAnswers, newTimes);
     }
   };
 
@@ -102,13 +107,20 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
   };
 
   const handleQuizComplete = () => {
+    handleQuizCompleteWithData(userAnswers, questionTimes);
+  };
+
+  const handleQuizCompleteWithData = (finalAnswers: (number | null)[], currentTimes: number[]) => {
     // Record final question time
     const finalTimeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
-    const finalTimes = [...questionTimes];
+    const finalTimes = [...currentTimes];
     finalTimes[currentQuestionIndex] = finalTimeSpent;
 
+    console.log("Quiz completing with final answers:", finalAnswers);
+    console.log("Final times:", finalTimes);
+
     // Calculate score and detailed results
-    const score = userAnswers.reduce((total: number, answer, index) => {
+    const score = finalAnswers.reduce((total: number, answer, index) => {
       if (answer !== null && answer === quiz.questions[index].correctAnswer) {
         return total + 1;
       }
@@ -117,9 +129,9 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
 
     const detailedResults = quiz.questions.map((question, index) => ({
       question: question.question,
-      userAnswer: userAnswers[index],
+      userAnswer: finalAnswers[index],
       correctAnswer: question.correctAnswer,
-      isCorrect: userAnswers[index] !== null && userAnswers[index] === question.correctAnswer,
+      isCorrect: finalAnswers[index] !== null && finalAnswers[index] === question.correctAnswer,
       timeSpent: finalTimes[index] || 0,
       explanation: question.explanation,
     }));
