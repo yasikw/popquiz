@@ -49,11 +49,12 @@ export default function Home({ user, onLogout }: HomeProps) {
         backgroundImage: `url(${bgImage})`,
         backgroundSize: '100% auto',
         backgroundPosition: 'center top',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        position: 'relative',
+        zIndex: 0
       }}
     >
-      {/* Overlay for better readability */}
-      <div className="absolute inset-0 bg-white/10 backdrop-blur-[0.3px]"></div>
+
       <div className="relative z-10 min-h-screen pb-20">
       <Header 
         user={user} 

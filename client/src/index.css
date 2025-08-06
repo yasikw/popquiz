@@ -73,6 +73,11 @@
     @apply font-sans antialiased;
     font-family: 'Noto Sans JP', sans-serif;
     color: #1e293b;
+    background: transparent !important;
+  }
+  
+  html {
+    background: transparent !important;
   }
 }
 
