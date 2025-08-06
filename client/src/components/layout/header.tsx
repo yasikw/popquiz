@@ -24,7 +24,7 @@ export default function Header({ user, activeSection, onSectionChange, onLogout 
             <img 
               src={logoImage} 
               alt="AI Quiz Logo" 
-              className="w-12 h-8 object-contain"
+              className="w-16 h-10 object-contain"
             />
           </div>
           
