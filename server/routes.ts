@@ -491,16 +491,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/users/:userId/stats", async (req, res) => {
     try {
+      console.log(`Getting stats for user: ${req.params.userId}`);
       let stats = await storage.getUserStats(req.params.userId);
+      console.log(`Found existing stats:`, stats);
       
       // If no stats exist, calculate them from existing sessions
       if (!stats) {
+        console.log(`No stats found, calculating from sessions...`);
         stats = await storage.calculateAndUpdateUserStats(req.params.userId);
+        console.log(`Calculated stats:`, stats);
+      }
+      
+      if (!stats) {
+        return res.status(404).json({ message: "統計が見つかりません" });
       }
       
       res.json(stats);
     } catch (error) {
+      console.error(`Stats error for user ${req.params.userId}:`, error);
       res.status(500).json({ message: "統計取得に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  // Manual stats calculation endpoint for debugging
+  app.post("/api/users/:userId/calculate-stats", async (req, res) => {
+    try {
+      console.log(`Manual stats calculation for user: ${req.params.userId}`);
+      const stats = await storage.calculateAndUpdateUserStats(req.params.userId);
+      console.log(`Manual calculation result:`, stats);
+      res.json(stats);
+    } catch (error) {
+      console.error(`Manual stats calculation error:`, error);
+      res.status(500).json({ message: "統計計算に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
     }
   });
 
@@ -536,7 +558,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.createQuestions(questionsData);
       
       // Update user statistics automatically
-      await storage.calculateAndUpdateUserStats(userId);
+      console.log(`Updating stats for user: ${userId}`);
+      const updatedStats = await storage.calculateAndUpdateUserStats(userId);
+      console.log(`Updated stats:`, updatedStats);
       
       res.json({ sessionId: session.id, message: "結果を保存しました" });
     } catch (error) {

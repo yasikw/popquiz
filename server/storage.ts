@@ -193,9 +193,17 @@ export class MemStorage implements IStorage {
   }
 
   async calculateAndUpdateUserStats(userId: string): Promise<UserStats> {
+    console.log(`Calculating stats for user: ${userId}`);
     const sessions = await this.getUserQuizSessions(userId);
+    console.log(`Found ${sessions.length} sessions for user ${userId}`);
+    
+    // Debug: Log all sessions
+    const allSessions = Array.from(this.quizSessions.values());
+    console.log(`Total sessions in memory: ${allSessions.length}`);
+    console.log(`All sessions:`, allSessions.map(s => ({ id: s.id, userId: s.userId })));
     
     if (sessions.length === 0) {
+      console.log(`No sessions found, creating default stats`);
       return this.updateUserStats(userId, {
         totalScore: 0,
         completedQuizzes: 0,
@@ -229,14 +237,17 @@ export class MemStorage implements IStorage {
     const overallAccuracy = sessions.reduce((sum, session) => 
       sum + (session.score / session.totalQuestions * 100), 0) / sessions.length;
 
-    return this.updateUserStats(userId, {
+    const statsData = {
       totalScore,
       completedQuizzes,
       averageAccuracy: Math.round(overallAccuracy),
       beginnerAccuracy,
       intermediateAccuracy,
       advancedAccuracy,
-    });
+    };
+    
+    console.log(`Calculated stats data:`, statsData);
+    return this.updateUserStats(userId, statsData);
   }
 }
 
