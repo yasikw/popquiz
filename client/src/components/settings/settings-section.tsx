@@ -170,7 +170,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
       
       <div className="grid grid-cols-1 gap-8 max-w-2xl mx-auto">
         {/* User Settings */}
-        <Card className="bg-white border border-gray-200 shadow-md">
+        <Card className="bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
           <CardContent className="p-6">
             <h4 className="text-lg font-semibold text-gray-800 mb-4">ユーザー設定</h4>
             <div className="space-y-4">
@@ -214,7 +214,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
         </Card>
 
         {/* パスワード変更セクション */}
-        <Card className="bg-white border border-gray-200 shadow-md">
+        <Card className="bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
           <CardContent className="p-6">
             <h4 className="text-lg font-semibold text-gray-800 mb-4">パスワード変更</h4>
             <div className="space-y-4">
@@ -272,7 +272,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
         </Card>
 
         {/* Quiz Settings */}
-        <Card className="bg-white border border-gray-200 shadow-md">
+        <Card className="bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
           <CardContent className="p-6">
             <h4 className="text-lg font-semibold text-gray-800 mb-4">クイズ設定</h4>
             <div className="space-y-4">
@@ -347,7 +347,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
       </div>
 
       {/* Data Management */}
-      <Card className="mt-8 bg-white border border-gray-200 shadow-md">
+      <Card className="mt-8 bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
         <CardContent className="p-6">
           <h4 className="text-lg font-semibold text-gray-800 mb-4">データ管理</h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
