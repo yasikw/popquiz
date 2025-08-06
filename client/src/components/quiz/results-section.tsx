@@ -52,6 +52,7 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
       // Check what type of content we're dealing with
       const lastContentType = localStorage.getItem('lastContentType');
       console.log('Last content type:', lastContentType);
+      console.log('All localStorage keys:', Object.keys(localStorage));
       
       let requestBody: any = {
         difficulty: settings.difficulty || settings.defaultDifficulty || 'intermediate',
@@ -62,23 +63,33 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
       if (lastContentType === 'pdf') {
         // Get the stored PDF file info
         const savedPdfFile = localStorage.getItem('lastPdfFile');
+        console.log('PDF file info from localStorage:', savedPdfFile);
         if (!savedPdfFile) {
           throw new Error('PDFファイル情報が見つかりません');
         }
         
         const pdfInfo = JSON.parse(savedPdfFile);
         requestBody.pdfInfo = pdfInfo;
+        console.log('Added PDF info to request body:', requestBody);
       } else if (lastContentType === 'youtube') {
         // Get the stored YouTube video ID
         const savedYouTubeInfo = localStorage.getItem('savedYouTubeInfo');
+        console.log('YouTube info from localStorage:', savedYouTubeInfo);
         if (!savedYouTubeInfo) {
           throw new Error('YouTube動画情報が見つかりません');
         }
         
         const youtubeInfo = JSON.parse(savedYouTubeInfo);
         requestBody.youtubeVideoId = youtubeInfo.videoId;
+        console.log('Added YouTube info to request body:', requestBody);
+      } else if (lastContentType === 'text') {
+        // Handle text content case - this might be missing
+        console.log('Text content type detected, but no caching implemented for text');
+        throw new Error('テキストコンテンツの別クイズ生成は現在サポートされていません');
       } else {
-        throw new Error('サポートされていないコンテンツタイプです');
+        console.log('Unsupported content type. Available types: pdf, youtube, text');
+        console.log('Actual lastContentType value:', JSON.stringify(lastContentType));
+        throw new Error(`サポートされていないコンテンツタイプです: ${lastContentType}`);
       }
       
       // Clear previous results
