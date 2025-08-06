@@ -138,7 +138,7 @@ export default function UploadSection({
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* PDF Upload Card */}
-        <Card className="bg-white border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-200">
+        <Card className="bg-white/30 border border-gray-200/40 shadow-md hover:shadow-lg transition-shadow duration-200">
           <CardContent className="p-6 text-center">
             <div className="bg-gradient-to-br from-red-400 to-pink-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg">
               <i className="fas fa-file-pdf text-white text-2xl"></i>
@@ -146,7 +146,7 @@ export default function UploadSection({
             <h4 className="text-lg font-semibold text-gray-800 mb-2">PDFファイル</h4>
             <p className="text-sm text-gray-600 mb-4">最大10MBまでのPDFファイルをアップロード</p>
             
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-gray-400 transition-colors mb-4 bg-gray-50">
+            <div className="border-2 border-dashed border-gray-300/40 rounded-xl p-6 hover:border-gray-400/40 transition-colors mb-4 bg-gray-50/30">
               <Input
                 type="file"
                 accept=".pdf"
@@ -175,7 +175,7 @@ export default function UploadSection({
         </Card>
 
         {/* Text File Upload Card */}
-        <Card className="bg-white border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-200">
+        <Card className="bg-white/30 border border-gray-200/40 shadow-md hover:shadow-lg transition-shadow duration-200">
           <CardContent className="p-6 text-center">
             <div className="bg-gradient-to-br from-green-400 to-emerald-500 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg">
               <i className="fas fa-file-alt text-white text-2xl"></i>
@@ -183,7 +183,7 @@ export default function UploadSection({
             <h4 className="text-lg font-semibold text-gray-800 mb-2">テキストファイル</h4>
             <p className="text-sm text-gray-600 mb-4">最大1MBまでのテキストファイル</p>
             
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-gray-400 transition-colors mb-4 bg-gray-50">
+            <div className="border-2 border-dashed border-gray-300/40 rounded-xl p-6 hover:border-gray-400/40 transition-colors mb-4 bg-gray-50/30">
               <Input
                 type="file"
                 accept=".txt,.md"
@@ -212,7 +212,7 @@ export default function UploadSection({
         </Card>
 
         {/* YouTube URL Card */}
-        <Card className="bg-white border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-200">
+        <Card className="bg-white/30 border border-gray-200/40 shadow-md hover:shadow-lg transition-shadow duration-200">
           <CardContent className="p-6 text-center">
             <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg">
               <i className="fab fa-youtube text-white text-2xl"></i>
