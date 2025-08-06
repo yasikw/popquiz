@@ -282,7 +282,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
                   <SelectTrigger className="bg-gray-50/60 border-gray-300/60 text-gray-800" data-testid="select-default-difficulty">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-white/90 border-gray-200/60">
+                  <SelectContent className="bg-white/40 border-gray-200/60">
                     <SelectItem value="beginner" className="text-gray-800 hover:bg-gray-100">初級</SelectItem>
                     <SelectItem value="intermediate" className="text-gray-800 hover:bg-gray-100">中級</SelectItem>
                     <SelectItem value="advanced" className="text-gray-800 hover:bg-gray-100">上級</SelectItem>
@@ -312,7 +312,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
                   <SelectTrigger className="bg-gray-50/60 border-gray-300/60 text-gray-800" data-testid="select-question-count">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-white/90 border-gray-200/60">
+                  <SelectContent className="bg-white/40 border-gray-200/60">
                     <SelectItem value="5" className="text-gray-800 hover:bg-gray-100">5問</SelectItem>
                     <SelectItem value="10" className="text-gray-800 hover:bg-gray-100">10問</SelectItem>
                     <SelectItem value="15" className="text-gray-800 hover:bg-gray-100">15問</SelectItem>
