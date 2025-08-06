@@ -34,6 +34,42 @@ export default function StatsSection({ userId }: StatsSectionProps) {
     setExpandedSessions(newExpanded);
   };
 
+  const createQuizSummary = (questions: Array<{ questionText: string }>) => {
+    if (!questions || questions.length === 0) return '';
+    
+    // Extract key topics from all questions
+    const allText = questions.map(q => q.questionText).join(' ');
+    const keywords = [];
+    
+    // Common Japanese topic patterns
+    const patterns = [
+      /([^、。？！\s]{2,8})(県|市|都|府|国|地域)/g,
+      /([^、。？！\s]{2,6})(文化|伝統|祭り|踊り)/g,
+      /([^、。？！\s]{2,6})(政治|経済|社会|歴史)/g,
+      /([^、。？！\s]{2,6})(技術|科学|建築|交通)/g,
+      /([^、。？！\s]{2,6})(料理|食べ物|特産品)/g,
+      /([^、。？！\s]{2,6})(観光|名所|景観|自然)/g,
+    ];
+    
+    patterns.forEach(pattern => {
+      const matches = allText.match(pattern);
+      if (matches) {
+        keywords.push(...matches.slice(0, 2));
+      }
+    });
+    
+    // If no patterns match, extract the first few words from first question
+    if (keywords.length === 0) {
+      const firstQuestion = questions[0].questionText;
+      const words = firstQuestion.replace(/[？！。、]/g, '').split(/\s+/);
+      keywords.push(words.slice(0, 3).join(''));
+    }
+    
+    // Create summary with question count
+    const summary = keywords.slice(0, 2).join('・');
+    return `${questions.length}問: ${summary.substring(0, 20)}`;
+  };
+
   // Calculate real statistics from sessions
   const calculateStats = (sessions: any[]) => {
     if (!sessions || sessions.length === 0) {
@@ -289,10 +325,7 @@ export default function StatsSection({ userId }: StatsSectionProps) {
                               )}
                               <div>
                                 <div className="text-sm font-medium text-gray-800">
-                                  {session.questions.length}問のクイズ
-                                </div>
-                                <div className="text-xs text-gray-600">
-                                  {session.questions[0].questionText.substring(0, 50)}...
+                                  {createQuizSummary(session.questions)}
                                 </div>
                               </div>
                             </button>
