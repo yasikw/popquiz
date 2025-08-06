@@ -2,12 +2,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { getUserStats, getUserSessionsWithQuestions } from "@/lib/api";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useState } from 'react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 
 interface StatsSectionProps {
   userId?: string;
 }
 
 export default function StatsSection({ userId }: StatsSectionProps) {
+  const [expandedSessions, setExpandedSessions] = useState<Set<string>>(new Set());
+
   const { data: stats } = useQuery({
     queryKey: ['/api/users', userId, 'stats'],
     queryFn: () => userId ? getUserStats(userId) : null,
@@ -19,6 +23,16 @@ export default function StatsSection({ userId }: StatsSectionProps) {
     queryFn: () => userId ? getUserSessionsWithQuestions(userId) : null,
     enabled: !!userId,
   });
+
+  const toggleSessionExpansion = (sessionId: string) => {
+    const newExpanded = new Set(expandedSessions);
+    if (newExpanded.has(sessionId)) {
+      newExpanded.delete(sessionId);
+    } else {
+      newExpanded.add(sessionId);
+    }
+    setExpandedSessions(newExpanded);
+  };
 
   // Calculate real statistics from sessions
   const calculateStats = (sessions: any[]) => {
@@ -261,10 +275,41 @@ export default function StatsSection({ userId }: StatsSectionProps) {
                       <td className="py-3" data-testid={`session-date-${session.id}`}>
                         {new Date(session.completedAt).toLocaleDateString('ja-JP')} {new Date(session.completedAt).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
                       </td>
-                      <td className="py-3" data-testid={`session-title-${session.id}`}>
-                        {session.questions && session.questions.length > 0 
-                          ? session.questions[0].questionText.substring(0, 50) + (session.questions[0].questionText.length > 50 ? '...' : '')
-                          : session.title}
+                      <td className="py-3 max-w-xs" data-testid={`session-title-${session.id}`}>
+                        {session.questions && session.questions.length > 0 ? (
+                          <div className="space-y-2">
+                            <button
+                              onClick={() => toggleSessionExpansion(session.id)}
+                              className="flex items-center space-x-2 text-left hover:text-blue-600 transition-colors"
+                            >
+                              {expandedSessions.has(session.id) ? (
+                                <ChevronDown className="w-4 h-4" />
+                              ) : (
+                                <ChevronRight className="w-4 h-4" />
+                              )}
+                              <div>
+                                <div className="text-sm font-medium text-gray-800">
+                                  {session.questions.length}問のクイズ
+                                </div>
+                                <div className="text-xs text-gray-600">
+                                  {session.questions[0].questionText.substring(0, 50)}...
+                                </div>
+                              </div>
+                            </button>
+                            
+                            {expandedSessions.has(session.id) && (
+                              <div className="ml-6 space-y-1 border-l-2 border-gray-200 pl-3">
+                                {session.questions.map((question, index) => (
+                                  <div key={index} className="text-xs text-gray-700">
+                                    <span className="font-medium">Q{index + 1}:</span> {question.questionText}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          session.title
+                        )}
                       </td>
                       <td className="py-3">
                         <span className={`px-2 py-1 rounded-full text-xs ${getDifficultyColor(session.difficulty)}`}>
