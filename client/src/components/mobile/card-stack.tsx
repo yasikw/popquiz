@@ -439,7 +439,7 @@ export default function CardStack({
   return (
     <div className="space-y-6">
       {/* Upload Card */}
-      <Card className="bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
+      <Card className="bg-white/80 border border-gray-200/40 shadow-md backdrop-blur-sm">
         <CardContent className="p-6">
           <div className="text-center mb-6">
             <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
