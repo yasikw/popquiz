@@ -8,7 +8,6 @@ import Home from "@/pages/home";
 import LoginPage from "@/pages/login";
 import NotFound from "@/pages/not-found";
 import { type User } from "@shared/schema";
-import bgImage from "@assets/BG_1754455391940.png";
 
 function Router() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -71,23 +70,12 @@ function Router() {
 
 function App() {
   return (
-    <div 
-      className="min-h-screen"
-      style={{
-        backgroundImage: `url(${bgImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed'
-      }}
-    >
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </QueryClientProvider>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Router />
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 }
 
