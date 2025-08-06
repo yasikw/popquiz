@@ -183,7 +183,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500"
+                  className="bg-gray-50/60 border-gray-300/60 text-gray-800 placeholder-gray-500"
                   data-testid="input-username"
                 />
               </div>
@@ -197,7 +197,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500"
+                  className="bg-gray-50/60 border-gray-300/60 text-gray-800 placeholder-gray-500"
                   data-testid="input-email"
                 />
               </div>
@@ -227,7 +227,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
                   type="password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500"
+                  className="bg-gray-50/60 border-gray-300/60 text-gray-800 placeholder-gray-500"
                   data-testid="input-current-password"
                 />
               </div>
@@ -241,7 +241,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500"
+                  className="bg-gray-50/60 border-gray-300/60 text-gray-800 placeholder-gray-500"
                   data-testid="input-new-password"
                 />
               </div>
@@ -255,7 +255,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500"
+                  className="bg-gray-50/60 border-gray-300/60 text-gray-800 placeholder-gray-500"
                   data-testid="input-confirm-password"
                 />
               </div>
@@ -279,10 +279,10 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
               <div>
                 <Label className="text-sm font-medium text-gray-700">デフォルト難易度</Label>
                 <Select value={defaultDifficulty} onValueChange={setDefaultDifficulty}>
-                  <SelectTrigger className="bg-gray-50 border-gray-300 text-gray-800" data-testid="select-default-difficulty">
+                  <SelectTrigger className="bg-gray-50/60 border-gray-300/60 text-gray-800" data-testid="select-default-difficulty">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border-gray-200">
+                  <SelectContent className="bg-white/90 border-gray-200/60">
                     <SelectItem value="beginner" className="text-gray-800 hover:bg-gray-100">初級</SelectItem>
                     <SelectItem value="intermediate" className="text-gray-800 hover:bg-gray-100">中級</SelectItem>
                     <SelectItem value="advanced" className="text-gray-800 hover:bg-gray-100">上級</SelectItem>
@@ -301,7 +301,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
                   onChange={(e) => setTimeLimit(e.target.value)}
                   min="30"
                   max="120"
-                  className="bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500"
+                  className="bg-gray-50/60 border-gray-300/60 text-gray-800 placeholder-gray-500"
                   data-testid="input-time-limit"
                 />
               </div>
@@ -309,10 +309,10 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
               <div>
                 <Label className="text-sm font-medium text-gray-700">問題数</Label>
                 <Select value={questionCount} onValueChange={setQuestionCount}>
-                  <SelectTrigger className="bg-gray-50 border-gray-300 text-gray-800" data-testid="select-question-count">
+                  <SelectTrigger className="bg-gray-50/60 border-gray-300/60 text-gray-800" data-testid="select-question-count">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border-gray-200">
+                  <SelectContent className="bg-white/90 border-gray-200/60">
                     <SelectItem value="5" className="text-gray-800 hover:bg-gray-100">5問</SelectItem>
                     <SelectItem value="10" className="text-gray-800 hover:bg-gray-100">10問</SelectItem>
                     <SelectItem value="15" className="text-gray-800 hover:bg-gray-100">15問</SelectItem>
@@ -354,7 +354,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
             <Button
               variant="outline"
               onClick={handleExportData}
-              className="flex items-center justify-center space-x-2 bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100 hover:border-gray-400"
+              className="flex items-center justify-center space-x-2 bg-gray-50/60 border-gray-300/60 text-gray-700 hover:bg-gray-100/60 hover:border-gray-400/60"
               data-testid="button-export-data"
             >
               <i className="fas fa-download"></i>
@@ -364,7 +364,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
             <Button
               variant="outline" 
               onClick={handleImportData}
-              className="flex items-center justify-center space-x-2 bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100 hover:border-gray-400"
+              className="flex items-center justify-center space-x-2 bg-gray-50/60 border-gray-300/60 text-gray-700 hover:bg-gray-100/60 hover:border-gray-400/60"
               data-testid="button-import-data"
             >
               <i className="fas fa-upload"></i>
