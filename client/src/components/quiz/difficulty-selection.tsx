@@ -45,10 +45,10 @@ export default function DifficultySelection({ selectedDifficulty, onDifficultyCh
         {difficulties.map((difficulty) => (
           <Card 
             key={difficulty.id}
-            className={`bg-white border cursor-pointer transition-shadow duration-200 ${
+            className={`bg-white/60 border cursor-pointer transition-shadow duration-200 ${
               selectedDifficulty === difficulty.id 
-                ? "border-blue-500 shadow-lg bg-blue-50" 
-                : "border-gray-200 shadow-md hover:shadow-lg hover:bg-gray-50"
+                ? "border-blue-500 shadow-lg bg-blue-50/60" 
+                : "border-gray-200/60 shadow-md hover:shadow-lg hover:bg-gray-50/60"
             }`}
             onClick={() => onDifficultyChange(difficulty.id)}
             data-testid={`difficulty-${difficulty.id}`}
