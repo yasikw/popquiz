@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, BookOpen, Sparkles, Trophy, Users } from "lucide-react";
 import bgImage from "@assets/BG_1754455391940.png";
+import logoImage from "@assets/AI Quiz_1754456013263.png";
 
 interface LoginPageProps {
   onLogin: (username: string, userId: string) => void;
@@ -141,15 +142,14 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       <div className="relative z-10 min-h-screen flex flex-col">
       {/* Header */}
       <div className="flex-shrink-0 text-center py-12">
-        <div className="flex items-center justify-center mb-4">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-full shadow-lg">
-            <BookOpen className="h-8 w-8 text-white" />
-          </div>
+        <div className="flex items-center justify-center mb-6">
+          <img 
+            src={logoImage} 
+            alt="AI Quiz Logo" 
+            className="w-32 h-32 object-contain drop-shadow-lg"
+          />
         </div>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-          AIクイズアプリ
-        </h1>
-        <p className="text-gray-600 text-lg">
+        <p className="text-gray-700 text-lg font-medium">
           AIが作る、あなただけの学習体験
         </p>
       </div>

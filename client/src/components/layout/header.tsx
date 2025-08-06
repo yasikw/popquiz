@@ -1,4 +1,5 @@
 import { type User } from "@shared/schema";
+import logoImage from "@assets/AI Quiz_1754456013263.png";
 
 interface HeaderProps {
   user: User | null;
@@ -20,10 +21,11 @@ export default function Header({ user, activeSection, onSectionChange, onLogout 
       <div className="max-w-md mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <i className="fas fa-brain text-white text-sm"></i>
-            </div>
-            <span className="text-lg font-bold text-gray-800">AI Quiz</span>
+            <img 
+              src={logoImage} 
+              alt="AI Quiz Logo" 
+              className="w-10 h-10 object-contain"
+            />
           </div>
           
           <div className="flex items-center space-x-4">

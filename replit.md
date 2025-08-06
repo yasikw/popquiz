@@ -19,6 +19,9 @@ This is an AI-powered Japanese language quiz application that generates interact
 ✓ Implemented password functionality in user settings with bcrypt security
 ✓ Updated database schema with password field and secure storage system
 ✓ Redesigned settings layout to display all cards in vertical single-column layout
+✓ Created modern login/registration system with authentication and session management
+✓ Applied custom background image throughout the app for cohesive design
+✓ Integrated custom AI Quiz logo in header and login screen
 
 # User Preferences
 
