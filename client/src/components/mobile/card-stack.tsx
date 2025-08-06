@@ -276,7 +276,7 @@ export default function CardStack({
     return (
       <div className="space-y-4">
         {/* Type Selector */}
-        <div className="relative overflow-hidden rounded-xl bg-gray-50 p-1">
+        <div className="relative overflow-hidden rounded-xl bg-white/60 p-1">
           <div className="flex relative">
             {/* Background slider */}
             <div 
@@ -402,7 +402,7 @@ export default function CardStack({
     return (
       <div className="space-y-4">
         {/* Difficulty Selector */}
-        <div className="relative overflow-hidden rounded-xl bg-gray-50 p-1">
+        <div className="relative overflow-hidden rounded-xl bg-white/60 p-1">
           <div className="flex relative">
             {/* Background slider */}
             <div 
