@@ -172,7 +172,7 @@ export default function StatsSection({ userId }: StatsSectionProps) {
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Performance Chart */}
-        <Card className="bg-white/60 border border-gray-200/60 shadow-md backdrop-blur-sm">
+        <Card className="bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
           <CardContent className="p-6">
             <h4 className="text-lg font-semibold text-gray-800 mb-4">成績の推移</h4>
             <div className="h-64">
@@ -226,7 +226,7 @@ export default function StatsSection({ userId }: StatsSectionProps) {
         </Card>
 
         {/* Statistics Summary */}
-        <Card className="bg-white/60 border border-gray-200/60 shadow-md backdrop-blur-sm">
+        <Card className="bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
           <CardContent className="p-6">
             <h4 className="text-lg font-semibold text-gray-800 mb-4">学習サマリー</h4>
             <div className="space-y-6">
@@ -289,7 +289,7 @@ export default function StatsSection({ userId }: StatsSectionProps) {
       </div>
 
       {/* Recent Quiz History */}
-      <Card className="mt-8 bg-white/60 border border-gray-200/60 shadow-md backdrop-blur-sm">
+      <Card className="mt-8 bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
         <CardContent className="p-6">
           <h4 className="text-lg font-semibold text-gray-800 mb-4">最近のクイズ履歴</h4>
           <div className="overflow-x-auto">
