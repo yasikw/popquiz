@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, BookOpen, Sparkles, Trophy, Users } from "lucide-react";
+import bgImage from "@assets/BG_1754455391940.png";
 
 interface LoginPageProps {
   onLogin: (username: string, userId: string) => void;
@@ -126,7 +127,18 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex flex-col">
+    <div 
+      className="min-h-screen flex flex-col relative"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]"></div>
+      <div className="relative z-10 min-h-screen flex flex-col">
       {/* Header */}
       <div className="flex-shrink-0 text-center py-12">
         <div className="flex items-center justify-center mb-4">
@@ -145,7 +157,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       {/* Main Content */}
       <div className="flex-1 flex items-center justify-center px-4 pb-12">
         <div className="w-full max-w-md">
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-2xl">
+          <Card className="bg-white/90 backdrop-blur-md border-0 shadow-2xl">
             <CardHeader className="text-center pb-4">
               <CardTitle className="text-2xl font-bold text-gray-800">
                 始めましょう
@@ -174,7 +186,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                         value={loginUsername}
                         onChange={(e) => setLoginUsername(e.target.value)}
                         placeholder="ユーザー名を入力"
-                        className="bg-white/50 border-gray-200"
+                        className="bg-white/70 border-gray-200"
                         required
                         data-testid="input-login-username"
                       />
@@ -191,7 +203,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                           value={loginPassword}
                           onChange={(e) => setLoginPassword(e.target.value)}
                           placeholder="パスワードを入力"
-                          className="bg-white/50 border-gray-200 pr-10"
+                          className="bg-white/70 border-gray-200 pr-10"
                           required
                           data-testid="input-login-password"
                         />
@@ -228,7 +240,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                         value={registerUsername}
                         onChange={(e) => setRegisterUsername(e.target.value)}
                         placeholder="ユーザー名を入力"
-                        className="bg-white/50 border-gray-200"
+                        className="bg-white/70 border-gray-200"
                         required
                         data-testid="input-register-username"
                       />
@@ -244,7 +256,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                         value={registerEmail}
                         onChange={(e) => setRegisterEmail(e.target.value)}
                         placeholder="email@example.com"
-                        className="bg-white/50 border-gray-200"
+                        className="bg-white/70 border-gray-200"
                         data-testid="input-register-email"
                       />
                     </div>
@@ -260,7 +272,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                           value={registerPassword}
                           onChange={(e) => setRegisterPassword(e.target.value)}
                           placeholder="パスワードを入力"
-                          className="bg-white/50 border-gray-200 pr-10"
+                          className="bg-white/70 border-gray-200 pr-10"
                           required
                           data-testid="input-register-password"
                         />
@@ -284,7 +296,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="パスワードを再入力"
-                        className="bg-white/50 border-gray-200"
+                        className="bg-white/70 border-gray-200"
                         required
                         data-testid="input-confirm-password"
                       />
@@ -326,6 +338,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

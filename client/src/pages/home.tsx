@@ -8,6 +8,7 @@ import LoadingOverlay from "@/components/ui/loading-overlay";
 import CardStack from "@/components/mobile/card-stack";
 import BottomNav from "@/components/mobile/bottom-nav";
 import { type GeneratedQuiz, type User } from "@shared/schema";
+import bgImage from "@assets/BG_1754455391940.png";
 
 interface HomeProps {
   user: User;
@@ -37,7 +38,18 @@ export default function Home({ user, onLogout }: HomeProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 pb-20">
+    <div 
+      className="min-h-screen pb-20 relative"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      {/* Overlay for better readability */}
+      <div className="absolute inset-0 bg-white/20 backdrop-blur-[0.5px]"></div>
+      <div className="relative z-10 min-h-screen pb-20">
       <Header 
         user={user} 
         activeSection={activeSection}
@@ -90,15 +102,17 @@ export default function Home({ user, onLogout }: HomeProps) {
         )}
       </main>
 
-      <LoadingOverlay 
-        isLoading={isLoading}
-        message={loadingMessage}
-      />
-
       <BottomNav 
         activeSection={activeSection}
         onSectionChange={setActiveSection}
       />
+
+      {/* Loading Overlay */}
+      <LoadingOverlay 
+        message={loadingMessage}
+        isVisible={isLoading}
+      />
+      </div>
     </div>
   );
 }
