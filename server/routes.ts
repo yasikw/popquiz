@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { extractTextFromPDF, generateQuizFromText, generateQuizFromCachedPDF, generateQuizFromCachedYouTube, getCacheStatus } from "./services/gemini";
+import { extractTextFromPDF, generateQuizFromText, generateQuizFromCachedPDF, generateQuizFromCachedYouTube, generateQuizFromCachedText, getCacheStatus } from "./services/gemini";
 import { extractYouTubeSubtitles } from "./services/youtube";
 import { insertUserSchema, insertQuizSessionSchema, insertQuestionSchema } from "@shared/schema";
 import multer from "multer";
@@ -52,13 +52,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Quiz generation from cached content (PDF or YouTube)
+  // Quiz generation from cached content (PDF, YouTube, or Text)
   app.post("/api/generate-quiz-from-cache", async (req, res) => {
     try {
-      const { pdfInfo, youtubeVideoId, difficulty = "intermediate", questionCount = 5 } = req.body;
+      const { pdfInfo, youtubeVideoId, textContent, difficulty = "intermediate", questionCount = 5 } = req.body;
       
-      if (!pdfInfo && !youtubeVideoId) {
-        return res.status(400).json({ message: "PDF情報またはYouTube動画IDが必要です" });
+      if (!pdfInfo && !youtubeVideoId && !textContent) {
+        return res.status(400).json({ message: "PDF情報、YouTube動画ID、またはテキスト内容が必要です" });
       }
 
       // Debug cache status
@@ -75,6 +75,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.log('Generating quiz from cached YouTube video:', youtubeVideoId);
         console.log('Requested difficulty:', difficulty, 'Question count:', questionCount);
         quiz = await generateQuizFromCachedYouTube(youtubeVideoId, difficulty, parseInt(questionCount));
+      } else if (textContent) {
+        console.log('Generating quiz from cached text content, length:', textContent.length);
+        console.log('Requested difficulty:', difficulty, 'Question count:', questionCount);
+        quiz = await generateQuizFromCachedText(textContent, difficulty, parseInt(questionCount));
       }
       
       if (!quiz) {

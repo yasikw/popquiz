@@ -83,9 +83,15 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
         requestBody.youtubeVideoId = youtubeInfo.videoId;
         console.log('Added YouTube info to request body:', requestBody);
       } else if (lastContentType === 'text') {
-        // Handle text content case - this might be missing
-        console.log('Text content type detected, but no caching implemented for text');
-        throw new Error('テキストコンテンツの別クイズ生成は現在サポートされていません');
+        // Get the stored text content
+        const savedTextContent = localStorage.getItem('lastTextContent');
+        console.log('Text content from localStorage:', savedTextContent ? `${savedTextContent.length} characters` : 'null');
+        if (!savedTextContent) {
+          throw new Error('テキスト内容が見つかりません');
+        }
+        
+        requestBody.textContent = savedTextContent;
+        console.log('Added text content to request body:', requestBody);
       } else {
         console.log('Unsupported content type. Available types: pdf, youtube, text');
         console.log('Actual lastContentType value:', JSON.stringify(lastContentType));

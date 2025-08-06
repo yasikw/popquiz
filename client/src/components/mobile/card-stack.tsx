@@ -249,6 +249,9 @@ export default function CardStack({
           videoId: videoId,
           url: youtubeUrl
         }));
+      } else if (currentType === 'text' && textContent) {
+        // Store text content for different quiz generation
+        localStorage.setItem('lastTextContent', textContent);
       }
       
       onQuizGenerated(quiz);

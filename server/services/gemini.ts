@@ -493,3 +493,58 @@ export async function generateQuizFromCachedYouTube(videoId: string, difficulty:
     return null;
   }
 }
+
+export async function generateQuizFromCachedText(textContent: string, difficulty: string = "intermediate", questionCount: number = 5): Promise<GeneratedQuiz | null> {
+  try {
+    console.log('Attempting to generate quiz from cached text content');
+    
+    // Generate cache key for text content
+    const cacheKey = `text-${textContent.substring(0, 100)}-${textContent.length}`;
+    console.log('Generated text cache key:', cacheKey);
+    
+    // Cache the text content if not already cached
+    if (!textCache.has(cacheKey)) {
+      textCache.set(cacheKey, textContent);
+      console.log('Cached text content, length:', textContent.length);
+    }
+    
+    const cachedText = textCache.get(cacheKey)!;
+    console.log('Found cached text content, length:', cachedText.length);
+    
+    // Try multiple times to get different questions
+    let attempts = 0;
+    const maxAttempts = 3;
+    
+    while (attempts < maxAttempts) {
+      attempts++;
+      console.log(`Generating text quiz attempt ${attempts}/${maxAttempts}`);
+      
+      const quiz = await generateQuizFromText(cachedText, difficulty, "テキストクイズ", questionCount);
+      
+      // Check if questions are different from previous ones
+      const currentQuestionTexts = quiz.questions.map(q => q.question);
+      const previousKey = `${cacheKey}-${difficulty}`;
+      const prevQuestions = previousQuestions.get(previousKey) || [];
+      
+      // If this is the first generation or questions are sufficiently different
+      if (prevQuestions.length === 0 || !areQuestionsSimilar(currentQuestionTexts, prevQuestions)) {
+        // Store current questions for future comparison
+        previousQuestions.set(previousKey, currentQuestionTexts);
+        console.log('Generated sufficiently different text questions');
+        return quiz;
+      }
+      
+      console.log('Text questions too similar to previous ones, retrying...');
+    }
+    
+    // If all attempts failed, still return the last quiz (better than nothing)
+    const finalQuiz = await generateQuizFromText(cachedText, difficulty, "テキストクイズ", questionCount);
+    return finalQuiz;
+    
+  } catch (error) {
+    console.error('Cached text quiz generation error:', error);
+    return null;
+  }
+}
+
+
