@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, BookOpen, Sparkles, Trophy, Users } from "lucide-react";
 import bgImage from "@assets/BG_1754455391940.png";
-import logoImage from "@assets/AI Quiz_1754456013263.png";
+import logoImage from "@assets/AIquiz logo_1754457435636.png";
 
 interface LoginPageProps {
   onLogin: (username: string, userId: string) => void;
@@ -146,7 +146,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           <img 
             src={logoImage} 
             alt="AI Quiz Logo" 
-            className="w-32 h-32 object-contain drop-shadow-lg"
+            className="w-40 h-24 object-contain drop-shadow-lg"
           />
         </div>
         <p className="text-gray-700 text-lg font-medium">

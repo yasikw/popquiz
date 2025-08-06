@@ -1,5 +1,5 @@
 import { type User } from "@shared/schema";
-import logoImage from "@assets/AI Quiz_1754456013263.png";
+import logoImage from "@assets/AIquiz logo_1754457435636.png";
 
 interface HeaderProps {
   user: User | null;
@@ -24,7 +24,7 @@ export default function Header({ user, activeSection, onSectionChange, onLogout 
             <img 
               src={logoImage} 
               alt="AI Quiz Logo" 
-              className="w-10 h-10 object-contain"
+              className="w-12 h-8 object-contain"
             />
           </div>
           
