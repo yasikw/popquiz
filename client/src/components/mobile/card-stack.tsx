@@ -494,25 +494,25 @@ export default function CardStack({
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-4 rounded-xl">
+            <div className="bg-gradient-to-br from-blue-50/60 to-cyan-50/60 p-4 rounded-xl">
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-600">0</div>
                 <div className="text-xs text-gray-600">完了クイズ</div>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-xl">
+            <div className="bg-gradient-to-br from-purple-50/60 to-pink-50/60 p-4 rounded-xl">
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-600">0%</div>
                 <div className="text-xs text-gray-600">平均正答率</div>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-xl">
+            <div className="bg-gradient-to-br from-green-50/60 to-emerald-50/60 p-4 rounded-xl">
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">0</div>
                 <div className="text-xs text-gray-600">総スコア</div>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-orange-50 to-yellow-50 p-4 rounded-xl">
+            <div className="bg-gradient-to-br from-orange-50/60 to-yellow-50/60 p-4 rounded-xl">
               <div className="text-center">
                 <div className="text-2xl font-bold text-orange-600">0</div>
                 <div className="text-xs text-gray-600">学習時間</div>
