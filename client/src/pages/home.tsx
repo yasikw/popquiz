@@ -53,7 +53,7 @@ export default function Home({ user, onLogout }: HomeProps) {
         onLogout={onLogout}
       />
       
-      <main className="max-w-md mx-auto px-4 py-6">
+      <main className="max-w-md mx-auto px-4 py-6 pt-20">
         {activeSection === "home" && (
           <>
             {/* Mobile Card Stack */}
