@@ -43,17 +43,7 @@ export default function Home({ user, onLogout }: HomeProps) {
   };
 
   return (
-    <div 
-      className="min-h-screen pb-20 relative max-w-md mx-auto"
-      style={{
-        backgroundImage: `url(${bgImage})`,
-        backgroundSize: '100% auto',
-        backgroundPosition: 'center top',
-        backgroundRepeat: 'no-repeat',
-        position: 'relative',
-        zIndex: 0
-      }}
-    >
+    <div className="min-h-screen pb-20 relative max-w-md mx-auto">
 
       <div className="relative z-10 min-h-screen pb-20">
       <Header 
