@@ -192,8 +192,10 @@ export default function CardStack({
       return;
     }
 
+    console.log("Setting loading state to true");
     setIsLoading(true);
     setLoadingMessage("AIがクイズを生成中...");
+    console.log("Loading state set, isLoading should be true");
 
     try {
       const formData = new FormData();
@@ -259,8 +261,10 @@ export default function CardStack({
       console.error('Quiz generation error:', error);
       alert(`クイズ生成に失敗しました: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
+      console.log("Setting loading state to false");
       setIsLoading(false);
       setLoadingMessage("");
+      console.log("Loading state cleared");
     }
   };
 

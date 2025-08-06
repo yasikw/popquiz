@@ -1,10 +1,10 @@
 interface LoadingOverlayProps {
-  isLoading: boolean;
+  isVisible: boolean;
   message: string;
 }
 
-export default function LoadingOverlay({ isLoading, message }: LoadingOverlayProps) {
-  if (!isLoading) return null;
+export default function LoadingOverlay({ isVisible, message }: LoadingOverlayProps) {
+  if (!isVisible) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" data-testid="loading-overlay">

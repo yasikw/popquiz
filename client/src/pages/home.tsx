@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/layout/header";
 import QuizInterface from "@/components/quiz/quiz-interface";
 import ResultsSection from "@/components/quiz/results-section";
@@ -21,6 +21,11 @@ export default function Home({ user, onLogout }: HomeProps) {
   const [currentQuiz, setCurrentQuiz] = useState<GeneratedQuiz | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
+
+  // Debug loading state changes
+  useEffect(() => {
+    console.log("HOME: Loading state changed:", { isLoading, loadingMessage });
+  }, [isLoading, loadingMessage]);
 
   const handleQuizGenerated = (quiz: GeneratedQuiz) => {
     setCurrentQuiz(quiz);
