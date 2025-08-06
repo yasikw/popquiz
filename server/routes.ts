@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { extractTextFromPDF, generateQuizFromText, generateQuizFromCachedPDF, generateQuizFromCachedYouTube, generateQuizFromCachedText, getCacheStatus } from "./services/gemini";
 import { extractYouTubeSubtitles } from "./services/youtube";
-import { insertUserSchema, insertQuizSessionSchema, insertQuestionSchema } from "@shared/schema";
+import { insertUserSchema, insertQuizSessionSchema, insertQuestionSchema, insertUserStatsSchema } from "@shared/schema";
 import multer from "multer";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
@@ -346,71 +346,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Quiz session management
-  app.post("/api/quiz-sessions", async (req, res) => {
-    try {
-      const sessionData = insertQuizSessionSchema.parse(req.body);
-      const session = await storage.createQuizSession(sessionData);
-      res.json(session);
-    } catch (error) {
-      res.status(400).json({ message: "クイズセッション作成に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
-    }
-  });
-
-  app.post("/api/quiz-sessions/:sessionId/questions", async (req, res) => {
-    try {
-      const { sessionId } = req.params;
-      const questionsData = z.array(insertQuestionSchema).parse(req.body);
-      
-      const questionsWithSession = questionsData.map(q => ({
-        ...q,
-        sessionId
-      }));
-      
-      const questions = await storage.createQuestions(questionsWithSession);
-      res.json(questions);
-    } catch (error) {
-      res.status(400).json({ message: "問題作成に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
-    }
-  });
-
-  app.get("/api/quiz-sessions/:sessionId/questions", async (req, res) => {
-    try {
-      const questions = await storage.getSessionQuestions(req.params.sessionId);
-      res.json(questions);
-    } catch (error) {
-      res.status(500).json({ message: "問題取得に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
-    }
-  });
-
-  app.put("/api/questions/:questionId/answer", async (req, res) => {
-    try {
-      const { userAnswer, timeSpent } = req.body;
-      const question = await storage.updateQuestion(req.params.questionId, {
-        userAnswer,
-        timeSpent
-      });
-      
-      if (!question) {
-        return res.status(404).json({ message: "問題が見つかりません" });
-      }
-      
-      res.json(question);
-    } catch (error) {
-      res.status(400).json({ message: "回答保存に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
-    }
-  });
-
   // User statistics
-  app.get("/api/users/:userId/sessions", async (req, res) => {
-    try {
-      const sessions = await storage.getUserQuizSessions(req.params.userId);
-      res.json(sessions);
-    } catch (error) {
-      res.status(500).json({ message: "セッション履歴取得に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
-    }
-  });
-
   app.get("/api/users/:userId/stats", async (req, res) => {
     try {
       const stats = await storage.getUserStats(req.params.userId);
@@ -423,13 +359,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/users/:userId/stats", async (req, res) => {
+  app.get("/api/users/:userId/sessions", async (req, res) => {
     try {
-      const statsData = req.body;
-      const stats = await storage.updateUserStats(req.params.userId, statsData);
-      res.json(stats);
+      const sessions = await storage.getUserQuizSessions(req.params.userId);
+      res.json(sessions);
     } catch (error) {
-      res.status(400).json({ message: "統計更新に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+      res.status(500).json({ message: "セッション履歴取得に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  // Submit quiz results and update statistics
+  app.post("/api/quiz-results", async (req, res) => {
+    try {
+      const { userId, quizData, results } = req.body;
+      
+      if (!userId || !quizData || !results) {
+        return res.status(400).json({ message: "必要なデータが不足しています" });
+      }
+
+      // Create quiz session
+      const sessionData = {
+        userId,
+        title: quizData.title || "AIクイズ",
+        difficulty: quizData.difficulty || "intermediate",
+        contentType: quizData.contentType || "text",
+        score: results.score || 0,
+        totalQuestions: results.totalQuestions || quizData.questions?.length || 0,
+        timeSpent: results.totalTimeSpent || 0,
+      };
+      
+      const session = await storage.createQuizSession(sessionData);
+      
+      // Create questions with user answers if available
+      if (quizData.questions && results.detailedResults) {
+        const questionsData = results.detailedResults.map((result: any, index: number) => ({
+          sessionId: session.id,
+          questionText: result.question || quizData.questions[index]?.question || "",
+          options: quizData.questions[index]?.options || [],
+          correctAnswer: result.correctAnswer ?? quizData.questions[index]?.correctAnswer ?? 0,
+          explanation: result.explanation || quizData.questions[index]?.explanation || "",
+          userAnswer: result.userAnswer,
+          timeSpent: result.timeSpent || 0,
+        }));
+        
+        await storage.createQuestions(questionsData);
+      }
+
+      // Update user statistics
+      const currentStats = await storage.getUserStats(userId);
+      if (currentStats) {
+        const accuracy = sessionData.totalQuestions > 0 ? (sessionData.score / sessionData.totalQuestions) : 0;
+        const newCompletedQuizzes = currentStats.completedQuizzes + 1;
+        const newTotalScore = currentStats.totalScore + sessionData.score;
+        const newAverageAccuracy = newCompletedQuizzes > 0 ? 
+          ((currentStats.averageAccuracy * currentStats.completedQuizzes) + accuracy) / newCompletedQuizzes : 0;
+
+        // Update difficulty-specific accuracy
+        const difficultyAccuracyUpdates: any = {};
+        if (sessionData.difficulty === "beginner") {
+          difficultyAccuracyUpdates.beginnerAccuracy = accuracy;
+        } else if (sessionData.difficulty === "intermediate") {
+          difficultyAccuracyUpdates.intermediateAccuracy = accuracy;
+        } else if (sessionData.difficulty === "advanced") {
+          difficultyAccuracyUpdates.advancedAccuracy = accuracy;
+        }
+
+        await storage.updateUserStats(userId, {
+          totalScore: newTotalScore,
+          completedQuizzes: newCompletedQuizzes,
+          averageAccuracy: newAverageAccuracy,
+          ...difficultyAccuracyUpdates
+        });
+      }
+      
+      res.json({ 
+        sessionId: session.id, 
+        message: "結果を保存し、統計を更新しました",
+        accuracy: sessionData.totalQuestions > 0 ? (sessionData.score / sessionData.totalQuestions) : 0
+      });
+    } catch (error) {
+      console.error("Quiz results submission error:", error);
+      res.status(500).json({ 
+        message: "結果保存に失敗しました", 
+        error: error instanceof Error ? error.message : "Unknown error" 
+      });
     }
   });
 

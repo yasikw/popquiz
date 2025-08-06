@@ -1,6 +1,8 @@
 import { apiRequest } from "./queryClient";
 import { type GeneratedQuiz, type User, type QuizSession, type Question, type UserStats } from "@shared/schema";
 
+
+
 // User operations
 export async function createUser(userData: { username: string; email?: string }) {
   const response = await apiRequest("POST", "/api/users", userData);
@@ -121,11 +123,23 @@ export async function updateUserStats(userId: string, stats: Partial<UserStats>)
 }
 
 // Submit quiz results
-export async function submitQuizResults(userId: string, quizData: any, results: any) {
-  const response = await apiRequest("POST", "/api/quiz-results", {
-    userId,
-    quizData,
-    results,
+export async function submitQuizResults(userId: string, quizData: GeneratedQuiz & { contentType?: string }, results: any) {
+  const response = await fetch('/api/quiz-results', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userId,
+      quizData,
+      results
+    }),
   });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to submit quiz results: ${errorText}`);
+  }
+
   return response.json();
 }

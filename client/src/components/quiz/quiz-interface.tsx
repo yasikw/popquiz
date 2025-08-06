@@ -172,23 +172,21 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     console.log("Final quiz results:", quizResults);
     console.log("=== End Quiz Completion Debug ===");
     
+    // Submit quiz results to server for statistics tracking
+    try {
+      const contentType = localStorage.getItem('lastContentType') || 'text';
+      await submitQuizResults(userId, {
+        ...quiz,
+        contentType: contentType
+      }, quizResults);
+      console.log("Quiz results successfully submitted to server");
+    } catch (error) {
+      console.error("Failed to submit quiz results:", error);
+      // Continue with local storage even if server submission fails
+    }
+    
     // Store results in localStorage for immediate display
     localStorage.setItem('quizResults', JSON.stringify(quizResults));
-    
-    // Save to database if user is logged in
-    if (userId && userId !== "anonymous") {
-      try {
-        // Add content type based on current context
-        const quizWithContentType = {
-          ...quiz,
-          contentType: localStorage.getItem('lastContentType') || 'text'
-        };
-        await submitQuizResults(userId, quizWithContentType, quizResults);
-        console.log("Quiz results saved to database");
-      } catch (error) {
-        console.warn("Error saving quiz results:", error);
-      }
-    }
     
     onQuizCompleted();
   };
