@@ -17,6 +17,9 @@ interface SettingsSectionProps {
 export default function SettingsSection({ user, onUserUpdate }: SettingsSectionProps) {
   const [username, setUsername] = useState(user?.username || "");
   const [email, setEmail] = useState(user?.email || "");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [defaultDifficulty, setDefaultDifficulty] = useState("intermediate");
   const [timeLimit, setTimeLimit] = useState("60");
   const [questionCount, setQuestionCount] = useState("10");
@@ -56,6 +59,69 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
       toast({
         title: "エラー",
         description: "設定の保存に失敗しました",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (!user) {
+      toast({
+        title: "エラー",
+        description: "ユーザーが見つかりません",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!newPassword || newPassword.length < 6) {
+      toast({
+        title: "エラー",
+        description: "新しいパスワードは6文字以上で入力してください",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast({
+        title: "エラー",
+        description: "新しいパスワードと確認用パスワードが一致しません",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/users/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          currentPassword,
+          newPassword,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'パスワード変更に失敗しました');
+      }
+
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+
+      toast({
+        title: "成功",
+        description: "パスワードを変更しました",
+      });
+    } catch (error) {
+      toast({
+        title: "エラー",
+        description: error instanceof Error ? error.message : "パスワード変更に失敗しました",
         variant: "destructive",
       });
     }
@@ -142,6 +208,64 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
                 data-testid="button-save-user-settings"
               >
                 設定を保存
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* パスワード変更セクション */}
+        <Card className="bg-white border border-gray-200 shadow-md">
+          <CardContent className="p-6">
+            <h4 className="text-lg font-semibold text-gray-800 mb-4">パスワード変更</h4>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="currentPassword" className="text-sm font-medium text-gray-700">
+                  現在のパスワード
+                </Label>
+                <Input
+                  id="currentPassword"
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500"
+                  data-testid="input-current-password"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="newPassword" className="text-sm font-medium text-gray-700">
+                  新しいパスワード (6文字以上)
+                </Label>
+                <Input
+                  id="newPassword"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500"
+                  data-testid="input-new-password"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
+                  新しいパスワード（確認）
+                </Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500"
+                  data-testid="input-confirm-password"
+                />
+              </div>
+
+              <Button 
+                onClick={handleChangePassword}
+                className="w-full bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white border-0 shadow-md"
+                data-testid="button-change-password"
+              >
+                パスワードを変更
               </Button>
             </div>
           </CardContent>

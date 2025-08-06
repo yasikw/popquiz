@@ -7,6 +7,7 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: string, user: Partial<InsertUser>): Promise<User | undefined>;
+  updateUserPassword(id: string, hashedPassword: string): Promise<User | undefined>;
 
   // Quiz session operations
   createQuizSession(session: InsertQuizSession): Promise<QuizSession>;
@@ -53,6 +54,7 @@ export class MemStorage implements IStorage {
       id,
       username: insertUser.username,
       email: insertUser.email || null,
+      password: insertUser.password || null,
       createdAt: new Date()
     };
     this.users.set(id, user);
@@ -79,6 +81,15 @@ export class MemStorage implements IStorage {
     if (!user) return undefined;
 
     const updatedUser = { ...user, ...updateData };
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+
+  async updateUserPassword(id: string, hashedPassword: string): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+
+    const updatedUser = { ...user, password: hashedPassword };
     this.users.set(id, updatedUser);
     return updatedUser;
   }

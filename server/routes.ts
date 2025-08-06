@@ -6,6 +6,7 @@ import { extractYouTubeSubtitles } from "./services/youtube";
 import { insertUserSchema, insertQuizSessionSchema, insertQuestionSchema } from "@shared/schema";
 import multer from "multer";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -49,6 +50,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(user);
     } catch (error) {
       res.status(400).json({ message: "ユーザー更新に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  // パスワード変更エンドポイント
+  app.post("/api/users/change-password", async (req, res) => {
+    try {
+      const { userId, currentPassword, newPassword } = req.body;
+
+      if (!userId || !newPassword) {
+        return res.status(400).json({ message: "ユーザーIDと新しいパスワードが必要です" });
+      }
+
+      if (newPassword.length < 6) {
+        return res.status(400).json({ message: "新しいパスワードは6文字以上である必要があります" });
+      }
+
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: "ユーザーが見つかりません" });
+      }
+
+      // 現在のパスワードが設定されている場合の検証
+      if (user.password && currentPassword) {
+        const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isCurrentPasswordValid) {
+          return res.status(400).json({ message: "現在のパスワードが正しくありません" });
+        }
+      }
+
+      // 新しいパスワードをハッシュ化
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+      // パスワードを更新
+      const updatedUser = await storage.updateUserPassword(userId, hashedPassword);
+      if (!updatedUser) {
+        return res.status(500).json({ message: "パスワード更新に失敗しました" });
+      }
+
+      res.json({ message: "パスワードが正常に変更されました" });
+    } catch (error) {
+      console.error("Password change error:", error);
+      res.status(500).json({ message: "パスワード変更に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
     }
   });
 
