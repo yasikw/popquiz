@@ -44,11 +44,11 @@ export default function Home({ user, onLogout }: HomeProps) {
 
   return (
     <div 
-      className="min-h-screen pb-20 relative"
+      className="min-h-screen pb-20 relative max-w-md mx-auto"
       style={{
         backgroundImage: `url(${bgImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundSize: '100% auto',
+        backgroundPosition: 'center top',
         backgroundRepeat: 'no-repeat'
       }}
     >
