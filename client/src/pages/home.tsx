@@ -9,9 +9,13 @@ import CardStack from "@/components/mobile/card-stack";
 import BottomNav from "@/components/mobile/bottom-nav";
 import { type GeneratedQuiz, type User } from "@shared/schema";
 
-export default function Home() {
+interface HomeProps {
+  user: User;
+  onLogout: () => void;
+}
+
+export default function Home({ user, onLogout }: HomeProps) {
   const [activeSection, setActiveSection] = useState<string>("home");
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("intermediate");
   const [currentQuiz, setCurrentQuiz] = useState<GeneratedQuiz | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,9 +39,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 pb-20">
       <Header 
-        user={currentUser} 
+        user={user} 
         activeSection={activeSection}
         onSectionChange={setActiveSection}
+        onLogout={onLogout}
       />
       
       <main className="max-w-md mx-auto px-4 py-6">
@@ -50,7 +55,7 @@ export default function Home() {
               onDifficultyChange={setSelectedDifficulty}
               setIsLoading={setIsLoading}
               setLoadingMessage={setLoadingMessage}
-              userId={currentUser?.id}
+              userId={user.id}
             />
           </>
         )}
@@ -58,7 +63,7 @@ export default function Home() {
         {activeSection === "quiz" && currentQuiz && (
           <QuizInterface 
             quiz={currentQuiz}
-            userId={currentUser?.id || "anonymous"}
+            userId={user.id}
             onQuizCompleted={handleQuizCompleted}
           />
         )}
@@ -74,13 +79,13 @@ export default function Home() {
         )}
 
         {activeSection === "stats" && (
-          <StatsSection userId={currentUser?.id} />
+          <StatsSection userId={user.id} />
         )}
 
         {activeSection === "settings" && (
           <SettingsSection 
-            user={currentUser}
-            onUserUpdate={setCurrentUser}
+            user={user}
+            onUserUpdate={() => {}}
           />
         )}
       </main>

@@ -4,9 +4,10 @@ interface HeaderProps {
   user: User | null;
   activeSection: string;
   onSectionChange: (section: string) => void;
+  onLogout?: () => void;
 }
 
-export default function Header({ user, activeSection, onSectionChange }: HeaderProps) {
+export default function Header({ user, activeSection, onSectionChange, onLogout }: HeaderProps) {
   const navItems = [
     { id: "home", label: "ホーム", icon: "fas fa-home" },
     { id: "quiz", label: "クイズ", icon: "fas fa-question-circle" },
@@ -25,32 +26,33 @@ export default function Header({ user, activeSection, onSectionChange }: HeaderP
             <span className="text-lg font-bold text-gray-800">AI Quiz</span>
           </div>
           
-          <div className="flex items-center">
-            <i className="fas fa-user-circle text-gray-400 text-lg"></i>
-          </div>
-
           <div className="flex items-center space-x-4">
             {user ? (
-              <div className="hidden sm:block text-right">
-                <div className="text-sm font-medium text-gray-800" data-testid="user-name">
-                  {user.username}
+              <>
+                <div className="hidden sm:block text-right">
+                  <div className="text-sm font-medium text-gray-800" data-testid="user-name">
+                    {user.username}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    登録日: {new Date(user.createdAt).toLocaleDateString('ja-JP')}
+                  </div>
                 </div>
-                <div className="text-xs text-gray-500">
-                  登録日: {user.createdAt.toLocaleDateString('ja-JP')}
-                </div>
-              </div>
+                {onLogout && (
+                  <button 
+                    onClick={onLogout}
+                    className="text-red-600 hover:text-red-700 text-sm font-medium"
+                    data-testid="button-logout"
+                  >
+                    <i className="fas fa-sign-out-alt mr-1"></i>
+                    ログアウト
+                  </button>
+                )}
+              </>
             ) : (
               <div className="text-sm text-gray-500">
                 ゲストユーザー
               </div>
             )}
-            
-            <button 
-              className="md:hidden text-gray-600"
-              data-testid="mobile-menu-toggle"
-            >
-              <i className="fas fa-bars text-xl"></i>
-            </button>
           </div>
         </div>
       </div>

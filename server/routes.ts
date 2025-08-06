@@ -17,6 +17,77 @@ const upload = multer({
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
+  // Authentication endpoints
+  app.post("/api/auth/register", async (req, res) => {
+    try {
+      const { username, email, password } = req.body;
+
+      if (!username || !password) {
+        return res.status(400).json({ message: "ユーザー名とパスワードが必要です" });
+      }
+
+      if (password.length < 6) {
+        return res.status(400).json({ message: "パスワードは6文字以上である必要があります" });
+      }
+
+      // Check if username already exists
+      const existingUser = await storage.getUserByUsername(username);
+      if (existingUser) {
+        return res.status(400).json({ message: "このユーザー名は既に使用されています" });
+      }
+
+      // Hash password
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      const userData = {
+        username,
+        email: email || null,
+        password: hashedPassword,
+      };
+
+      const user = await storage.createUser(userData);
+      
+      // Return user without password
+      const { password: _, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      console.error("Registration error:", error);
+      res.status(500).json({ message: "ユーザー登録に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+
+      if (!username || !password) {
+        return res.status(400).json({ message: "ユーザー名とパスワードが必要です" });
+      }
+
+      const user = await storage.getUserByUsername(username);
+      if (!user) {
+        return res.status(401).json({ message: "ユーザー名またはパスワードが正しくありません" });
+      }
+
+      if (!user.password) {
+        return res.status(401).json({ message: "パスワードが設定されていません" });
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: "ユーザー名またはパスワードが正しくありません" });
+      }
+
+      // Return user without password
+      const { password: _, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ message: "ログインに失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
   // User management
   app.post("/api/users", async (req, res) => {
     try {
