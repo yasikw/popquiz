@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
-import { getUserStats, getUserSessions } from "@/lib/api";
+import { getUserStats, getUserSessionsWithQuestions } from "@/lib/api";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface StatsSectionProps {
@@ -14,9 +14,9 @@ export default function StatsSection({ userId }: StatsSectionProps) {
     enabled: !!userId,
   });
 
-  const { data: sessions } = useQuery({
-    queryKey: ['/api/users', userId, 'sessions'],
-    queryFn: () => userId ? getUserSessions(userId) : null,
+  const { data: sessionsWithQuestions } = useQuery({
+    queryKey: ['/api/users', userId, 'sessions-with-questions'],
+    queryFn: () => userId ? getUserSessionsWithQuestions(userId) : null,
     enabled: !!userId,
   });
 
@@ -80,7 +80,7 @@ export default function StatsSection({ userId }: StatsSectionProps) {
       }));
   };
 
-  const displayStats = sessions ? calculateStats(sessions) : stats || {
+  const displayStats = sessionsWithQuestions ? calculateStats(sessionsWithQuestions) : stats || {
     totalScore: 0,
     completedQuizzes: 0,
     averageAccuracy: 0,
@@ -89,7 +89,7 @@ export default function StatsSection({ userId }: StatsSectionProps) {
     advancedAccuracy: 0,
   };
   
-  const displaySessions = sessions || [];
+  const displaySessions = sessionsWithQuestions || [];
   const chartData = prepareChartData(displaySessions);
 
   const formatTime = (seconds: number) => {
@@ -247,7 +247,7 @@ export default function StatsSection({ userId }: StatsSectionProps) {
               <thead className="border-b border-gray-300">
                 <tr className="text-left text-gray-600">
                   <th className="pb-3">日時</th>
-                  <th className="pb-3">コンテンツ</th>
+                  <th className="pb-3">問題内容</th>
                   <th className="pb-3">難易度</th>
                   <th className="pb-3">正答率</th>
                   <th className="pb-3">所要時間</th>
@@ -262,7 +262,9 @@ export default function StatsSection({ userId }: StatsSectionProps) {
                         {new Date(session.completedAt).toLocaleDateString('ja-JP')} {new Date(session.completedAt).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
                       </td>
                       <td className="py-3" data-testid={`session-title-${session.id}`}>
-                        {session.title}
+                        {session.questions && session.questions.length > 0 
+                          ? session.questions[0].questionText.substring(0, 50) + (session.questions[0].questionText.length > 50 ? '...' : '')
+                          : session.title}
                       </td>
                       <td className="py-3">
                         <span className={`px-2 py-1 rounded-full text-xs ${getDifficultyColor(session.difficulty)}`}>

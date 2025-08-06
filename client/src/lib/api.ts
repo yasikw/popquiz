@@ -112,6 +112,11 @@ export async function getUserSessions(userId: string) {
   return response.json() as Promise<QuizSession[]>;
 }
 
+export async function getUserSessionsWithQuestions(userId: string) {
+  const response = await apiRequest("GET", `/api/users/${userId}/sessions-with-questions`);
+  return response.json() as Promise<(QuizSession & { questions: Question[] })[]>;
+}
+
 export async function getUserStats(userId: string) {
   const response = await apiRequest("GET", `/api/users/${userId}/stats`);
   return response.json() as Promise<UserStats>;

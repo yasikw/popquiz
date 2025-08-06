@@ -479,6 +479,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User sessions with questions for detailed view
+  app.get("/api/users/:userId/sessions-with-questions", async (req, res) => {
+    try {
+      const sessionsWithQuestions = await storage.getUserQuizSessionsWithQuestions(req.params.userId);
+      res.json(sessionsWithQuestions);
+    } catch (error) {
+      res.status(500).json({ message: "詳細セッション取得に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
   app.get("/api/users/:userId/stats", async (req, res) => {
     try {
       const stats = await storage.getUserStats(req.params.userId);
