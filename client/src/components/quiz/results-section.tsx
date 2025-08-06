@@ -45,14 +45,19 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
     try {
       // Get quiz settings
       const savedSettings = localStorage.getItem('quizSettings');
+      console.log('Saved quiz settings:', savedSettings);
       const settings = savedSettings ? JSON.parse(savedSettings) : { difficulty: 'intermediate', questionCount: 5 };
+      console.log('Parsed settings:', settings);
       
       // Check what type of content we're dealing with
       const lastContentType = localStorage.getItem('lastContentType');
+      console.log('Last content type:', lastContentType);
+      
       let requestBody: any = {
-        difficulty: settings.defaultDifficulty || 'intermediate',
+        difficulty: settings.difficulty || settings.defaultDifficulty || 'intermediate',
         questionCount: settings.questionCount || 5,
       };
+      console.log('Initial request body:', requestBody);
       
       if (lastContentType === 'pdf') {
         // Get the stored PDF file info
@@ -79,6 +84,8 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
       // Clear previous results
       localStorage.removeItem('quizResults');
       
+      console.log('Sending request body:', JSON.stringify(requestBody, null, 2));
+      
       const response = await fetch('/api/generate-quiz-from-cache', {
         method: 'POST',
         headers: {
@@ -87,19 +94,53 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
         body: JSON.stringify(requestBody),
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Array.from(response.headers.entries()));
+
       if (!response.ok) {
-        throw new Error('新しいクイズの生成に失敗しました');
+        const errorText = await response.text();
+        console.error('Server error response:', errorText);
+        try {
+          const errorJson = JSON.parse(errorText);
+          throw new Error(errorJson.message || `HTTP ${response.status}: 新しいクイズの生成に失敗しました`);
+        } catch (parseError) {
+          throw new Error(`HTTP ${response.status}: ${errorText || '新しいクイズの生成に失敗しました'}`);
+        }
       }
 
-      const newQuiz = await response.json();
+      const responseText = await response.text();
+      console.log('Response text preview:', responseText.substring(0, 200));
+      
+      let newQuiz;
+      try {
+        newQuiz = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        throw new Error('サーバーレスポンスの解析に失敗しました');
+      }
       console.log('New quiz generated successfully:', newQuiz);
       
       // Call the parent component's quiz generated handler
       onQuizGenerated(newQuiz);
       
     } catch (error) {
-      console.error('Different quiz generation error:', error);
-      alert(`新しいクイズの生成に失敗しました: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Different quiz generation error details:', error);
+      console.error('Error type:', typeof error);
+      console.error('Error constructor:', error?.constructor?.name);
+      
+      // More detailed error handling
+      let errorMessage = 'Unknown error';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+        console.error('Error stack:', error.stack);
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else if (error && typeof error === 'object') {
+        console.error('Error object keys:', Object.keys(error));
+        errorMessage = JSON.stringify(error);
+      }
+      
+      alert(`新しいクイズの生成に失敗しました: ${errorMessage}`);
     } finally {
       setIsGenerating(false);
     }

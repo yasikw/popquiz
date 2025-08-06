@@ -73,22 +73,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
         quiz = await generateQuizFromCachedPDF(pdfInfo, difficulty, parseInt(questionCount));
       } else if (youtubeVideoId) {
         console.log('Generating quiz from cached YouTube video:', youtubeVideoId);
+        console.log('Requested difficulty:', difficulty, 'Question count:', questionCount);
         quiz = await generateQuizFromCachedYouTube(youtubeVideoId, difficulty, parseInt(questionCount));
       }
       
       if (!quiz) {
+        console.log('Quiz generation returned null');
         return res.status(404).json({ 
           message: "キャッシュされたコンテンツが見つかりません",
           cacheStatus: cacheStatus
         });
       }
       
+      console.log('Quiz generated successfully from cache');
       res.json(quiz);
     } catch (error) {
-      console.error('Cached quiz generation error:', error);
+      console.error('Cached quiz generation error details:', error);
+      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
       res.status(500).json({ 
         message: "キャッシュからのクイズ生成に失敗しました", 
-        error: error instanceof Error ? error.message : "Unknown error" 
+        error: error instanceof Error ? error.message : "Unknown error",
+        stack: error instanceof Error ? error.stack : undefined
       });
     }
   });
