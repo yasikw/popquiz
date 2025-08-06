@@ -49,7 +49,8 @@ export default function Home({ user, onLogout }: HomeProps) {
         backgroundImage: `url(${bgImage})`,
         backgroundSize: '100% auto',
         backgroundPosition: 'center top',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed'
       }}
     >
       {/* Overlay for better readability */}
