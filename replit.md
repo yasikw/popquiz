@@ -15,6 +15,10 @@ This is an AI-powered Japanese language quiz application that generates interact
 ✓ Added detailed debugging and error handling for cache operations
 ✓ Resolved cache key generation inconsistencies between PDF processing and quiz generation
 ✓ Fixed variable scoping issues and added extractVideoId helper function
+✓ Added generateQuizFromCachedText function for text content re-use
+✓ Implemented password functionality in user settings with bcrypt security
+✓ Updated database schema with password field and secure storage system
+✓ Redesigned settings layout to display all cards in vertical single-column layout
 
 # User Preferences
 

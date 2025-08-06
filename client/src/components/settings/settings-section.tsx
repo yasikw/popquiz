@@ -168,7 +168,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
     <section className="mb-12">
       <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">設定</h3>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8 max-w-2xl mx-auto">
         {/* User Settings */}
         <Card className="bg-white border border-gray-200 shadow-md">
           <CardContent className="p-6">
