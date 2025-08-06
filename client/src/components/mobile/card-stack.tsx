@@ -319,7 +319,7 @@ export default function CardStack({
                 data-testid="input-file"
               />
               {file && (
-                <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-sm">
+                <div className="mt-2 p-2 bg-green-50/60 border border-green-200/60 rounded text-sm">
                   <i className="fas fa-check-circle text-green-600 mr-2"></i>
                   選択済み: {file.name} ({(file.size / 1024 / 1024).toFixed(1)}MB)
                   <button 
@@ -341,7 +341,7 @@ export default function CardStack({
                 const savedPdfFile = localStorage.getItem('lastPdfFile');
                 const pdfInfo = savedPdfFile ? JSON.parse(savedPdfFile) : null;
                 return pdfInfo ? (
-                  <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-sm">
+                  <div className="mt-2 p-2 bg-blue-50/60 border border-blue-200/60 rounded text-sm">
                     <i className="fas fa-info-circle text-blue-600 mr-2"></i>
                     前回のPDF: {pdfInfo.name} ({(pdfInfo.size / 1024 / 1024).toFixed(1)}MB)
                     <div className="text-xs text-blue-700 mt-1">
@@ -364,7 +364,7 @@ export default function CardStack({
                 className="mt-1"
                 data-testid="input-youtube"
               />
-              <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm">
+              <div className="mt-2 p-3 bg-blue-50/60 border border-blue-200/60 rounded-lg text-sm">
                 <div className="flex items-start">
                   <i className="fas fa-info-circle text-blue-600 mr-2 mt-0.5"></i>
                   <div>
