@@ -24,6 +24,7 @@ export interface IStorage {
   // User stats operations
   getUserStats(userId: string): Promise<UserStats | undefined>;
   updateUserStats(userId: string, stats: Partial<InsertUserStats>): Promise<UserStats>;
+  calculateAndUpdateUserStats(userId: string): Promise<UserStats>;
 }
 
 export class MemStorage implements IStorage {
@@ -189,6 +190,53 @@ export class MemStorage implements IStorage {
     const updated = { ...existing, ...updateData };
     this.userStats.set(userId, updated);
     return updated;
+  }
+
+  async calculateAndUpdateUserStats(userId: string): Promise<UserStats> {
+    const sessions = await this.getUserQuizSessions(userId);
+    
+    if (sessions.length === 0) {
+      return this.updateUserStats(userId, {
+        totalScore: 0,
+        completedQuizzes: 0,
+        averageAccuracy: 0,
+        beginnerAccuracy: 0,
+        intermediateAccuracy: 0,
+        advancedAccuracy: 0,
+      });
+    }
+
+    const totalScore = sessions.reduce((sum, session) => sum + session.score, 0);
+    const completedQuizzes = sessions.length;
+    
+    const difficultyGroups = {
+      beginner: sessions.filter(s => s.difficulty === 'beginner'),
+      intermediate: sessions.filter(s => s.difficulty === 'intermediate'),
+      advanced: sessions.filter(s => s.difficulty === 'advanced'),
+    };
+
+    const calculateAccuracy = (sessionsGroup: QuizSession[]) => {
+      if (sessionsGroup.length === 0) return 0;
+      const totalAccuracy = sessionsGroup.reduce((sum, session) => 
+        sum + (session.score / session.totalQuestions * 100), 0);
+      return Math.round(totalAccuracy / sessionsGroup.length);
+    };
+
+    const beginnerAccuracy = calculateAccuracy(difficultyGroups.beginner);
+    const intermediateAccuracy = calculateAccuracy(difficultyGroups.intermediate);
+    const advancedAccuracy = calculateAccuracy(difficultyGroups.advanced);
+    
+    const overallAccuracy = sessions.reduce((sum, session) => 
+      sum + (session.score / session.totalQuestions * 100), 0) / sessions.length;
+
+    return this.updateUserStats(userId, {
+      totalScore,
+      completedQuizzes,
+      averageAccuracy: Math.round(overallAccuracy),
+      beginnerAccuracy,
+      intermediateAccuracy,
+      advancedAccuracy,
+    });
   }
 }
 

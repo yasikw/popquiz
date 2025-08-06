@@ -491,7 +491,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/users/:userId/stats", async (req, res) => {
     try {
-      const stats = await storage.getUserStats(req.params.userId);
+      let stats = await storage.getUserStats(req.params.userId);
+      
+      // If no stats exist, calculate them from existing sessions
+      if (!stats) {
+        stats = await storage.calculateAndUpdateUserStats(req.params.userId);
+      }
+      
       res.json(stats);
     } catch (error) {
       res.status(500).json({ message: "統計取得に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
@@ -528,6 +534,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }));
       
       await storage.createQuestions(questionsData);
+      
+      // Update user statistics automatically
+      await storage.calculateAndUpdateUserStats(userId);
       
       res.json({ sessionId: session.id, message: "結果を保存しました" });
     } catch (error) {
