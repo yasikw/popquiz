@@ -1,5 +1,7 @@
-import { type User, type InsertUser, type QuizSession, type InsertQuizSession, type Question, type InsertQuestion, type UserStats, type InsertUserStats } from "@shared/schema";
+import { type User, type InsertUser, type QuizSession, type InsertQuizSession, type Question, type InsertQuestion, type UserStats, type InsertUserStats, type UserSettings, type InsertUserSettings, users, userSettings, quizSessions, questions, userStats } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { db } from "./db";
+import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
   // User operations
@@ -25,6 +27,11 @@ export interface IStorage {
   getUserStats(userId: string): Promise<UserStats | undefined>;
   updateUserStats(userId: string, stats: Partial<InsertUserStats>): Promise<UserStats>;
   calculateAndUpdateUserStats(userId: string): Promise<UserStats>;
+
+  // User settings operations
+  getUserSettings(userId: string): Promise<UserSettings | undefined>;
+  updateUserSettings(userId: string, settings: Partial<InsertUserSettings>): Promise<UserSettings>;
+  createUserSettings(settings: InsertUserSettings): Promise<UserSettings>;
 }
 
 export class MemStorage implements IStorage {
@@ -32,12 +39,14 @@ export class MemStorage implements IStorage {
   private quizSessions: Map<string, QuizSession>;
   private questions: Map<string, Question>;
   private userStats: Map<string, UserStats>;
+  private userSettings: Map<string, UserSettings>;
 
   constructor() {
     this.users = new Map();
     this.quizSessions = new Map();
     this.questions = new Map();
     this.userStats = new Map();
+    this.userSettings = new Map();
   }
 
   async getUser(id: string): Promise<User | undefined> {
@@ -249,6 +258,296 @@ export class MemStorage implements IStorage {
     console.log(`Calculated stats data:`, statsData);
     return this.updateUserStats(userId, statsData);
   }
+
+  // User settings operations for MemStorage
+  async getUserSettings(userId: string): Promise<UserSettings | undefined> {
+    return this.userSettings.get(userId);
+  }
+
+  async updateUserSettings(userId: string, updateData: Partial<InsertUserSettings>): Promise<UserSettings> {
+    const existing = this.userSettings.get(userId);
+    if (!existing) {
+      const id = randomUUID();
+      const settings: UserSettings = {
+        id,
+        userId,
+        defaultDifficulty: "intermediate",
+        questionCount: 5,
+        timeLimit: 60,
+        updatedAt: new Date(),
+        ...updateData,
+      };
+      this.userSettings.set(userId, settings);
+      return settings;
+    }
+
+    const updated = { ...existing, ...updateData, updatedAt: new Date() };
+    this.userSettings.set(userId, updated);
+    return updated;
+  }
+
+  async createUserSettings(insertSettings: InsertUserSettings): Promise<UserSettings> {
+    const id = randomUUID();
+    const settings: UserSettings = {
+      id,
+      ...insertSettings,
+      updatedAt: new Date(),
+    };
+    this.userSettings.set(insertSettings.userId, settings);
+    return settings;
+  }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  // User operations
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    
+    // Create default user settings
+    await this.createUserSettings({
+      userId: user.id,
+      defaultDifficulty: "intermediate",
+      questionCount: 5,
+      timeLimit: 60,
+    });
+
+    // Initialize user stats
+    await db.insert(userStats).values({
+      userId: user.id,
+      totalScore: 0,
+      completedQuizzes: 0,
+      averageAccuracy: 0,
+      beginnerAccuracy: 0,
+      intermediateAccuracy: 0,
+      advancedAccuracy: 0,
+    });
+
+    return user;
+  }
+
+  async updateUser(id: string, updateData: Partial<InsertUser>): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set(updateData)
+      .where(eq(users.id, id))
+      .returning();
+    return user || undefined;
+  }
+
+  async updateUserPassword(id: string, hashedPassword: string): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set({ password: hashedPassword })
+      .where(eq(users.id, id))
+      .returning();
+    return user || undefined;
+  }
+
+  // Quiz session operations
+  async createQuizSession(insertSession: InsertQuizSession): Promise<QuizSession> {
+    const [session] = await db
+      .insert(quizSessions)
+      .values(insertSession)
+      .returning();
+    return session;
+  }
+
+  async getQuizSession(id: string): Promise<QuizSession | undefined> {
+    const [session] = await db.select().from(quizSessions).where(eq(quizSessions.id, id));
+    return session || undefined;
+  }
+
+  async getUserQuizSessions(userId: string): Promise<QuizSession[]> {
+    return await db
+      .select()
+      .from(quizSessions)
+      .where(eq(quizSessions.userId, userId))
+      .orderBy(desc(quizSessions.completedAt));
+  }
+
+  async getUserSessions(userId: string): Promise<QuizSession[]> {
+    return this.getUserQuizSessions(userId);
+  }
+
+  async getUserQuizSessionsWithQuestions(userId: string): Promise<(QuizSession & { questions: Question[] })[]> {
+    const sessions = await this.getUserQuizSessions(userId);
+    const sessionsWithQuestions = await Promise.all(
+      sessions.map(async session => ({
+        ...session,
+        questions: await this.getSessionQuestions(session.id)
+      }))
+    );
+    return sessionsWithQuestions;
+  }
+
+  // Question operations
+  async createQuestions(insertQuestions: InsertQuestion[]): Promise<Question[]> {
+    const createdQuestions = await db
+      .insert(questions)
+      .values(insertQuestions)
+      .returning();
+    return createdQuestions;
+  }
+
+  async getSessionQuestions(sessionId: string): Promise<Question[]> {
+    return await db
+      .select()
+      .from(questions)
+      .where(eq(questions.sessionId, sessionId));
+  }
+
+  async updateQuestion(id: string, updateData: Partial<InsertQuestion>): Promise<Question | undefined> {
+    const [question] = await db
+      .update(questions)
+      .set(updateData)
+      .where(eq(questions.id, id))
+      .returning();
+    return question || undefined;
+  }
+
+  // User stats operations
+  async getUserStats(userId: string): Promise<UserStats | undefined> {
+    const [stats] = await db.select().from(userStats).where(eq(userStats.userId, userId));
+    return stats || undefined;
+  }
+
+  async updateUserStats(userId: string, updateData: Partial<InsertUserStats>): Promise<UserStats> {
+    // Try to update existing stats first
+    const [updated] = await db
+      .update(userStats)
+      .set(updateData)
+      .where(eq(userStats.userId, userId))
+      .returning();
+
+    // If no stats exist, create new ones
+    if (!updated) {
+      const [newStats] = await db
+        .insert(userStats)
+        .values({
+          userId,
+          totalScore: 0,
+          completedQuizzes: 0,
+          averageAccuracy: 0,
+          beginnerAccuracy: 0,
+          intermediateAccuracy: 0,
+          advancedAccuracy: 0,
+          ...updateData,
+        })
+        .returning();
+      return newStats;
+    }
+
+    return updated;
+  }
+
+  async calculateAndUpdateUserStats(userId: string): Promise<UserStats> {
+    console.log(`Calculating stats for user: ${userId}`);
+    const sessions = await this.getUserQuizSessions(userId);
+    console.log(`Found ${sessions.length} sessions for user ${userId}`);
+    
+    if (sessions.length === 0) {
+      console.log(`No sessions found, creating default stats`);
+      return this.updateUserStats(userId, {
+        totalScore: 0,
+        completedQuizzes: 0,
+        averageAccuracy: 0,
+        beginnerAccuracy: 0,
+        intermediateAccuracy: 0,
+        advancedAccuracy: 0,
+      });
+    }
+
+    const totalScore = sessions.reduce((sum, session) => sum + session.score, 0);
+    const completedQuizzes = sessions.length;
+    
+    const difficultyGroups = {
+      beginner: sessions.filter(s => s.difficulty === 'beginner'),
+      intermediate: sessions.filter(s => s.difficulty === 'intermediate'),
+      advanced: sessions.filter(s => s.difficulty === 'advanced'),
+    };
+
+    const calculateAccuracy = (sessionsGroup: QuizSession[]) => {
+      if (sessionsGroup.length === 0) return 0;
+      const totalAccuracy = sessionsGroup.reduce((sum, session) => 
+        sum + (session.score / session.totalQuestions * 100), 0);
+      return Math.round(totalAccuracy / sessionsGroup.length);
+    };
+
+    const beginnerAccuracy = calculateAccuracy(difficultyGroups.beginner);
+    const intermediateAccuracy = calculateAccuracy(difficultyGroups.intermediate);
+    const advancedAccuracy = calculateAccuracy(difficultyGroups.advanced);
+    
+    const overallAccuracy = sessions.reduce((sum, session) => 
+      sum + (session.score / session.totalQuestions * 100), 0) / sessions.length;
+
+    const statsData = {
+      totalScore,
+      completedQuizzes,
+      averageAccuracy: Math.round(overallAccuracy),
+      beginnerAccuracy,
+      intermediateAccuracy,
+      advancedAccuracy,
+    };
+    
+    console.log(`Calculated stats data:`, statsData);
+    return this.updateUserStats(userId, statsData);
+  }
+
+  // User settings operations
+  async getUserSettings(userId: string): Promise<UserSettings | undefined> {
+    const [settings] = await db.select().from(userSettings).where(eq(userSettings.userId, userId));
+    return settings || undefined;
+  }
+
+  async updateUserSettings(userId: string, updateData: Partial<InsertUserSettings>): Promise<UserSettings> {
+    // Try to update existing settings first
+    const [updated] = await db
+      .update(userSettings)
+      .set({
+        ...updateData,
+        updatedAt: new Date(),
+      })
+      .where(eq(userSettings.userId, userId))
+      .returning();
+
+    // If no settings exist, create new ones
+    if (!updated) {
+      const [newSettings] = await db
+        .insert(userSettings)
+        .values({
+          userId,
+          defaultDifficulty: "intermediate",
+          questionCount: 5,
+          timeLimit: 60,
+          ...updateData,
+        })
+        .returning();
+      return newSettings;
+    }
+
+    return updated;
+  }
+
+  async createUserSettings(insertSettings: InsertUserSettings): Promise<UserSettings> {
+    const [settings] = await db
+      .insert(userSettings)
+      .values(insertSettings)
+      .returning();
+    return settings;
+  }
+}
+
+export const storage = new DatabaseStorage();

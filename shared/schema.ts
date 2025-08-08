@@ -11,6 +11,15 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const userSettings = pgTable("user_settings", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id).notNull().unique(),
+  defaultDifficulty: text("default_difficulty").default("intermediate").notNull(),
+  questionCount: integer("question_count").default(5).notNull(),
+  timeLimit: integer("time_limit").default(60).notNull(), // seconds per question
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const quizSessions = pgTable("quiz_sessions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").references(() => users.id).notNull(),
@@ -27,7 +36,7 @@ export const questions = pgTable("questions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   sessionId: varchar("session_id").references(() => quizSessions.id).notNull(),
   questionText: text("question_text").notNull(),
-  options: json("options").$type<string[]>().notNull(),
+  options: json("options").notNull(),
   correctAnswer: integer("correct_answer").notNull(), // 0-3 index
   explanation: text("explanation").notNull(),
   userAnswer: integer("user_answer"), // 0-3 index, null if not answered
@@ -64,6 +73,11 @@ export const insertUserStatsSchema = createInsertSchema(userStats).omit({
   id: true,
 });
 
+export const insertUserSettingsSchema = createInsertSchema(userSettings).omit({
+  id: true,
+  updatedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -76,6 +90,9 @@ export type InsertQuestion = z.infer<typeof insertQuestionSchema>;
 
 export type UserStats = typeof userStats.$inferSelect;
 export type InsertUserStats = z.infer<typeof insertUserStatsSchema>;
+
+export type UserSettings = typeof userSettings.$inferSelect;
+export type InsertUserSettings = z.infer<typeof insertUserSettingsSchema>;
 
 // Quiz generation types
 export interface QuizQuestion {

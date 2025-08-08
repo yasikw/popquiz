@@ -2,8 +2,16 @@
 
 This is an AI-powered Japanese language quiz application that generates interactive quizzes from various content sources including PDFs, text files, and YouTube videos. The app leverages Google's Gemini AI API to extract text from content and automatically generate multiple-choice questions with explanations. Built with a modern React frontend and Express backend, the application provides a comprehensive learning platform with user management, progress tracking, and performance analytics.
 
-## Recent Changes (January 5, 2025)
+## Recent Changes (January 8, 2025)
 
+✓ Migrated from localStorage to comprehensive PostgreSQL database storage
+✓ Created user_settings table with default difficulty, question count, and time limit preferences
+✓ Implemented API endpoints for user settings CRUD operations (GET/PUT /api/users/:id/settings)
+✓ Updated settings interface to load and save preferences from database
+✓ Enhanced quiz generation to use database settings instead of localStorage
+✓ Maintained 60% transparency for interface elements and 40% for select boxes
+✓ Added loading states and error handling for database operations
+✓ Integrated React Query for settings data management and caching
 ✓ Fixed critical "別の問題を出題" (different quiz) button functionality for both PDF and YouTube content
 ✓ Implemented comprehensive YouTube caching system with video ID extraction and storage
 ✓ Added generateQuizFromCachedYouTube function for consistent YouTube quiz regeneration

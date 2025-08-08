@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { extractTextFromPDF, generateQuizFromText, generateQuizFromCachedPDF, generateQuizFromCachedYouTube, generateQuizFromCachedText, getCacheStatus } from "./services/gemini";
 import { extractYouTubeSubtitles } from "./services/youtube";
-import { insertUserSchema, insertQuizSessionSchema, insertQuestionSchema, insertUserStatsSchema } from "@shared/schema";
+import { insertUserSchema, insertQuizSessionSchema, insertQuestionSchema, insertUserStatsSchema, insertUserSettingsSchema } from "@shared/schema";
 import multer from "multer";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
@@ -565,6 +565,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ sessionId: session.id, message: "結果を保存しました" });
     } catch (error) {
       res.status(400).json({ message: "結果保存に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  // User settings endpoints
+  app.get("/api/users/:userId/settings", async (req, res) => {
+    try {
+      const settings = await storage.getUserSettings(req.params.userId);
+      if (!settings) {
+        // Check if user exists before creating settings
+        const user = await storage.getUser(req.params.userId);
+        if (!user) {
+          return res.status(404).json({ message: "ユーザーが見つかりません" });
+        }
+        // Create default settings if none exist
+        const defaultSettings = await storage.createUserSettings({
+          userId: req.params.userId,
+          defaultDifficulty: "intermediate",
+          questionCount: 5,
+          timeLimit: 60,
+        });
+        return res.json(defaultSettings);
+      }
+      res.json(settings);
+    } catch (error) {
+      console.error("Settings get error:", error);
+      res.status(500).json({ message: "設定取得に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.put("/api/users/:userId/settings", async (req, res) => {
+    try {
+      const settingsData = insertUserSettingsSchema.partial().parse(req.body);
+      const settings = await storage.updateUserSettings(req.params.userId, settingsData);
+      res.json(settings);
+    } catch (error) {
+      console.error("Settings update error:", error);
+      res.status(400).json({ message: "設定更新に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
     }
   });
 

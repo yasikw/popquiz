@@ -7,7 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { updateUser } from "@/lib/api";
-import { type User } from "@shared/schema";
+import { type User, type UserSettings } from "@shared/schema";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 interface SettingsSectionProps {
   user: User | null;
@@ -26,17 +28,22 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
   const [autoNext, setAutoNext] = useState(true);
   const { toast } = useToast();
 
-  // Load settings from localStorage on component mount
+  const queryClient = useQueryClient();
+
+  // Load settings from database
+  const { data: userSettings, isLoading: settingsLoading } = useQuery({
+    queryKey: [`/api/users/${user?.id}/settings`],
+    enabled: !!user?.id,
+  });
+
+  // Update state when settings are loaded
   useEffect(() => {
-    const savedSettings = localStorage.getItem('quizSettings');
-    if (savedSettings) {
-      const settings = JSON.parse(savedSettings);
-      setDefaultDifficulty(settings.defaultDifficulty || "intermediate");
-      setTimeLimit(settings.timeLimit?.toString() || "60");
-      setQuestionCount(settings.questionCount?.toString() || "10");
-      setAutoNext(settings.autoNext ?? true);
+    if (userSettings) {
+      setDefaultDifficulty(userSettings.defaultDifficulty || "intermediate");
+      setTimeLimit(userSettings.timeLimit?.toString() || "60");
+      setQuestionCount(userSettings.questionCount?.toString() || "5");
     }
-  }, []);
+  }, [userSettings]);
 
   const handleSaveUserSettings = async () => {
     if (!user) {
@@ -127,20 +134,50 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
     }
   };
 
+  // Mutation for updating user settings
+  const updateSettingsMutation = useMutation({
+    mutationFn: async (settingsData: Partial<UserSettings>) => {
+      return apiRequest(`/api/users/${user?.id}/settings`, {
+        method: "PUT",
+        body: JSON.stringify(settingsData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/users/${user?.id}/settings`] });
+      toast({
+        title: "成功",
+        description: "クイズ設定を保存しました",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "エラー",
+        description: "設定の保存に失敗しました",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleSaveQuizSettings = () => {
-    // Save quiz settings to localStorage
-    const settings = {
+    if (!user?.id) {
+      toast({
+        title: "エラー",
+        description: "ユーザーが見つかりません",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const settingsData = {
       defaultDifficulty,
       timeLimit: parseInt(timeLimit),
       questionCount: parseInt(questionCount),
-      autoNext
     };
-    localStorage.setItem('quizSettings', JSON.stringify(settings));
     
-    toast({
-      title: "成功",
-      description: "クイズ設定を保存しました",
-    });
+    updateSettingsMutation.mutate(settingsData);
   };
 
   const handleExportData = () => {
@@ -336,10 +373,11 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
 
               <Button 
                 onClick={handleSaveQuizSettings}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white border-0 shadow-md"
+                disabled={updateSettingsMutation.isPending || settingsLoading}
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white border-0 shadow-md disabled:opacity-50"
                 data-testid="button-save-quiz-settings"
               >
-                設定を保存
+                {updateSettingsMutation.isPending ? "保存中..." : "設定を保存"}
               </Button>
             </div>
           </CardContent>

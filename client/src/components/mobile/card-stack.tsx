@@ -3,7 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { type GeneratedQuiz } from "@shared/schema";
+import { type GeneratedQuiz, type UserSettings } from "@shared/schema";
+import { useQuery } from "@tanstack/react-query";
 
 interface CardStackProps {
   onQuizGenerated: (quiz: GeneratedQuiz) => void;
@@ -129,9 +130,8 @@ export default function CardStack({
     // Clear previous results but keep the PDF info
     localStorage.removeItem('quizResults');
     
-    // Get question count from settings
-    const savedSettings = localStorage.getItem('quizSettings');
-    const questionCount = savedSettings ? JSON.parse(savedSettings).questionCount || 5 : 5;
+    // Get question count from user settings
+    const questionCount = (userSettings as UserSettings)?.questionCount || 5;
     
     setIsLoading(true);
     setLoadingMessage("前回のPDFからクイズを生成中...");
@@ -168,11 +168,15 @@ export default function CardStack({
     }
   };
 
+  // Load user settings from database
+  const { data: userSettings } = useQuery({
+    queryKey: [`/api/users/${userId}/settings`],
+    enabled: !!userId,
+  });
+
   const handleQuizGeneration = async () => {
-    // Get question count from settings
-    const savedSettings = localStorage.getItem('quizSettings');
-    console.log('Raw saved settings:', savedSettings);
-    const questionCount = savedSettings ? JSON.parse(savedSettings).questionCount || 5 : 5;
+    // Get question count from user settings
+    const questionCount = (userSettings as UserSettings)?.questionCount || 5;
     
     const currentType = uploadTypes[currentUploadType].id;
     
