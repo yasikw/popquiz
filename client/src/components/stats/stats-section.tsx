@@ -14,12 +14,16 @@ export default function StatsSection({ userId }: StatsSectionProps) {
     queryKey: ['/api/users', userId, 'stats'],
     queryFn: () => userId ? getUserStats(userId) : null,
     enabled: !!userId,
+    staleTime: 0, // Always fetch fresh data
+    refetchOnWindowFocus: true,
   });
 
   const { data: sessionsWithQuestions } = useQuery({
     queryKey: ['/api/users', userId, 'sessions-with-questions'],
     queryFn: () => userId ? getUserSessionsWithQuestions(userId) : null,
     enabled: !!userId,
+    staleTime: 0, // Always fetch fresh data
+    refetchOnWindowFocus: true,
   });
 
 
@@ -31,24 +35,41 @@ export default function StatsSection({ userId }: StatsSectionProps) {
       if (questions && questions.length > 0) {
         const allText = questions.map(q => q.questionText).join(' ');
         
-        // Look for topic patterns in Japanese from questions
+        // Enhanced patterns to extract topics from Japanese text questions
         const topicPatterns = [
-          /日本の?([^、。？！\s]{2,6})(について|に関して|とは|が|の)/g,
-          /([^、。？！\s]{2,8})(の歴史|歴史|文化|政治|経済)/g,
+          /日本の([^、。？！\s]{2,8})/g,  // "日本の歴史" etc
+          /([^、。？！\s]{1,8})の歴史/g,  // "XXの歴史"
+          /([^、。？！\s]{1,8})歴史/g,    // "XX歴史"
+          /([^、。？！\s]{2,8})(について|に関して|とは)/g,
           /([^、。？！\s]{2,6})(県|市|都|府|国|地域)/g,
+          /([^、。？！\s]{2,8})(文化|政治|経済|社会)/g,
         ];
         
         for (const pattern of topicPatterns) {
           const matches = allText.match(pattern);
           if (matches && matches.length > 0) {
-            let topic = matches[0];
-            // Clean up the extracted topic
-            topic = topic.replace(/(について|に関して|とは|が|の)$/, '');
-            topic = topic.replace(/^日本の?/, '');
-            if (topic.includes('歴史')) {
-              topic = topic.replace(/の?歴史/, '') + 'の歴史';
+            let match = matches[0];
+            
+            // Handle specific patterns
+            if (pattern.source.includes('日本の')) {
+              const japanMatch = allText.match(/日本の([^、。？！\s]{2,8})/);
+              if (japanMatch && japanMatch[1]) {
+                return `日本の${japanMatch[1]}`;
+              }
+            } else if (pattern.source.includes('歴史')) {
+              const historyMatch = allText.match(/([^、。？！\s]{1,8})の歴史/);
+              if (historyMatch && historyMatch[1]) {
+                return `${historyMatch[1]}の歴史`;
+              } else {
+                return '日本の歴史';
+              }
+            } else {
+              // Clean up the extracted topic
+              let topic = match.replace(/(について|に関して|とは|が|の)$/, '');
+              if (topic && topic.length > 1) {
+                return topic;
+              }
             }
-            return topic || 'テキストクイズ';
           }
         }
         

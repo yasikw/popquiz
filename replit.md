@@ -35,6 +35,11 @@ This is an AI-powered Japanese language quiz application that generates interact
 ✓ Added automatic quiz result submission to database with performance metrics
 ✓ Created user statistics API endpoints for data retrieval and updates
 ✓ Integrated difficulty-specific accuracy tracking (beginner/intermediate/advanced)
+✓ Fixed quiz history display to show sessions instead of individual questions
+✓ Enhanced content title extraction for text input topics (e.g., "日本の歴史")
+✓ Implemented real-time statistics updates after quiz completion in home screen
+✓ Added proper duplicate session filtering in statistics display
+✓ Optimized React Query caching with fresh data fetching for accurate statistics
 
 # User Preferences
 

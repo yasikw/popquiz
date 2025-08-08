@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import Header from "@/components/layout/header";
 import QuizInterface from "@/components/quiz/quiz-interface";
 import ResultsSection from "@/components/quiz/results-section";
@@ -21,6 +22,7 @@ export default function Home({ user, onLogout }: HomeProps) {
   const [currentQuiz, setCurrentQuiz] = useState<GeneratedQuiz | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
+  const queryClient = useQueryClient();
 
   // Debug loading state changes
   useEffect(() => {
@@ -34,6 +36,9 @@ export default function Home({ user, onLogout }: HomeProps) {
 
   const handleQuizCompleted = () => {
     console.log("handleQuizCompleted called, switching to results section");
+    // Invalidate and refetch user stats data to show updated statistics
+    queryClient.invalidateQueries({ queryKey: ['/api/users', user.id, 'stats'] });
+    queryClient.invalidateQueries({ queryKey: ['/api/users', user.id, 'sessions-with-questions'] });
     setActiveSection("results");
   };
 
