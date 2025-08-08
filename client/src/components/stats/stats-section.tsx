@@ -2,15 +2,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { getUserStats, getUserSessionsWithQuestions } from "@/lib/api";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useState } from 'react';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+
 
 interface StatsSectionProps {
   userId?: string;
 }
 
 export default function StatsSection({ userId }: StatsSectionProps) {
-  const [expandedSessions, setExpandedSessions] = useState<Set<string>>(new Set());
 
   const { data: stats } = useQuery({
     queryKey: ['/api/users', userId, 'stats'],
@@ -24,50 +22,54 @@ export default function StatsSection({ userId }: StatsSectionProps) {
     enabled: !!userId,
   });
 
-  const toggleSessionExpansion = (sessionId: string) => {
-    const newExpanded = new Set(expandedSessions);
-    if (newExpanded.has(sessionId)) {
-      newExpanded.delete(sessionId);
-    } else {
-      newExpanded.add(sessionId);
-    }
-    setExpandedSessions(newExpanded);
-  };
 
-  const createQuizSummary = (questions: Array<{ questionText: string }>) => {
-    if (!questions || questions.length === 0) return '';
-    
-    // Extract key topics from all questions
-    const allText = questions.map(q => q.questionText).join(' ');
-    const keywords = [];
-    
-    // Common Japanese topic patterns
-    const patterns = [
-      /([^、。？！\s]{2,8})(県|市|都|府|国|地域)/g,
-      /([^、。？！\s]{2,6})(文化|伝統|祭り|踊り)/g,
-      /([^、。？！\s]{2,6})(政治|経済|社会|歴史)/g,
-      /([^、。？！\s]{2,6})(技術|科学|建築|交通)/g,
-      /([^、。？！\s]{2,6})(料理|食べ物|特産品)/g,
-      /([^、。？！\s]{2,6})(観光|名所|景観|自然)/g,
-    ];
-    
-    patterns.forEach(pattern => {
-      const matches = allText.match(pattern);
-      if (matches) {
-        keywords.push(...matches.slice(0, 2));
+
+  // Create content title based on content type
+  const getContentTitle = (session: any, questions: Array<{ questionText: string }>) => {
+    // For PDF content - extract filename or key topics
+    if (session.contentType === 'pdf') {
+      // Try to extract meaningful content from questions
+      if (questions && questions.length > 0) {
+        const allText = questions.map(q => q.questionText).join(' ');
+        
+        // Look for specific topic patterns in Japanese
+        const topicPatterns = [
+          /([^、。？！\s]{3,10})(について|に関して|とは)/g,
+          /([^、。？！\s]{3,8})(県|市|都|府|国)/g,
+          /([^、。？！\s]{3,8})(文化|歴史|伝統)/g,
+        ];
+        
+        for (const pattern of topicPatterns) {
+          const matches = allText.match(pattern);
+          if (matches && matches.length > 0) {
+            const topic = matches[0].replace(/(について|に関して|とは)/, '');
+            return `PDFクイズ: ${topic}`;
+          }
+        }
+        
+        // Fallback to first few characters of first question
+        const firstWords = questions[0].questionText.substring(0, 15);
+        return `PDFクイズ: ${firstWords}...`;
       }
-    });
-    
-    // If no patterns match, extract the first few words from first question
-    if (keywords.length === 0) {
-      const firstQuestion = questions[0].questionText;
-      const words = firstQuestion.replace(/[？！。、]/g, '').split(/\s+/);
-      keywords.push(words.slice(0, 3).join(''));
+      return 'PDFクイズ';
     }
     
-    // Create summary with question count
-    const summary = keywords.slice(0, 2).join('・');
-    return `${questions.length}問: ${summary.substring(0, 20)}`;
+    // For YouTube content - use video title or URL
+    if (session.contentType === 'youtube') {
+      return session.title && session.title !== 'AIクイズ' ? 
+        `YouTube: ${session.title}` : 'YouTubeクイズ';
+    }
+    
+    // For text content - use beginning of text
+    if (session.contentType === 'text') {
+      if (questions && questions.length > 0) {
+        const firstWords = questions[0].questionText.substring(0, 20);
+        return `テキスト: ${firstWords}...`;
+      }
+      return 'テキストクイズ';
+    }
+    
+    return session.title || 'クイズ';
   };
 
   // Calculate real statistics from sessions
@@ -293,70 +295,67 @@ export default function StatsSection({ userId }: StatsSectionProps) {
         <CardContent className="p-6">
           <h4 className="text-lg font-semibold text-gray-800 mb-4">最近のクイズ履歴</h4>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="border-b border-gray-300">
-                <tr className="text-left text-gray-600">
-                  <th className="pb-3">日時</th>
-                  <th className="pb-3">問題内容</th>
-                  <th className="pb-3">難易度</th>
-                  <th className="pb-3">正答率</th>
-                  <th className="pb-3">所要時間</th>
-                  <th className="pb-3">スコア</th>
-                </tr>
-              </thead>
+            <div className="min-w-full">
+              <table className="w-full text-sm">
+                <thead className="border-b border-gray-300">
+                  <tr className="text-left text-gray-600">
+                    <th className="pb-3 pr-4 min-w-[120px]">日時</th>
+                    <th className="pb-3 pr-4 min-w-[200px]">コンテンツ</th>
+                    <th className="pb-3 pr-4 min-w-[80px]">難易度</th>
+                    <th className="pb-3 pr-4 min-w-[80px]">正答率</th>
+                    <th className="pb-3 pr-4 min-w-[80px]">所要時間</th>
+                    <th className="pb-3 min-w-[80px]">スコア</th>
+                  </tr>
+                </thead>
               <tbody className="divide-y divide-gray-200">
                 {displaySessions.length > 0 ? (
                   displaySessions.slice(0, 10).map((session) => (
-                    <tr key={session.id} className="hover:bg-gray-50 text-gray-800">
-                      <td className="py-3" data-testid={`session-date-${session.id}`}>
-                        {new Date(session.completedAt).toLocaleDateString('ja-JP')} {new Date(session.completedAt).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
+                    <tr key={session.id} className="hover:bg-gray-50/50 text-gray-800">
+                      <td className="py-3 pr-4" data-testid={`session-date-${session.id}`}>
+                        <div className="whitespace-nowrap">
+                          {new Date(session.completedAt).toLocaleDateString('ja-JP', { 
+                            month: 'short', 
+                            day: 'numeric' 
+                          })}
+                        </div>
+                        <div className="text-xs text-gray-500 whitespace-nowrap">
+                          {new Date(session.completedAt).toLocaleTimeString('ja-JP', { 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                          })}
+                        </div>
                       </td>
-                      <td className="py-3 max-w-xs" data-testid={`session-title-${session.id}`}>
-                        {session.questions && session.questions.length > 0 ? (
-                          <div className="space-y-2">
-                            <button
-                              onClick={() => toggleSessionExpansion(session.id)}
-                              className="flex items-center space-x-2 text-left hover:text-blue-600 transition-colors"
-                            >
-                              {expandedSessions.has(session.id) ? (
-                                <ChevronDown className="w-4 h-4" />
-                              ) : (
-                                <ChevronRight className="w-4 h-4" />
-                              )}
-                              <div>
-                                <div className="text-sm font-medium text-gray-800">
-                                  {createQuizSummary(session.questions)}
-                                </div>
-                              </div>
-                            </button>
-                            
-                            {expandedSessions.has(session.id) && (
-                              <div className="ml-6 space-y-1 border-l-2 border-gray-200 pl-3">
-                                {session.questions.map((question, index) => (
-                                  <div key={index} className="text-xs text-gray-700">
-                                    <span className="font-medium">Q{index + 1}:</span> {question.questionText}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
+                      <td className="py-3 pr-4" data-testid={`session-title-${session.id}`}>
+                        <div className="max-w-[200px]">
+                          <div className="font-medium text-gray-800 truncate">
+                            {getContentTitle(session, session.questions || [])}
                           </div>
-                        ) : (
-                          session.title
-                        )}
+                          <div className="text-xs text-gray-500">
+                            {session.questions?.length || 0}問のクイズ
+                          </div>
+                        </div>
                       </td>
-                      <td className="py-3">
-                        <span className={`px-2 py-1 rounded-full text-xs ${getDifficultyColor(session.difficulty)}`}>
+                      <td className="py-3 pr-4">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getDifficultyColor(session.difficulty)}`}>
                           {getDifficultyLabel(session.difficulty)}
                         </span>
                       </td>
-                      <td className="py-3" data-testid={`session-accuracy-${session.id}`}>
-                        {Math.round((session.score / session.totalQuestions) * 100)}%
+                      <td className="py-3 pr-4" data-testid={`session-accuracy-${session.id}`}>
+                        <div className="text-center">
+                          <div className="font-semibold">
+                            {Math.round((session.score / session.totalQuestions) * 100)}%
+                          </div>
+                        </div>
                       </td>
-                      <td className="py-3" data-testid={`session-time-${session.id}`}>
-                        {formatTime(session.timeSpent)}
+                      <td className="py-3 pr-4" data-testid={`session-time-${session.id}`}>
+                        <div className="text-center whitespace-nowrap">
+                          {formatTime(session.timeSpent)}
+                        </div>
                       </td>
-                      <td className="py-3 font-medium text-blue-600" data-testid={`session-score-${session.id}`}>
-                        {session.score}/{session.totalQuestions}
+                      <td className="py-3" data-testid={`session-score-${session.id}`}>
+                        <div className="text-center font-semibold">
+                          {session.score}/{session.totalQuestions}
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -372,7 +371,8 @@ export default function StatsSection({ userId }: StatsSectionProps) {
                   </tr>
                 )}
               </tbody>
-            </table>
+              </table>
+            </div>
           </div>
         </CardContent>
       </Card>
