@@ -3,8 +3,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { type GeneratedQuiz, type UserSettings } from "@shared/schema";
+import { type GeneratedQuiz, type UserSettings, type UserStats } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
+import { getUserStats, getUserSessionsWithQuestions } from "@/lib/api";
 
 interface CardStackProps {
   onQuizGenerated: (quiz: GeneratedQuiz) => void;
@@ -173,6 +174,28 @@ export default function CardStack({
     queryKey: [`/api/users/${userId}/settings`],
     enabled: !!userId,
   });
+
+  // Load user statistics from database for real-time display
+  const { data: userStats } = useQuery({
+    queryKey: ['/api/users', userId, 'stats'],
+    queryFn: () => userId ? getUserStats(userId) : null,
+    enabled: !!userId,
+    staleTime: 0, // Always fetch fresh data
+    refetchOnWindowFocus: true,
+  });
+
+  // Load user sessions to calculate total learning time
+  const { data: sessionsWithQuestions } = useQuery({
+    queryKey: ['/api/users', userId, 'sessions-with-questions'],
+    queryFn: () => userId ? getUserSessionsWithQuestions(userId) : null,
+    enabled: !!userId,
+    staleTime: 0, // Always fetch fresh data
+    refetchOnWindowFocus: true,
+  });
+
+  // Calculate total learning time from sessions
+  const totalLearningTime = sessionsWithQuestions ? 
+    sessionsWithQuestions.reduce((total: number, session: any) => total + (session.timeSpent || 0), 0) : 0;
 
   const handleQuizGeneration = async () => {
     // Get question count from user settings
@@ -500,25 +523,33 @@ export default function CardStack({
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gradient-to-br from-blue-50/60 to-cyan-50/60 p-4 rounded-xl">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">0</div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {userStats?.completedQuizzes || 0}
+                </div>
                 <div className="text-xs text-gray-600">完了クイズ</div>
               </div>
             </div>
             <div className="bg-gradient-to-br from-purple-50/60 to-pink-50/60 p-4 rounded-xl">
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">0%</div>
+                <div className="text-2xl font-bold text-purple-600">
+                  {userStats ? Math.round((userStats.averageAccuracy || 0) * 100) : 0}%
+                </div>
                 <div className="text-xs text-gray-600">平均正答率</div>
               </div>
             </div>
             <div className="bg-gradient-to-br from-green-50/60 to-emerald-50/60 p-4 rounded-xl">
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">0</div>
+                <div className="text-2xl font-bold text-green-600">
+                  {userStats?.totalScore || 0}
+                </div>
                 <div className="text-xs text-gray-600">総スコア</div>
               </div>
             </div>
             <div className="bg-gradient-to-br from-orange-50/60 to-yellow-50/60 p-4 rounded-xl">
               <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">0</div>
+                <div className="text-2xl font-bold text-orange-600">
+                  {Math.round(totalLearningTime / 60)}分
+                </div>
                 <div className="text-xs text-gray-600">学習時間</div>
               </div>
             </div>
