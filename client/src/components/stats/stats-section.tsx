@@ -26,13 +26,44 @@ export default function StatsSection({ userId }: StatsSectionProps) {
 
   // Create content title based on content type
   const getContentTitle = (session: any, questions: Array<{ questionText: string }>) => {
-    // For PDF content - extract filename or key topics
-    if (session.contentType === 'pdf') {
-      // Try to extract meaningful content from questions
+    // For text content - extract topic from questions since user input wasn't saved
+    if (session.contentType === 'text') {
       if (questions && questions.length > 0) {
         const allText = questions.map(q => q.questionText).join(' ');
         
-        // Look for specific topic patterns in Japanese
+        // Look for topic patterns in Japanese from questions
+        const topicPatterns = [
+          /日本の?([^、。？！\s]{2,6})(について|に関して|とは|が|の)/g,
+          /([^、。？！\s]{2,8})(の歴史|歴史|文化|政治|経済)/g,
+          /([^、。？！\s]{2,6})(県|市|都|府|国|地域)/g,
+        ];
+        
+        for (const pattern of topicPatterns) {
+          const matches = allText.match(pattern);
+          if (matches && matches.length > 0) {
+            let topic = matches[0];
+            // Clean up the extracted topic
+            topic = topic.replace(/(について|に関して|とは|が|の)$/, '');
+            topic = topic.replace(/^日本の?/, '');
+            if (topic.includes('歴史')) {
+              topic = topic.replace(/の?歴史/, '') + 'の歴史';
+            }
+            return topic || 'テキストクイズ';
+          }
+        }
+        
+        // Fallback to extracting key terms
+        const firstWords = questions[0].questionText.substring(0, 15);
+        return `${firstWords.replace(/[？！。、]/g, '')}...`;
+      }
+      return 'テキストクイズ';
+    }
+    
+    // For PDF content - extract filename or key topics
+    if (session.contentType === 'pdf') {
+      if (questions && questions.length > 0) {
+        const allText = questions.map(q => q.questionText).join(' ');
+        
         const topicPatterns = [
           /([^、。？！\s]{3,10})(について|に関して|とは)/g,
           /([^、。？！\s]{3,8})(県|市|都|府|国)/g,
@@ -47,7 +78,6 @@ export default function StatsSection({ userId }: StatsSectionProps) {
           }
         }
         
-        // Fallback to first few characters of first question
         const firstWords = questions[0].questionText.substring(0, 15);
         return `PDFクイズ: ${firstWords}...`;
       }
@@ -58,15 +88,6 @@ export default function StatsSection({ userId }: StatsSectionProps) {
     if (session.contentType === 'youtube') {
       return session.title && session.title !== 'AIクイズ' ? 
         `YouTube: ${session.title}` : 'YouTubeクイズ';
-    }
-    
-    // For text content - use beginning of text
-    if (session.contentType === 'text') {
-      if (questions && questions.length > 0) {
-        const firstWords = questions[0].questionText.substring(0, 20);
-        return `テキスト: ${firstWords}...`;
-      }
-      return 'テキストクイズ';
     }
     
     return session.title || 'クイズ';
@@ -141,7 +162,24 @@ export default function StatsSection({ userId }: StatsSectionProps) {
     advancedAccuracy: 0,
   };
   
-  const displaySessions = sessionsWithQuestions || [];
+  // Group sessions by unique combinations to avoid duplicates
+  const uniqueSessions = sessionsWithQuestions ? 
+    sessionsWithQuestions.reduce((acc: any[], session: any) => {
+      // Check if we already have a similar session (same content, difficulty, score)
+      const existing = acc.find(s => 
+        s.contentType === session.contentType &&
+        s.difficulty === session.difficulty &&
+        s.score === session.score &&
+        Math.abs(new Date(s.completedAt).getTime() - new Date(session.completedAt).getTime()) < 60000 // within 1 minute
+      );
+      
+      if (!existing) {
+        acc.push(session);
+      }
+      return acc;
+    }, []) : [];
+    
+  const displaySessions = uniqueSessions;
   const chartData = prepareChartData(displaySessions);
 
   const formatTime = (seconds: number) => {
