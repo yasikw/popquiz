@@ -40,6 +40,10 @@ This is an AI-powered Japanese language quiz application that generates interact
 ✓ Implemented real-time statistics updates after quiz completion in home screen
 ✓ Added proper duplicate session filtering in statistics display
 ✓ Optimized React Query caching with fresh data fetching for accurate statistics
+✓ Improved YouTube quiz generation to focus on specific video content rather than general topics
+✓ Enhanced content extraction with stricter prompts for accurate, factual information
+✓ Fixed URL-based analysis to generate quiz-appropriate detailed content with specific facts
+✓ Updated Gemini API integration with improved temperature settings for consistent results
 
 # User Preferences
 
