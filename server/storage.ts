@@ -145,7 +145,7 @@ export class MemStorage implements IStorage {
       id: randomUUID(),
       sessionId: q.sessionId,
       questionText: q.questionText,
-      options: [...q.options],
+      options: Array.isArray(q.options) ? [...q.options] : [],
       correctAnswer: q.correctAnswer,
       explanation: q.explanation,
       userAnswer: q.userAnswer || null,
@@ -167,7 +167,7 @@ export class MemStorage implements IStorage {
     const updatedQuestion: Question = { 
       ...question, 
       ...updateData,
-      options: updateData.options ? [...updateData.options] : question.options
+      options: updateData.options && Array.isArray(updateData.options) ? [...updateData.options] : question.options
     };
     this.questions.set(id, updatedQuestion);
     return updatedQuestion;
@@ -290,7 +290,10 @@ export class MemStorage implements IStorage {
     const id = randomUUID();
     const settings: UserSettings = {
       id,
-      ...insertSettings,
+      userId: insertSettings.userId,
+      defaultDifficulty: insertSettings.defaultDifficulty || "intermediate",
+      questionCount: insertSettings.questionCount || 5,
+      timeLimit: insertSettings.timeLimit || 60,
       updatedAt: new Date(),
     };
     this.userSettings.set(insertSettings.userId, settings);
