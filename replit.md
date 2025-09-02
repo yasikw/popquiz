@@ -2,7 +2,21 @@
 
 This is an AI-powered Japanese language quiz application that generates interactive quizzes from various content sources including PDFs, text files, and YouTube videos. The app leverages Google's Gemini AI API to extract text from content and automatically generate multiple-choice questions with explanations. Built with a modern React frontend and Express backend, the application provides a comprehensive learning platform with user management, progress tracking, and performance analytics.
 
-## Recent Changes (January 8, 2025)
+## Recent Changes (January 13, 2025)
+
+✓ **Comprehensive Security Implementation**
+  - Added Helmet middleware for security headers (XSS protection, Content Security Policy, clickjacking prevention)
+  - Implemented DOMPurify for client-side and server-side input sanitization
+  - Created comprehensive security validation library with input/URL/file validation functions
+  - Applied rate limiting to API endpoints (10 requests/minute general, 5 uploads/minute)
+  - Added input sanitization to all user inputs (forms, URLs, text content)
+  - Enhanced file upload validation with security checks for dangerous file patterns
+  - Implemented Content Security Policy with appropriate directives for the application
+  - Added server-side input validation middleware for quiz generation endpoints
+  - Sanitized authentication inputs (usernames, emails) to prevent injection attacks
+  - Enhanced YouTube URL validation with security-focused regex patterns
+
+## Previous Changes (January 8, 2025)
 
 ✓ Migrated from localStorage to comprehensive PostgreSQL database storage
 ✓ Created user_settings table with default difficulty, question count, and time limit preferences
@@ -103,6 +117,12 @@ Preferred communication style: Simple, everyday language.
 - **Google Gemini API**: Primary AI service for text extraction and quiz generation
 - **API Models**: gemini-2.5-pro for text processing and vision capabilities
 - **Authentication**: Environment variable-based API key management (GEMINI_API_KEY)
+
+## Security Libraries
+- **Helmet**: Security middleware for Express.js providing XSS protection and security headers
+- **DOMPurify**: HTML/text sanitization library for preventing XSS attacks (client and server)
+- **JSDOM**: Server-side DOM implementation for DOMPurify integration
+- **bcryptjs**: Password hashing and validation for secure user authentication
 
 ## Database and Infrastructure
 - **Neon Database**: Serverless PostgreSQL hosting with automatic scaling

@@ -5,6 +5,14 @@ import { extractTextFromPDF, generateQuizFromText, generateQuizFromCachedPDF, ge
 import { extractYouTubeSubtitles } from "./services/youtube";
 import { insertUserSchema, insertQuizSessionSchema, insertQuestionSchema, insertUserStatsSchema, insertUserSettingsSchema } from "@shared/schema";
 import multer from "multer";
+import { 
+  apiRateLimit, 
+  uploadRateLimit, 
+  validateQuizInput, 
+  validateFileUpload,
+  sanitizeInput,
+  validateYouTubeURL 
+} from "./middleware/security";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 
@@ -17,10 +25,17 @@ const upload = multer({
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
-  // Authentication endpoints
+  // Apply security middleware to all API routes
+  app.use('/api/', apiRateLimit);
+
+  // Authentication endpoints (with input sanitization)
   app.post("/api/auth/register", async (req, res) => {
     try {
-      const { username, email, password } = req.body;
+      let { username, email, password } = req.body;
+
+      // Sanitize inputs
+      username = sanitizeInput(username);
+      email = email ? sanitizeInput(email) : null;
 
       if (!username || !password) {
         return res.status(400).json({ message: "ユーザー名とパスワードが必要です" });
@@ -59,7 +74,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/auth/login", async (req, res) => {
     try {
-      const { username, password } = req.body;
+      let { username, password } = req.body;
+
+      // Sanitize username input
+      username = sanitizeInput(username);
 
       if (!username || !password) {
         return res.status(400).json({ message: "ユーザー名とパスワードが必要です" });
@@ -217,8 +235,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Unified quiz generation endpoint
-  app.post("/api/generate-quiz", upload.single('file'), async (req, res) => {
+  // Unified quiz generation endpoint with security middleware
+  app.post("/api/generate-quiz", uploadRateLimit, upload.single('file'), validateQuizInput, validateFileUpload, async (req, res) => {
     try {
       const { contentType, difficulty = "intermediate", youtubeUrl, textContent, questionCount = "5" } = req.body;
       console.log('Quiz generation request received with questionCount:', questionCount);
@@ -242,11 +260,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (!textContent) {
           return res.status(400).json({ message: "テキスト内容が必要です" });
         }
+        // textContent is already sanitized by middleware
         title = "テキストクイズ";
         extractedText = textContent;
       } else if (contentType === 'youtube') {
         if (!youtubeUrl) {
           return res.status(400).json({ message: "YouTube URLが必要です" });
+        }
+        // Sanitization already done by middleware, but double-check URL format
+        if (!validateYouTubeURL(youtubeUrl)) {
+          return res.status(400).json({ message: "無効なYouTube URLです" });
         }
         title = "YouTube動画クイズ";
         extractedText = await extractYouTubeSubtitles(youtubeUrl);

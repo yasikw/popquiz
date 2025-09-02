@@ -3,9 +3,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 import { type GeneratedQuiz, type UserSettings, type UserStats } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
 import { getUserStats, getUserSessionsWithQuestions } from "@/lib/api";
+import { sanitizeUserInput, sanitizeURL, validateFile } from '@/lib/security';
 
 interface CardStackProps {
   onQuizGenerated: (quiz: GeneratedQuiz) => void;
@@ -84,6 +86,7 @@ export default function CardStack({
   const [file, setFile] = useState<File | null>(null);
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [textContent, setTextContent] = useState("");
+  const { toast } = useToast();
 
   // Check for existing PDF file on component mount
   useEffect(() => {
@@ -104,8 +107,33 @@ export default function CardStack({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
-      console.log('File selected:', selectedFile.name, selectedFile.size);
+      
+      // Validate file based on upload type
+      const currentType = uploadTypes[currentUploadType];
+      let allowedTypes: string[] = [];
+      let maxSize = 10 * 1024 * 1024; // 10MB default
+
+      if (currentType.id === 'pdf') {
+        allowedTypes = ['application/pdf'];
+        maxSize = 10 * 1024 * 1024; // 10MB for PDF
+      } else if (currentType.id === 'text') {
+        allowedTypes = ['text/plain', 'text/markdown'];
+        maxSize = 1 * 1024 * 1024; // 1MB for text
+      }
+
+      const validation = validateFile(selectedFile, allowedTypes, maxSize);
+      if (!validation.isValid) {
+        toast({
+          title: "ファイルエラー",
+          description: validation.error,
+          variant: "destructive",
+        });
+        return;
+      }
+      
       setFile(selectedFile);
+      console.log('File selected:', selectedFile.name, selectedFile.size);
+      
       // Store PDF file information for retention
       localStorage.setItem('lastPdfFile', JSON.stringify({
         name: selectedFile.name,
@@ -205,6 +233,31 @@ export default function CardStack({
     
     console.log('Quiz generation started:', { currentType, selectedDifficulty, questionCount });
     console.log('Parsed question count:', questionCount);
+
+    // Validate inputs based on type
+    if (currentType === 'youtube') {
+      const sanitizedUrl = sanitizeURL(youtubeUrl);
+      if (!sanitizedUrl) {
+        toast({
+          title: "無効なURL",
+          description: "有効なYouTube URLを入力してください",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
+    if (currentType === 'text') {
+      const sanitizedText = sanitizeUserInput(textContent);
+      if (!sanitizedText || sanitizedText.length < 10) {
+        toast({
+          title: "テキストが不十分",
+          description: "10文字以上のテキストを入力してください",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
     
     if (currentType === 'pdf' && !file) {
       alert("PDFファイルを選択してください");
@@ -386,7 +439,12 @@ export default function CardStack({
               <Input
                 type="url"
                 value={youtubeUrl}
-                onChange={(e) => setYoutubeUrl(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const sanitizedUrl = sanitizeURL(value);
+                  // Keep original value for user experience but validate on submit
+                  setYoutubeUrl(value);
+                }}
                 placeholder="https://youtube.com/watch?v=..."
                 className="mt-1"
                 data-testid="input-youtube"
@@ -411,10 +469,17 @@ export default function CardStack({
               <Label className="text-sm font-medium text-gray-700">テキスト内容</Label>
               <textarea
                 value={textContent}
-                onChange={(e) => setTextContent(e.target.value)}
+                onChange={(e) => {
+                  const sanitized = sanitizeUserInput(e.target.value, { 
+                    KEEP_CONTENT: true,
+                    MAX_LENGTH: 10000 // 10,000 character limit
+                  });
+                  setTextContent(sanitized);
+                }}
                 placeholder="学習内容を直接入力..."
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none h-24"
                 data-testid="textarea-content"
+                maxLength={10000}
               />
             </div>
           )}

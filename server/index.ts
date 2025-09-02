@@ -1,10 +1,72 @@
 import express, { type Request, Response, NextFunction } from "express";
+import helmet from "helmet";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+
+// Security middleware - must be applied first
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'", 
+        "'unsafe-inline'", // Required for Vite in development
+        "'unsafe-eval'", // Required for Vite in development
+        "https://www.googletagmanager.com",
+        "https://cdn.jsdelivr.net"
+      ],
+      styleSrc: [
+        "'self'", 
+        "'unsafe-inline'", // Required for Tailwind CSS
+        "https://cdnjs.cloudflare.com",
+        "https://fonts.googleapis.com"
+      ],
+      imgSrc: [
+        "'self'", 
+        "data:", 
+        "blob:",
+        "https:",
+        "http:" // Allow external images for quiz content
+      ],
+      connectSrc: [
+        "'self'",
+        "wss://localhost:*", // WebSocket for Vite HMR
+        "https://generativelanguage.googleapis.com" // Gemini API
+      ],
+      fontSrc: [
+        "'self'",
+        "https://fonts.gstatic.com",
+        "https://cdnjs.cloudflare.com"
+      ],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'", "blob:", "data:"],
+      frameSrc: ["'self'", "https://www.youtube.com", "https://youtube.com"]
+    }
+  },
+  crossOriginEmbedderPolicy: false, // Disabled for external content compatibility
+}));
+
+// Additional security headers
+app.use((req, res, next) => {
+  // X-Frame-Options (additional protection)
+  res.setHeader('X-Frame-Options', 'DENY');
+  
+  // X-Content-Type-Options
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  
+  // Referrer Policy
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  
+  // Remove X-Powered-By header
+  res.removeHeader('X-Powered-By');
+  
+  next();
+});
+
+app.use(express.json({ limit: '50mb' })); // Increased limit for PDF uploads
+app.use(express.urlencoded({ extended: false, limit: '50mb' }));
 
 app.use((req, res, next) => {
   const start = Date.now();
