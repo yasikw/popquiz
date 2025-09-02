@@ -131,7 +131,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put("/api/users/:id", async (req, res) => {
     try {
-      const updateData = insertUserSchema.partial().parse(req.body);
+      // Sanitize user inputs before validation
+      const sanitizedBody = { ...req.body };
+      if (sanitizedBody.username) {
+        sanitizedBody.username = sanitizeInput(sanitizedBody.username);
+      }
+      if (sanitizedBody.email) {
+        sanitizedBody.email = sanitizeInput(sanitizedBody.email);
+      }
+      
+      const updateData = insertUserSchema.partial().parse(sanitizedBody);
       const user = await storage.updateUser(req.params.id, updateData);
       if (!user) {
         return res.status(404).json({ message: "ユーザーが見つかりません" });
@@ -188,7 +197,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Quiz generation from cached content (PDF, YouTube, or Text)
   app.post("/api/generate-quiz-from-cache", async (req, res) => {
     try {
-      const { pdfInfo, youtubeVideoId, textContent, difficulty = "intermediate", questionCount = 5 } = req.body;
+      let { pdfInfo, youtubeVideoId, textContent, difficulty = "intermediate", questionCount = 5 } = req.body;
+      
+      // Sanitize inputs
+      if (textContent) {
+        textContent = sanitizeInput(textContent);
+      }
+      if (youtubeVideoId) {
+        youtubeVideoId = sanitizeInput(youtubeVideoId);
+      }
+      difficulty = sanitizeInput(difficulty) || "intermediate";
       
       if (!pdfInfo && !youtubeVideoId && !textContent) {
         return res.status(400).json({ message: "PDF情報、YouTube動画ID、またはテキスト内容が必要です" });
@@ -299,7 +317,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "PDFファイルが必要です" });
       }
 
-      const { difficulty = "intermediate", title = "PDFクイズ", questionCount = "5" } = req.body;
+      let { difficulty = "intermediate", title = "PDFクイズ", questionCount = "5" } = req.body;
+      
+      // Sanitize inputs
+      difficulty = sanitizeInput(difficulty) || "intermediate";
+      title = sanitizeInput(title) || "PDFクイズ";
       
       // Create PDF info for caching
       const pdfFileInfo = {
@@ -330,7 +352,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "テキストファイルが必要です" });
       }
 
-      const { difficulty = "intermediate", title = "テキストクイズ", questionCount = "5" } = req.body;
+      let { difficulty = "intermediate", title = "テキストクイズ", questionCount = "5" } = req.body;
+      
+      // Sanitize inputs
+      difficulty = sanitizeInput(difficulty) || "intermediate";
+      title = sanitizeInput(title) || "テキストクイズ";
       const text = req.file.buffer.toString('utf-8');
       
       if (!text.trim()) {
@@ -347,7 +373,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/process-youtube", async (req, res) => {
     try {
-      const { url, difficulty = "intermediate", title = "YouTube動画クイズ", questionCount = "5" } = req.body;
+      let { url, difficulty = "intermediate", title = "YouTube動画クイズ", questionCount = "5" } = req.body;
+      
+      // Sanitize inputs
+      url = sanitizeInput(url);
+      difficulty = sanitizeInput(difficulty) || "intermediate";
+      title = sanitizeInput(title) || "YouTube動画クイズ";
+      
+      // Validate YouTube URL
+      if (!validateYouTubeURL(url)) {
+        return res.status(400).json({ message: "無効なYouTube URLです" });
+      }
       
       if (!url) {
         return res.status(400).json({ message: "YouTube URLが必要です" });
@@ -549,17 +585,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Submit quiz results
+  // Submit quiz results (with input sanitization)
   app.post("/api/quiz-results", async (req, res) => {
     try {
       const { userId, quizData, results } = req.body;
       
-      // Create quiz session
+      // Sanitize quiz data inputs
+      const sanitizedQuizData = {
+        ...quizData,
+        title: sanitizeInput(quizData.title || "クイズ"),
+        difficulty: sanitizeInput(quizData.difficulty || "intermediate"),
+        contentType: sanitizeInput(quizData.contentType || "text")
+      };
+      
+      // Create quiz session with sanitized data
       const sessionData = {
         userId,
-        title: quizData.title,
-        difficulty: quizData.difficulty,
-        contentType: quizData.contentType || "text",
+        title: sanitizedQuizData.title,
+        difficulty: sanitizedQuizData.difficulty,
+        contentType: sanitizedQuizData.contentType,
         score: results.score,
         totalQuestions: results.totalQuestions,
         timeSpent: results.totalTimeSpent,
@@ -567,14 +611,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const session = await storage.createQuizSession(sessionData);
       
-      // Create questions with user answers
+      // Create questions with user answers (sanitized)
       const questionsData = results.detailedResults.map((result: any) => ({
         sessionId: session.id,
-        questionText: result.question,
-        options: quizData.questions.find((q: any) => q.question === result.question)?.options || [],
-        correctAnswer: result.correctAnswer,
-        explanation: result.explanation,
-        userAnswer: result.userAnswer,
+        questionText: sanitizeInput(result.question || ""),
+        options: (quizData.questions.find((q: any) => q.question === result.question)?.options || [])
+          .map((option: string) => sanitizeInput(option)),
+        correctAnswer: sanitizeInput(result.correctAnswer || ""),
+        explanation: sanitizeInput(result.explanation || ""),
+        userAnswer: sanitizeInput(result.userAnswer || ""),
         timeSpent: result.timeSpent,
       }));
       

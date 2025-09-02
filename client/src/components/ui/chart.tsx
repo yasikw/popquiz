@@ -76,28 +76,48 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null
   }
 
-  return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
-${colorConfig
-  .map(([key, itemConfig]) => {
-    const color =
-      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
-      itemConfig.color
-    return color ? `  --color-${key}: ${color};` : null
-  })
-  .join("\n")}
-}
-`
-          )
-          .join("\n"),
-      }}
-    />
-  )
+  // Generate safe CSS without dangerouslySetInnerHTML
+  const cssRules = Object.entries(THEMES)
+    .map(([theme, prefix]) => {
+      const rules = colorConfig
+        .map(([key, itemConfig]) => {
+          const color =
+            itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
+            itemConfig.color
+          // Sanitize color values to prevent CSS injection
+          const sanitizedColor = color && /^[#a-zA-Z0-9(),.\s%]+$/.test(color) ? color : null;
+          return sanitizedColor ? `--color-${key}: ${sanitizedColor};` : null
+        })
+        .filter(Boolean)
+        .join('\n  ');
+      
+      return rules ? `${prefix} [data-chart="${id}"] {\n  ${rules}\n}` : null;
+    })
+    .filter(Boolean)
+    .join('\n');
+
+  // Use a safer approach by creating the style element with textContent
+  React.useEffect(() => {
+    const styleId = `chart-style-${id}`;
+    let styleElement = document.getElementById(styleId) as HTMLStyleElement;
+    
+    if (!styleElement) {
+      styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      document.head.appendChild(styleElement);
+    }
+    
+    styleElement.textContent = cssRules;
+    
+    return () => {
+      const existingStyle = document.getElementById(styleId);
+      if (existingStyle) {
+        existingStyle.remove();
+      }
+    };
+  }, [id, cssRules]);
+
+  return null;
 }
 
 const ChartTooltip = RechartsPrimitive.Tooltip

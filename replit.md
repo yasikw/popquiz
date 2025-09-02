@@ -15,6 +15,9 @@ This is an AI-powered Japanese language quiz application that generates interact
   - Added server-side input validation middleware for quiz generation endpoints
   - Sanitized authentication inputs (usernames, emails) to prevent injection attacks
   - Enhanced YouTube URL validation with security-focused regex patterns
+  - **Fixed XSS vulnerabilities**: Replaced dangerouslySetInnerHTML with safe CSS injection method
+  - **Enhanced API security**: Added input sanitization to all API endpoints including quiz results
+  - **Strengthened data validation**: Applied sanitization to all user-generated content before storage
 
 ## Previous Changes (January 8, 2025)
 
