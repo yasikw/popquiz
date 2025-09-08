@@ -187,8 +187,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // User management
-  app.post("/api/users", async (req, res) => {
+  // User management（JWT認証必須）
+  app.post("/api/users", authenticateUser, async (req, res) => {
     try {
       const userData = insertUserSchema.parse(req.body);
       const user = await storage.createUser(userData);
@@ -198,7 +198,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/users/:username", async (req, res) => {
+  app.get("/api/users/:username", authenticateUser, async (req, res) => {
     try {
       const user = await storage.getUserByUsername(req.params.username);
       if (!user) {
@@ -210,7 +210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/users/:id", async (req, res) => {
+  app.put("/api/users/:id", authenticateUser, authorizeUser, async (req, res) => {
     try {
       // Sanitize user inputs before validation
       const sanitizedBody = { ...req.body };
@@ -489,8 +489,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // User statistics
-  app.get("/api/users/:userId/stats", async (req, res) => {
+  // User statistics (JWT認証・認可必須)
+  app.get("/api/users/:userId/stats", authenticateUser, authorizeUser, async (req, res) => {
     try {
       const stats = await storage.getUserStats(req.params.userId);
       if (!stats) {
@@ -502,7 +502,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/users/:userId/sessions", async (req, res) => {
+  app.get("/api/users/:userId/sessions", authenticateUser, authorizeUser, async (req, res) => {
     try {
       const sessions = await storage.getUserQuizSessions(req.params.userId);
       res.json(sessions);
@@ -511,8 +511,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Submit quiz results and update statistics (JWT認証必須)
-  app.post("/api/quiz-results", authenticateUser, async (req, res) => {
+  // Submit quiz results and update statistics (JWT認証・認可必須)
+  app.post("/api/quiz-results", authenticateUser, authorizeResourceOwner('stats'), async (req, res) => {
     try {
       const { userId, quizData, results } = req.body;
       
@@ -589,8 +589,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Quiz session endpoints
-  app.post("/api/quiz-sessions", async (req, res) => {
+  // Quiz session endpoints (JWT認証・認可必須)
+  app.post("/api/quiz-sessions", authenticateUser, authorizeResourceOwner('session'), async (req, res) => {
     try {
       const sessionData = insertQuizSessionSchema.parse(req.body);
       const session = await storage.createQuizSession(sessionData);
@@ -600,7 +600,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/quiz-sessions/:sessionId/questions", async (req, res) => {
+  app.post("/api/quiz-sessions/:sessionId/questions", authenticateUser, async (req, res) => {
     try {
       const questions = req.body.map((q: any) => insertQuestionSchema.parse({
         ...q,
@@ -622,8 +622,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // User sessions with questions for detailed view
-  app.get("/api/users/:userId/sessions-with-questions", async (req, res) => {
+  // User sessions with questions for detailed view (JWT認証・認可必須)
+  app.get("/api/users/:userId/sessions-with-questions", authenticateUser, authorizeUser, async (req, res) => {
     try {
       const sessionsWithQuestions = await storage.getUserQuizSessionsWithQuestions(req.params.userId);
       res.json(sessionsWithQuestions);
@@ -656,8 +656,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Manual stats calculation endpoint for debugging
-  app.post("/api/users/:userId/calculate-stats", async (req, res) => {
+  // Manual stats calculation endpoint for debugging (JWT認証・認可必須)
+  app.post("/api/users/:userId/calculate-stats", authenticateUser, authorizeUser, async (req, res) => {
     try {
       console.log(`Manual stats calculation for user: ${req.params.userId}`);
       const stats = await storage.calculateAndUpdateUserStats(req.params.userId);
@@ -720,8 +720,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // User settings endpoints
-  app.get("/api/users/:userId/settings", async (req, res) => {
+  // User settings endpoints (JWT認証・認可必須)
+  app.get("/api/users/:userId/settings", authenticateUser, authorizeUser, async (req, res) => {
     try {
       const settings = await storage.getUserSettings(req.params.userId);
       if (!settings) {
@@ -746,7 +746,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/users/:userId/settings", async (req, res) => {
+  app.put("/api/users/:userId/settings", authenticateUser, authorizeUser, async (req, res) => {
     try {
       const settingsData = insertUserSettingsSchema.partial().parse(req.body);
       const settings = await storage.updateUserSettings(req.params.userId, settingsData);
