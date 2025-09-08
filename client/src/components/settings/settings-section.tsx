@@ -17,8 +17,8 @@ interface SettingsSectionProps {
 }
 
 export default function SettingsSection({ user, onUserUpdate }: SettingsSectionProps) {
-  const [username, setUsername] = useState(user?.username || "");
-  const [email, setEmail] = useState(user?.email || "");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -35,6 +35,14 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
     queryKey: [`/api/users/${user?.id}/settings`],
     enabled: !!user?.id,
   });
+
+  // Update user info when user prop changes
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username || "");
+      setEmail(user.email || "");
+    }
+  }, [user]);
 
   // Update state when settings are loaded
   useEffect(() => {
