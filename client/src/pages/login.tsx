@@ -45,6 +45,15 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       }
 
       const userData = await response.json();
+      
+      // Store JWT tokens
+      if (userData.accessToken) {
+        localStorage.setItem('accessToken', userData.accessToken);
+      }
+      if (userData.refreshToken) {
+        localStorage.setItem('refreshToken', userData.refreshToken);
+      }
+      
       onLogin(userData.username, userData.id);
       
       toast({
@@ -99,6 +108,15 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       }
 
       const userData = await response.json();
+      
+      // Store JWT tokens
+      if (userData.accessToken) {
+        localStorage.setItem('accessToken', userData.accessToken);
+      }
+      if (userData.refreshToken) {
+        localStorage.setItem('refreshToken', userData.refreshToken);
+      }
+      
       onLogin(userData.username, userData.id);
 
       toast({

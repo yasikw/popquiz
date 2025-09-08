@@ -29,6 +29,13 @@ export async function apiRequest(
   const makeRequest = async (): Promise<Response> => {
     // Build headers properly for TypeScript
     const baseHeaders: Record<string, string> = data ? { "Content-Type": "application/json" } : {};
+    
+    // Add JWT token to Authorization header if available
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      baseHeaders['Authorization'] = `Bearer ${token}`;
+    }
+    
     const headers = method.toUpperCase() !== 'GET' 
       ? await addCSRFHeaders(baseHeaders)
       : baseHeaders;
@@ -65,8 +72,15 @@ export const getQueryFn: <T>(options: {
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
     // GET requests typically don't need CSRF tokens, but include credentials for authentication
+    const headers: Record<string, string> = {};
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
     const res = await fetch(queryKey.join("/") as string, {
       credentials: "include",
+      headers,
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {

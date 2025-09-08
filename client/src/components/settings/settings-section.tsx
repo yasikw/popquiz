@@ -38,10 +38,11 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
 
   // Update state when settings are loaded
   useEffect(() => {
-    if (userSettings) {
-      setDefaultDifficulty(userSettings.defaultDifficulty || "intermediate");
-      setTimeLimit(userSettings.timeLimit?.toString() || "60");
-      setQuestionCount(userSettings.questionCount?.toString() || "5");
+    if (userSettings && typeof userSettings === 'object' && 'defaultDifficulty' in userSettings) {
+      const settings = userSettings as UserSettings;
+      setDefaultDifficulty(settings.defaultDifficulty || "intermediate");
+      setTimeLimit(settings.timeLimit?.toString() || "60");
+      setQuestionCount(settings.questionCount?.toString() || "5");
     }
   }, [userSettings]);
 
@@ -166,7 +167,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
     }
 
     const settingsData = {
-      defaultDifficulty,
+      defaultDifficulty: defaultDifficulty as "beginner" | "intermediate" | "advanced",
       timeLimit: parseInt(timeLimit),
       questionCount: parseInt(questionCount),
     };
