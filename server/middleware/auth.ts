@@ -66,27 +66,8 @@ export function generateRefreshToken(user: User): string {
  * JWTトークンを検証し、ペイロードを返す
  */
 export function verifyToken(token: string): JWTPayload {
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET, {
-      issuer: 'japanese-quiz-app',
-      audience: 'japanese-quiz-users'
-    });
-
-    // JWTペイロードの型確認と変換
-    if (typeof decoded === 'object' && decoded !== null && 'userId' in decoded && 'username' in decoded) {
-      return decoded as JWTPayload;
-    } else {
-      throw new Error('Invalid token payload');
-    }
-  } catch (error) {
-    if (error instanceof jwt.TokenExpiredError) {
-      throw new Error('Token expired');
-    } else if (error instanceof jwt.JsonWebTokenError) {
-      throw new Error('Invalid token');
-    } else {
-      throw new Error('Token verification failed');
-    }
-  }
+  // アクセストークン検証にリダイレクト
+  return verifyAccessToken(token);
 }
 
 /**
