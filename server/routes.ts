@@ -3,7 +3,16 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { extractTextFromPDF, generateQuizFromText, generateQuizFromCachedPDF, generateQuizFromCachedYouTube, generateQuizFromCachedText, getCacheStatus } from "./services/gemini";
 import { extractYouTubeSubtitles } from "./services/youtube";
-import { insertUserSchema, insertQuizSessionSchema, insertQuestionSchema, insertUserStatsSchema, insertUserSettingsSchema } from "@shared/schema";
+import { 
+  insertUserSchema, 
+  insertQuizSessionSchema, 
+  insertQuestionSchema, 
+  insertUserStatsSchema, 
+  insertUserSettingsSchema,
+  authRegisterSchema,
+  authLoginSchema,
+  quizGenerationSchema
+} from "@shared/schema";
 import multer from "multer";
 import { 
   apiRateLimit, 
@@ -16,6 +25,16 @@ import {
   sanitizeInput,
   validateYouTubeURL 
 } from "./middleware/security";
+import {
+  validateInput,
+  validateParams,
+  validateQuery,
+  idParamSchema,
+  userIdParamSchema,
+  paginationQuerySchema,
+  settingsUpdateSchema,
+  quizResultSchema
+} from "./middleware/validation";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { 
@@ -76,22 +95,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/csrf-token", generateCSRFTokenEndpoint);
   app.post("/api/csrf-token/refresh", refreshCSRFToken);
 
-  // Authentication endpoints (with input sanitization and specific rate limiting)
-  app.post("/api/auth/register", registerRateLimit, async (req, res) => {
+  // Authentication endpoints (with unified validation and specific rate limiting)
+  app.post("/api/auth/register", registerRateLimit, validateInput(authRegisterSchema), async (req, res) => {
     try {
-      let { username, email, password } = req.body;
-
-      // Sanitize inputs
-      username = sanitizeInput(username);
-      email = email ? sanitizeInput(email) : null;
-
-      if (!username || !password) {
-        return res.status(400).json({ message: "ユーザー名とパスワードが必要です" });
-      }
-
-      if (password.length < 6) {
-        return res.status(400).json({ message: "パスワードは6文字以上である必要があります" });
-      }
+      const { username, email, password } = req.body;
 
       // Check if username already exists
       const existingUser = await storage.getUserByUsername(username);
@@ -129,16 +136,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/auth/login", authRateLimit, async (req, res) => {
+  app.post("/api/auth/login", authRateLimit, validateInput(authLoginSchema), async (req, res) => {
     try {
-      let { username, password } = req.body;
-
-      // Sanitize username input
-      username = sanitizeInput(username);
-
-      if (!username || !password) {
-        return res.status(400).json({ message: "ユーザー名とパスワードが必要です" });
-      }
+      const { username, password } = req.body;
 
       const user = await storage.getUserByUsername(username);
       if (!user) {
@@ -185,13 +185,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // JWT refresh endpoint
-  app.post("/api/auth/refresh", async (req, res) => {
+  app.post("/api/auth/refresh", validateInput(z.object({
+    refreshToken: z.string().min(1, "リフレッシュトークンは必須です")
+  })), async (req, res) => {
     try {
       const { refreshToken } = req.body;
-
-      if (!refreshToken) {
-        return res.status(400).json({ message: "リフレッシュトークンが必要です" });
-      }
 
       // トークンをリフレッシュ
       const { accessToken: newAccessToken, refreshToken: newRefreshToken, user } = await refreshTokens(refreshToken);
@@ -226,9 +224,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User management（JWT認証必須）
-  app.post("/api/users", authenticateUser, async (req, res) => {
+  app.post("/api/users", authenticateUser, validateInput(insertUserSchema), async (req, res) => {
     try {
-      const userData = insertUserSchema.parse(req.body);
+      const userData = req.body;
       const user = await storage.createUser(userData);
       res.json(user);
     } catch (error) {
@@ -236,7 +234,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/users/:username", authenticateUser, async (req, res) => {
+  app.get("/api/users/:username", authenticateUser, validateParams(z.object({
+    username: z.string().min(1, "ユーザー名は必須です").max(50, "ユーザー名は50文字以下である必要があります")
+  })), async (req, res) => {
     try {
       const user = await storage.getUserByUsername(req.params.username);
       if (!user) {
@@ -248,18 +248,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/users/:id", authenticateUser, authorizeUser, async (req, res) => {
+  app.put("/api/users/:id", authenticateUser, authorizeUser, 
+    validateParams(idParamSchema), 
+    validateInput(insertUserSchema.partial()), 
+    async (req, res) => {
     try {
-      // Sanitize user inputs before validation
-      const sanitizedBody = { ...req.body };
-      if (sanitizedBody.username) {
-        sanitizedBody.username = sanitizeInput(sanitizedBody.username);
-      }
-      if (sanitizedBody.email) {
-        sanitizedBody.email = sanitizeInput(sanitizedBody.email);
-      }
-      
-      const updateData = insertUserSchema.partial().parse(sanitizedBody);
+      const updateData = req.body;
       const user = await storage.updateUser(req.params.id, updateData);
       if (!user) {
         return res.status(404).json({ message: "ユーザーが見つかりません" });
@@ -271,20 +265,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // パスワード変更エンドポイント（JWT認証必須）
-  app.post("/api/users/change-password", authenticateUser, async (req, res) => {
+  app.post("/api/users/change-password", authenticateUser, validateInput(z.object({
+    currentPassword: z.string().optional(),
+    newPassword: z.string().min(6, "新しいパスワードは6文字以上である必要があります").max(128, "新しいパスワードは128文字以下である必要があります")
+  })), async (req, res) => {
     try {
       const { currentPassword, newPassword } = req.body;
 
       // 認証済みユーザーからuserIdを取得（セキュリティ修正）
       const userId = req.user!.id;
-
-      if (!newPassword) {
-        return res.status(400).json({ message: "新しいパスワードが必要です" });
-      }
-
-      if (newPassword.length < 6) {
-        return res.status(400).json({ message: "新しいパスワードは6文字以上である必要があります" });
-      }
 
       const user = await storage.getUser(userId);
       if (!user) {
@@ -317,23 +306,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Quiz generation from cached content (PDF, YouTube, or Text)
-  app.post("/api/generate-quiz-from-cache", async (req, res) => {
+  app.post("/api/generate-quiz-from-cache", validateInput(z.object({
+    pdfInfo: z.object({
+      name: z.string().min(1, "PDFファイル名は必須です"),
+      size: z.number().min(0, "ファイルサイズは0以上である必要があります"),
+      type: z.string().min(1, "ファイルタイプは必須です")
+    }).optional(),
+    youtubeVideoId: z.string().min(1, "YouTube動画IDは必須です").optional(),
+    textContent: z.string().min(10, "テキストは10文字以上である必要があります").max(10000, "テキストは10000文字以下である必要があります").optional(),
+    difficulty: z.enum(['beginner', 'intermediate', 'advanced']).default("intermediate"),
+    questionCount: z.number().int().min(1).max(20).default(5)
+  }).refine(data => data.pdfInfo || data.youtubeVideoId || data.textContent, {
+    message: "PDF情報、YouTube動画ID、またはテキスト内容のいずれかが必要です"
+  })), async (req, res) => {
     try {
-      let { pdfInfo, youtubeVideoId, textContent, difficulty = "intermediate", questionCount = 5 } = req.body;
+      const { pdfInfo, youtubeVideoId, textContent, difficulty, questionCount } = req.body;
       
-      // Sanitize inputs
-      if (textContent) {
-        textContent = sanitizeInput(textContent);
-      }
-      if (youtubeVideoId) {
-        youtubeVideoId = sanitizeInput(youtubeVideoId);
-      }
-      difficulty = sanitizeInput(difficulty) || "intermediate";
-      
-      if (!pdfInfo && !youtubeVideoId && !textContent) {
-        return res.status(400).json({ message: "PDF情報、YouTube動画ID、またはテキスト内容が必要です" });
-      }
-
       // Debug cache status
       const cacheStatus = getCacheStatus();
       console.log('Cache status:', cacheStatus);
@@ -343,15 +331,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (pdfInfo) {
         console.log('Generating quiz from cached PDF:', pdfInfo.name);
         console.log('Received PDF info:', pdfInfo);
-        quiz = await generateQuizFromCachedPDF(pdfInfo, difficulty, parseInt(questionCount));
+        quiz = await generateQuizFromCachedPDF(pdfInfo, difficulty, questionCount);
       } else if (youtubeVideoId) {
         console.log('Generating quiz from cached YouTube video:', youtubeVideoId);
         console.log('Requested difficulty:', difficulty, 'Question count:', questionCount);
-        quiz = await generateQuizFromCachedYouTube(youtubeVideoId, difficulty, parseInt(questionCount));
+        quiz = await generateQuizFromCachedYouTube(youtubeVideoId, difficulty, questionCount);
       } else if (textContent) {
         console.log('Generating quiz from cached text content, length:', textContent.length);
         console.log('Requested difficulty:', difficulty, 'Question count:', questionCount);
-        quiz = await generateQuizFromCachedText(textContent, difficulty, parseInt(questionCount));
+        quiz = await generateQuizFromCachedText(textContent, difficulty, questionCount);
       }
       
       if (!quiz) {
@@ -376,7 +364,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Unified quiz generation endpoint with security middleware
-  app.post("/api/generate-quiz", quizRateLimit, upload.single('file'), handleMulterError, validateQuizInput, validateFileUpload, async (req, res) => {
+  app.post("/api/generate-quiz", quizRateLimit, upload.single('file'), handleMulterError, validateInput(quizGenerationSchema), validateFileUpload, async (req, res) => {
     try {
       const { contentType, difficulty = "intermediate", youtubeUrl, textContent, questionCount = "5" } = req.body;
       console.log('Quiz generation request received with questionCount:', questionCount);
@@ -528,7 +516,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User statistics (JWT認証・認可必須)
-  app.get("/api/users/:userId/stats", authenticateUser, authorizeUser, async (req, res) => {
+  app.get("/api/users/:userId/stats", authenticateUser, authorizeUser, validateParams(userIdParamSchema), async (req, res) => {
     try {
       const stats = await storage.getUserStats(req.params.userId);
       if (!stats) {
@@ -540,7 +528,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/users/:userId/sessions", authenticateUser, authorizeUser, async (req, res) => {
+  app.get("/api/users/:userId/sessions", authenticateUser, authorizeUser, validateParams(userIdParamSchema), validateQuery(paginationQuerySchema), async (req, res) => {
     try {
       const sessions = await storage.getUserQuizSessions(req.params.userId);
       res.json(sessions);
@@ -550,13 +538,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Submit quiz results and update statistics (JWT認証・認可必須)
-  app.post("/api/quiz-results", authenticateUser, authorizeResourceOwner('stats'), async (req, res) => {
+  app.post("/api/quiz-results", authenticateUser, authorizeResourceOwner('stats'), validateInput(z.object({
+    userId: z.string().uuid("有効なユーザーIDを指定してください"),
+    quizData: z.object({
+      title: z.string().min(1, "タイトルは必須です").max(500, "タイトルは500文字以下である必要があります"),
+      difficulty: z.enum(['beginner', 'intermediate', 'advanced']),
+      contentType: z.enum(['pdf', 'text', 'youtube']),
+      questions: z.array(z.object({
+        question: z.string().min(1, "問題文は必須です"),
+        options: z.array(z.string()).length(4, "選択肢は4つである必要があります"),
+        correctAnswer: z.number().int().min(0).max(3),
+        explanation: z.string().min(1, "解説は必須です")
+      })).optional()
+    }),
+    results: z.object({
+      score: z.number().int().min(0, "スコアは0以上である必要があります"),
+      totalQuestions: z.number().int().min(1, "問題数は1以上である必要があります"),
+      totalTimeSpent: z.number().int().min(0, "経過時間は0以上である必要があります"),
+      detailedResults: z.array(z.object({
+        question: z.string().optional(),
+        correctAnswer: z.number().int().min(0).max(3).optional(),
+        explanation: z.string().optional(),
+        userAnswer: z.number().int().min(0).max(3),
+        timeSpent: z.number().int().min(0).default(0)
+      })).optional()
+    })
+  })), async (req, res) => {
     try {
       const { userId, quizData, results } = req.body;
-      
-      if (!userId || !quizData || !results) {
-        return res.status(400).json({ message: "必要なデータが不足しています" });
-      }
 
       // Create quiz session
       const sessionData = {
@@ -759,7 +768,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User settings endpoints (JWT認証・認可必須)
-  app.get("/api/users/:userId/settings", authenticateUser, authorizeUser, async (req, res) => {
+  app.get("/api/users/:userId/settings", authenticateUser, authorizeUser, validateParams(userIdParamSchema), async (req, res) => {
     try {
       const settings = await storage.getUserSettings(req.params.userId);
       if (!settings) {
@@ -784,9 +793,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/users/:userId/settings", authenticateUser, authorizeUser, async (req, res) => {
+  app.put("/api/users/:userId/settings", authenticateUser, authorizeUser, validateParams(userIdParamSchema), validateInput(insertUserSettingsSchema.partial()), async (req, res) => {
     try {
-      const settingsData = insertUserSettingsSchema.partial().parse(req.body);
+      const settingsData = req.body;
       const settings = await storage.updateUserSettings(req.params.userId, settingsData);
       res.json(settings);
     } catch (error) {
