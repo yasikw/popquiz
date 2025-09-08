@@ -21,7 +21,7 @@ declare global {
 }
 
 // JWT設定
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET!;
 const JWT_EXPIRES_IN = '24h';
 const JWT_REFRESH_EXPIRES_IN = '7d';
 
@@ -69,9 +69,14 @@ export function verifyToken(token: string): JWTPayload {
     const decoded = jwt.verify(token, JWT_SECRET, {
       issuer: 'japanese-quiz-app',
       audience: 'japanese-quiz-users'
-    }) as JWTPayload;
+    });
 
-    return decoded;
+    // JWTペイロードの型確認と変換
+    if (typeof decoded === 'object' && decoded !== null && 'userId' in decoded && 'username' in decoded) {
+      return decoded as JWTPayload;
+    } else {
+      throw new Error('Invalid token payload');
+    }
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       throw new Error('Token expired');

@@ -15,6 +15,12 @@ import {
 } from "./middleware/security";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
+import { 
+  generateAccessToken, 
+  generateRefreshToken, 
+  authenticateUser,
+  refreshTokens 
+} from "./middleware/auth";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -63,9 +69,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const user = await storage.createUser(userData);
       
-      // Return user without password
+      // Generate JWT tokens
+      const accessToken = generateAccessToken(user);
+      const refreshToken = generateRefreshToken(user);
+      
+      // Return user without password and tokens
       const { password: _, ...userWithoutPassword } = user;
-      res.json(userWithoutPassword);
+      res.json({
+        user: userWithoutPassword,
+        accessToken,
+        refreshToken,
+        message: "ユーザー登録が完了しました"
+      });
     } catch (error) {
       console.error("Registration error:", error);
       res.status(500).json({ message: "ユーザー登録に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
@@ -97,12 +112,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "ユーザー名またはパスワードが正しくありません" });
       }
 
-      // Return user without password
+      // Generate JWT tokens
+      const accessToken = generateAccessToken(user);
+      const refreshToken = generateRefreshToken(user);
+      
+      // Return user without password and tokens
       const { password: _, ...userWithoutPassword } = user;
-      res.json(userWithoutPassword);
+      res.json({
+        user: userWithoutPassword,
+        accessToken,
+        refreshToken,
+        message: "ログインが成功しました"
+      });
     } catch (error) {
       console.error("Login error:", error);
       res.status(500).json({ message: "ログインに失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  // JWT logout endpoint
+  app.post("/api/auth/logout", async (req, res) => {
+    try {
+      // JWTはステートレスなので、クライアント側でトークンを削除することでログアウト
+      // サーバー側では特別な処理は不要（ブラックリスト機能を実装する場合は除く）
+      res.json({ message: "ログアウトが完了しました" });
+    } catch (error) {
+      console.error("Logout error:", error);
+      res.status(500).json({ message: "ログアウトに失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  // JWT refresh endpoint
+  app.post("/api/auth/refresh", async (req, res) => {
+    try {
+      const { refreshToken } = req.body;
+
+      if (!refreshToken) {
+        return res.status(400).json({ message: "リフレッシュトークンが必要です" });
+      }
+
+      // トークンをリフレッシュ
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken, user } = await refreshTokens(refreshToken);
+
+      res.json({
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+        user,
+        message: "トークンが更新されました"
+      });
+    } catch (error) {
+      console.error("Token refresh error:", error);
+      res.status(401).json({ message: "無効なリフレッシュトークンです", error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  // Get current user (JWT authenticated)
+  app.get("/api/auth/user", authenticateUser, async (req, res) => {
+    try {
+      // authenticateUserミドルウェアにより、req.userにユーザー情報が設定される
+      if (!req.user) {
+        return res.status(401).json({ message: "認証されていません" });
+      }
+
+      // パスワードを除いてユーザー情報を返す
+      const { password: _, ...userWithoutPassword } = req.user;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      console.error("Get user error:", error);
+      res.status(500).json({ message: "ユーザー情報取得に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
     }
   });
 
@@ -151,8 +228,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // パスワード変更エンドポイント
-  app.post("/api/users/change-password", async (req, res) => {
+  // パスワード変更エンドポイント（JWT認証必須）
+  app.post("/api/users/change-password", authenticateUser, async (req, res) => {
     try {
       const { userId, currentPassword, newPassword } = req.body;
 
@@ -427,8 +504,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Submit quiz results and update statistics
-  app.post("/api/quiz-results", async (req, res) => {
+  // Submit quiz results and update statistics (JWT認証必須)
+  app.post("/api/quiz-results", authenticateUser, async (req, res) => {
     try {
       const { userId, quizData, results } = req.body;
       
