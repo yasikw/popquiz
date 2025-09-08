@@ -33,6 +33,25 @@ const upload = multer({
   }
 });
 
+// Multer error handling middleware
+const handleMulterError = (err: any, req: any, res: any, next: any) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({
+        error: 'File Too Large',
+        message: 'ファイルサイズが制限を超えています（最大10MB）。より小さなファイルをアップロードしてください。',
+        code: 'FILE_TOO_LARGE'
+      });
+    }
+    return res.status(400).json({
+      error: 'File Upload Error',
+      message: 'ファイルアップロードエラーが発生しました。',
+      code: err.code
+    });
+  }
+  next(err);
+};
+
 export async function registerRoutes(app: Express): Promise<Server> {
   
   // Apply security middleware to all API routes
@@ -338,7 +357,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Unified quiz generation endpoint with security middleware
-  app.post("/api/generate-quiz", uploadRateLimit, upload.single('file'), validateQuizInput, validateFileUpload, async (req, res) => {
+  app.post("/api/generate-quiz", uploadRateLimit, upload.single('file'), handleMulterError, validateQuizInput, validateFileUpload, async (req, res) => {
     try {
       const { contentType, difficulty = "intermediate", youtubeUrl, textContent, questionCount = "5" } = req.body;
       console.log('Quiz generation request received with questionCount:', questionCount);
@@ -395,7 +414,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Content processing and quiz generation
-  app.post("/api/process-pdf", upload.single('pdf'), async (req, res) => {
+  app.post("/api/process-pdf", upload.single('pdf'), handleMulterError, async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "PDFファイルが必要です" });
@@ -430,7 +449,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/process-text", upload.single('text'), async (req, res) => {
+  app.post("/api/process-text", upload.single('text'), handleMulterError, async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "テキストファイルが必要です" });

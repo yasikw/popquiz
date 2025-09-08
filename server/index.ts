@@ -68,6 +68,18 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '5mb' })); // Balanced limit for security and functionality
 app.use(express.urlencoded({ extended: false, limit: '5mb' }));
 
+// Payload size error handling middleware
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  if (err.type === 'entity.too.large') {
+    return res.status(413).json({
+      error: 'Payload Too Large',
+      message: 'リクエストサイズが制限を超えています（最大5MB）。ファイルサイズを小さくしてください。',
+      code: 'PAYLOAD_TOO_LARGE'
+    });
+  }
+  next(err);
+});
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
