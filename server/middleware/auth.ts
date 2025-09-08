@@ -90,6 +90,58 @@ export function verifyToken(token: string): JWTPayload {
 }
 
 /**
+ * アクセストークン専用検証関数
+ */
+export function verifyAccessToken(token: string): JWTPayload {
+  try {
+    const decoded = jwt.verify(token, JWT_ACCESS_SECRET, {
+      issuer: 'japanese-quiz-app',
+      audience: 'japanese-quiz-users'
+    });
+
+    if (typeof decoded === 'object' && decoded !== null && 'userId' in decoded && 'username' in decoded) {
+      return decoded as JWTPayload;
+    } else {
+      throw new Error('Invalid token payload');
+    }
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      throw new Error('Token expired');
+    } else if (error instanceof jwt.JsonWebTokenError) {
+      throw new Error('Invalid token');
+    } else {
+      throw new Error('Token verification failed');
+    }
+  }
+}
+
+/**
+ * リフレッシュトークン専用検証関数
+ */
+export function verifyRefreshToken(token: string): JWTPayload {
+  try {
+    const decoded = jwt.verify(token, JWT_REFRESH_SECRET, {
+      issuer: 'japanese-quiz-app',
+      audience: 'japanese-quiz-users'
+    });
+
+    if (typeof decoded === 'object' && decoded !== null && 'userId' in decoded && 'username' in decoded) {
+      return decoded as JWTPayload;
+    } else {
+      throw new Error('Invalid token payload');
+    }
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      throw new Error('Token expired');
+    } else if (error instanceof jwt.JsonWebTokenError) {
+      throw new Error('Invalid token');
+    } else {
+      throw new Error('Token verification failed');
+    }
+  }
+}
+
+/**
  * Authorizationヘッダーからトークンを抽出
  */
 function extractTokenFromHeader(authHeader: string | undefined): string | null {
