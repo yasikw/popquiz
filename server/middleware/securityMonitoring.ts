@@ -2,8 +2,19 @@ import { Request, Response, NextFunction } from 'express';
 import { securityLogger, SecurityLogLevel, SecurityEventType } from '../utils/securityLogger';
 import rateLimit from 'express-rate-limit';
 
+// Express Request型の拡張
+interface ExtendedRequest extends Request {
+  sessionID?: string;
+  session?: {
+    lastUserAgent?: string;
+    lastIpAddress?: string;
+    [key: string]: any;
+  };
+  user?: any; // 柔軟な型定義に変更
+}
+
 // 異常なトラフィックパターンを検知するミドルウェア
-export function abnormalTrafficDetection(req: Request, res: Response, next: NextFunction): void {
+export function abnormalTrafficDetection(req: ExtendedRequest, res: Response, next: NextFunction): void {
   const userAgent = req.get('User-Agent') || '';
   const ipAddress = req.ip || req.connection?.remoteAddress || 'unknown';
   
@@ -110,7 +121,7 @@ export function abnormalTrafficDetection(req: Request, res: Response, next: Next
 }
 
 // ファイルアップロード監視ミドルウェア
-export function fileUploadMonitoring(req: Request, res: Response, next: NextFunction): void {
+export function fileUploadMonitoring(req: ExtendedRequest, res: Response, next: NextFunction): void {
   const originalSend = res.send;
   
   res.send = function(data: any) {
@@ -146,7 +157,7 @@ export function fileUploadMonitoring(req: Request, res: Response, next: NextFunc
 }
 
 // 認証失敗監視ミドルウェア
-export function authFailureMonitoring(req: Request, res: Response, next: NextFunction): void {
+export function authFailureMonitoring(req: ExtendedRequest, res: Response, next: NextFunction): void {
   const originalSend = res.send;
   
   res.send = function(data: any) {
@@ -175,7 +186,7 @@ export function authFailureMonitoring(req: Request, res: Response, next: NextFun
 }
 
 // レート制限監視用のカスタムハンドラー
-export const rateLimitHandler = (req: Request, res: Response) => {
+export const rateLimitHandler = (req: ExtendedRequest, res: Response) => {
   const ipAddress = req.ip || req.connection?.remoteAddress || 'unknown';
   
   securityLogger.logRateLimitExceeded(
@@ -191,7 +202,7 @@ export const rateLimitHandler = (req: Request, res: Response) => {
 };
 
 // セキュリティヘッダー監視ミドルウェア
-export function securityHeadersMonitoring(req: Request, res: Response, next: NextFunction): void {
+export function securityHeadersMonitoring(req: ExtendedRequest, res: Response, next: NextFunction): void {
   // CSRF トークンの検証
   if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
     const csrfToken = req.get('X-CSRF-Token') || req.body?._csrf;
@@ -245,56 +256,58 @@ export function securityHeadersMonitoring(req: Request, res: Response, next: Nex
 }
 
 // セッションハイジャック検知ミドルウェア
-export function sessionHijackDetection(req: Request, res: Response, next: NextFunction): void {
+export function sessionHijackDetection(req: ExtendedRequest, res: Response, next: NextFunction): void {
   if (req.user && req.sessionID) {
     const currentUserAgent = req.get('User-Agent') || '';
     const currentIp = req.ip || req.connection?.remoteAddress || 'unknown';
     
     // セッションに前回のUser-AgentとIPアドレスを保存
-    if (!req.session.lastUserAgent || !req.session.lastIpAddress) {
-      req.session.lastUserAgent = currentUserAgent;
-      req.session.lastIpAddress = currentIp;
-    } else {
-      // User-Agentの急激な変化をチェック
-      if (req.session.lastUserAgent !== currentUserAgent) {
-        securityLogger.log(
-          SecurityLogLevel.WARNING,
-          SecurityEventType.SESSION_HIJACK_ATTEMPT,
-          'User-Agent change detected in active session',
-          {
-            userId: req.user.id,
-            sessionId: req.sessionID,
-            ipAddress: currentIp,
-            metadata: {
-              previousUserAgent: '[REDACTED]',
-              currentUserAgent: '[REDACTED]',
-              ipChanged: req.session.lastIpAddress !== currentIp
+    if (req.session) {
+      if (!req.session.lastUserAgent || !req.session.lastIpAddress) {
+        req.session.lastUserAgent = currentUserAgent;
+        req.session.lastIpAddress = currentIp;
+      } else {
+        // User-Agentの急激な変化をチェック
+        if (req.session.lastUserAgent !== currentUserAgent) {
+          securityLogger.log(
+            SecurityLogLevel.WARNING,
+            SecurityEventType.SESSION_HIJACK_ATTEMPT,
+            'User-Agent change detected in active session',
+            {
+              userId: req.user.id,
+              sessionId: req.sessionID,
+              ipAddress: currentIp,
+              metadata: {
+                previousUserAgent: '[REDACTED]',
+                currentUserAgent: '[REDACTED]',
+                ipChanged: req.session.lastIpAddress !== currentIp
+              }
             }
-          }
-        );
-      }
+          );
+        }
 
-      // IPアドレスの変化をチェック（警告レベル）
-      if (req.session.lastIpAddress !== currentIp) {
-        securityLogger.log(
-          SecurityLogLevel.INFO,
-          SecurityEventType.SUSPICIOUS_ACTIVITY,
-          'IP address change detected in active session',
-          {
-            userId: req.user.id,
-            sessionId: req.sessionID,
-            ipAddress: currentIp,
-            metadata: {
-              previousIp: req.session.lastIpAddress,
-              userAgentChanged: req.session.lastUserAgent !== currentUserAgent
+        // IPアドレスの変化をチェック（警告レベル）
+        if (req.session.lastIpAddress !== currentIp) {
+          securityLogger.log(
+            SecurityLogLevel.INFO,
+            SecurityEventType.SUSPICIOUS_ACTIVITY,
+            'IP address change detected in active session',
+            {
+              userId: req.user.id,
+              sessionId: req.sessionID,
+              ipAddress: currentIp,
+              metadata: {
+                previousIp: req.session.lastIpAddress,
+                userAgentChanged: req.session.lastUserAgent !== currentUserAgent
+              }
             }
-          }
-        );
-      }
+          );
+        }
 
-      // 現在の値を更新
-      req.session.lastUserAgent = currentUserAgent;
-      req.session.lastIpAddress = currentIp;
+        // 現在の値を更新
+        req.session.lastUserAgent = currentUserAgent;
+        req.session.lastIpAddress = currentIp;
+      }
     }
   }
 
