@@ -137,13 +137,7 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
   // Mutation for updating user settings
   const updateSettingsMutation = useMutation({
     mutationFn: async (settingsData: Partial<UserSettings>) => {
-      return apiRequest(`/api/users/${user?.id}/settings`, {
-        method: "PUT",
-        body: JSON.stringify(settingsData),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      return apiRequest("PUT", `/api/users/${user?.id}/settings`, settingsData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/users/${user?.id}/settings`] });
