@@ -54,11 +54,11 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         localStorage.setItem('refreshToken', userData.refreshToken);
       }
       
-      onLogin(userData.username, userData.id);
+      onLogin(userData.user.username, userData.user.id, userData.user.email);
       
       toast({
         title: "ログイン成功",
-        description: `${userData.username}さん、おかえりなさい！`,
+        description: `${userData.user.username}さん、おかえりなさい！`,
       });
     } catch (error) {
       toast({
@@ -117,11 +117,11 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         localStorage.setItem('refreshToken', userData.refreshToken);
       }
       
-      onLogin(userData.username, userData.id);
+      onLogin(userData.user.username, userData.user.id, userData.user.email);
 
       toast({
         title: "登録成功",
-        description: `${userData.username}さん、ようこそ！`,
+        description: `${userData.user.username}さん、ようこそ！`,
       });
     } catch (error) {
       toast({

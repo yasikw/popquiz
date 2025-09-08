@@ -31,11 +31,11 @@ function Router() {
     setIsLoading(false);
   }, []);
 
-  const handleLogin = (username: string, userId: string) => {
+  const handleLogin = (username: string, userId: string, email?: string | null) => {
     const user: User = {
       id: userId,
       username,
-      email: null,
+      email: email || null,
       password: null,
       createdAt: new Date(),
     };
