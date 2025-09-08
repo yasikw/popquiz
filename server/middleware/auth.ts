@@ -246,8 +246,8 @@ export async function refreshTokens(refreshToken: string): Promise<{
   user: User;
 }> {
   try {
-    // リフレッシュトークンを検証
-    const decoded = verifyToken(refreshToken);
+    // リフレッシュトークン専用の検証を使用
+    const decoded = verifyRefreshToken(refreshToken);
 
     // ユーザー情報を取得
     const user = await storage.getUser(decoded.userId);
