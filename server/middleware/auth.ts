@@ -163,8 +163,8 @@ export async function authenticateUser(
     // トークンを検証
     const decoded = verifyToken(token);
 
-    // ユーザー情報を取得
-    const user = await storage.getUser(decoded.userId);
+    // ユーザー情報を取得（認証用の内部操作なので自分自身のIDを使用）
+    const user = await storage.getUser(decoded.userId, decoded.userId);
     if (!user) {
       res.status(401).json({ 
         error: 'Invalid token',
@@ -173,8 +173,14 @@ export async function authenticateUser(
       return;
     }
 
-    // req.userにユーザー情報を設定
-    req.user = user;
+    // req.userにユーザー情報を設定（SafeUserをUser型にキャスト）
+    req.user = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      password: '', // セキュリティのため空文字列
+      createdAt: user.createdAt
+    };
     next();
 
   } catch (error) {
@@ -222,10 +228,17 @@ export async function optionalAuthentication(
 
     // トークンがある場合は検証を試行
     const decoded = verifyToken(token);
-    const user = await storage.getUser(decoded.userId);
+    const user = await storage.getUser(decoded.userId, decoded.userId);
     
     if (user) {
-      req.user = user;
+      // req.userにユーザー情報を設定（SafeUserをUser型にキャスト）
+      req.user = {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        password: '', // セキュリティのため空文字列
+        createdAt: user.createdAt
+      };
     }
 
     next();
@@ -249,20 +262,29 @@ export async function refreshTokens(refreshToken: string): Promise<{
     // リフレッシュトークン専用の検証を使用
     const decoded = verifyRefreshToken(refreshToken);
 
-    // ユーザー情報を取得
-    const user = await storage.getUser(decoded.userId);
+    // ユーザー情報を取得（リフレッシュ時の内部操作なので自分自身のIDを使用）
+    const user = await storage.getUser(decoded.userId, decoded.userId);
     if (!user) {
       throw new Error('User not found');
     }
 
+    // 新しいトークンを生成するため、SafeUserをUser形式に変換
+    const userForToken = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      password: '', // トークン生成時は不要
+      createdAt: user.createdAt
+    };
+
     // 新しいトークンを生成
-    const newAccessToken = generateAccessToken(user);
-    const newRefreshToken = generateRefreshToken(user);
+    const newAccessToken = generateAccessToken(userForToken);
+    const newRefreshToken = generateRefreshToken(userForToken);
 
     return {
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
-      user
+      user: userForToken
     };
 
   } catch (error) {
