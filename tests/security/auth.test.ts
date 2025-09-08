@@ -5,10 +5,10 @@ import { describe, test, expect, beforeAll, beforeEach, afterAll, jest } from '@
 
 // Mock storage for testing
 const mockStorage = {
-  getUserByUsername: jest.fn(),
-  createUser: jest.fn(),
-  getUser: jest.fn(),
-  getUserSettings: jest.fn()
+  getUserByUsername: jest.fn<any>(),
+  createUser: jest.fn<any>(),
+  getUser: jest.fn<any>(),
+  getUserSettings: jest.fn<any>()
 };
 
 // Import the app for testing

@@ -9,11 +9,11 @@ const purify = DOMPurify(window as any);
 
 // Mock storage for testing
 const mockStorage = {
-  createUser: jest.fn(),
-  getUserByUsername: jest.fn(),
-  createQuizSession: jest.fn(),
-  getUsers: jest.fn(),
-  executeQuery: jest.fn()
+  createUser: jest.fn<any>(),
+  getUserByUsername: jest.fn<any>(),
+  createQuizSession: jest.fn<any>(),
+  getUsers: jest.fn<any>(),
+  executeQuery: jest.fn<any>()
 };
 
 let app: any;
@@ -147,7 +147,7 @@ describe('🛡️ Injection Attack Security Tests', () => {
     test('should prevent second-order SQL injection', async () => {
       const maliciousUsername = "admin'; DROP TABLE sessions; --";
       
-      mockStorage.createUser.mockImplementation((userData) => {
+      mockStorage.createUser.mockImplementation((userData: any) => {
         if (userData.username.includes('DROP') || userData.username.includes(';')) {
           throw new Error('Invalid username format');
         }
