@@ -1,0 +1,40 @@
+{
+  "name": "japanese-quiz-app-production",
+  "version": "1.0.0",
+  "description": "Production build scripts and configurations for Japanese Quiz Application",
+  "scripts": {
+    "validate:production": "ts-node scripts/production-setup.ts --validate-only",
+    "setup:production": "ts-node scripts/production-setup.ts",
+    "generate:secrets": "ts-node scripts/production-setup.ts --generate-secrets",
+    "test:security": "jest tests/security/ --config simple-jest.config.js --forceExit",
+    "test:security:report": "jest tests/security/ --config simple-jest.config.js --coverage --forceExit",
+    "build:production": "NODE_ENV=production npm run build",
+    "start:production": "NODE_ENV=production npm start",
+    "deploy:check": "npm run validate:production && npm run test:security && npm run build:production",
+    "security:scan": "npm audit --audit-level moderate",
+    "security:fix": "npm audit fix",
+    "deps:update": "npm update && npm audit",
+    "logs:security": "tail -f logs/security.log",
+    "logs:audit": "tail -f logs/audit.log",
+    "backup:db": "pg_dump $DATABASE_URL > backups/db-backup-$(date +%Y%m%d-%H%M%S).sql",
+    "restore:db": "psql $DATABASE_URL < backups/db-backup-latest.sql",
+    "ssl:check": "openssl s_client -connect $PRODUCTION_DOMAIN:443 -servername $PRODUCTION_DOMAIN",
+    "performance:test": "npm run build && node --max-old-space-size=256 dist/server/index.js",
+    "health:check": "curl -f https://$PRODUCTION_DOMAIN/api/health || exit 1"
+  },
+  "production": {
+    "requirements": {
+      "node": ">=18.0.0",
+      "npm": ">=8.0.0",
+      "postgresql": ">=13.0",
+      "memory": "512MB",
+      "disk": "2GB"
+    },
+    "environment": {
+      "NODE_ENV": "production",
+      "FORCE_HTTPS": true,
+      "SSL_REQUIRED": true,
+      "DEBUG": false
+    }
+  }
+}

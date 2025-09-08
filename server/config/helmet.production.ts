@@ -100,12 +100,7 @@ export const productionHelmetConfig: HelmetOptions = {
     allow: false
   },
   
-  // Expect Certificate Transparency
-  expectCt: {
-    maxAge: 86400,
-    enforce: true,
-    reportUri: "https://your-domain.com/ct-report"
-  },
+  // Note: Expect-CT header is deprecated in favor of Certificate Transparency logs
   
   // Frameguard - Deny all framing
   frameguard: {
@@ -131,25 +126,8 @@ export const productionHelmetConfig: HelmetOptions = {
   // Origin Agent Cluster - Isolate origin
   originAgentCluster: true,
   
-  // Permissions Policy - Restrict dangerous features
-  permissionsPolicy: {
-    features: {
-      geolocation: ["'none'"],
-      microphone: ["'none'"],
-      camera: ["'none'"],
-      payment: ["'none'"],
-      usb: ["'none'"],
-      magnetometer: ["'none'"],
-      gyroscope: ["'none'"],
-      speaker: ["'none'"],
-      vibrate: ["'none'"],
-      fullscreen: ["'self'"],
-      picture_in_picture: ["'none'"],
-      sync_xhr: ["'none'"],
-      clipboard_read: ["'none'"],
-      clipboard_write: ["'none'"]
-    }
-  },
+  // Note: Permissions Policy should be set via custom middleware
+  // as it's not included in the current Helmet types
   
   // Referrer Policy - Strict
   referrerPolicy: {

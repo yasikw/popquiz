@@ -1,0 +1,154 @@
+# Production Gitignore - Additional security exclusions for production deployments
+
+# Environment files (CRITICAL - NEVER commit these)
+.env.production
+.env.staging
+.env.local
+.env
+
+# Security logs and audit files
+logs/
+*.log
+security.log
+audit.log
+
+# SSL certificates and private keys
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+ssl/
+certs/
+
+# Database dumps and backups
+*.sql
+*.dump
+backups/
+db-backup-*
+
+# Uploaded files (may contain sensitive user data)
+uploads/
+tmp/
+temp/
+
+# Cache and temporary files
+.cache/
+.tmp/
+node_modules/.cache/
+
+# IDE and editor files that might contain sensitive data
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build artifacts
+dist/
+build/
+coverage/
+
+# Package manager files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+.nyc_output
+
+# Dependencies
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+.env.test
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# next.js build output
+.next
+
+# nuxt.js build output
+.nuxt
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# Security scanner outputs
+.security-scan-results
+vulnerability-report.json
+
+# Deployment artifacts
+deploy.zip
+deployment-package.tar.gz
+
+# Configuration files that might contain secrets
+config/production.json
+config/staging.json
+
+# Docker files (if containing sensitive info)
+docker-compose.override.yml
+docker-compose.production.yml
+
+# Kubernetes secrets
+k8s-secrets.yaml
+*.secret.yaml
+
+# Terraform state files (may contain sensitive data)
+*.tfstate
+*.tfstate.*
+
+# Ansible vault files
+vault.yml
+secrets.yml
+
+# GPG keys
+*.gpg
+*.asc
