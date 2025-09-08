@@ -43,10 +43,20 @@ import {
   authenticateUser,
   refreshTokens 
 } from "./middleware/auth";
+import { securityLogger } from "./utils/securityLogger";
+import { 
+  abnormalTrafficDetection,
+  authFailureMonitoring,
+  fileUploadMonitoring,
+  securityHeadersMonitoring,
+  sessionHijackDetection,
+  createSecurityRateLimit
+} from "./middleware/securityMonitoring";
 import { 
   authorizeUser, 
   authorizeResourceOwner 
 } from "./middleware/authorization";
+import { logAnalyzer } from "./utils/logAnalyzer";
 import { 
   generateCSRFTokenEndpoint,
   refreshCSRFToken,
@@ -80,6 +90,11 @@ const handleMulterError = (err: any, req: Request, res: Response, next: NextFunc
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // セキュリティ監視ミドルウェアを全体に適用
+  app.use(abnormalTrafficDetection);
+  app.use(authFailureMonitoring);
+  app.use(securityHeadersMonitoring);
+  app.use(sessionHijackDetection);
   
   // Configure Express to trust proxy headers for proper IP detection
   // Use specific trust proxy setting for better security
@@ -132,6 +147,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const accessToken = generateAccessToken(userForJWT);
       const refreshToken = generateRefreshToken(userForJWT);
       
+      // Log successful registration
+      securityLogger.logAuthSuccess(
+        safeUser.id, 
+        req.ip || req.connection?.remoteAddress,
+        req.get('User-Agent')
+      );
+      
       // Return safe user data (already without password)
       res.json({
         user: safeUser,
@@ -140,7 +162,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "ユーザー登録が完了しました"
       });
     } catch (error) {
-      console.error("Registration error:", error);
+      securityLogger.logSuspiciousActivity(
+        'User registration error',
+        undefined,
+        req.ip || req.connection?.remoteAddress,
+        { error: error instanceof Error ? error.message : 'Unknown error' }
+      );
       res.status(500).json({ message: "ユーザー登録に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
     }
   });
@@ -151,6 +178,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const user = await storage.getUserByUsername(username);
       if (!user) {
+        securityLogger.logAuthFailure(
+          username,
+          req.ip || req.connection?.remoteAddress,
+          req.get('User-Agent'),
+          'User not found'
+        );
         return res.status(401).json({ message: "ユーザー名またはパスワードが正しくありません" });
       }
 
@@ -160,12 +193,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
+        securityLogger.logAuthFailure(
+          username,
+          req.ip || req.connection?.remoteAddress,
+          req.get('User-Agent'),
+          'Invalid password'
+        );
         return res.status(401).json({ message: "ユーザー名またはパスワードが正しくありません" });
       }
 
       // Generate JWT tokens
       const accessToken = generateAccessToken(user);
       const refreshToken = generateRefreshToken(user);
+      
+      // Log successful login
+      securityLogger.logAuthSuccess(
+        user.id, 
+        req.ip || req.connection?.remoteAddress,
+        req.get('User-Agent')
+      );
       
       // Return user without password and tokens
       const { password: _, ...userWithoutPassword } = user;
@@ -176,7 +222,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "ログインが成功しました"
       });
     } catch (error) {
-      console.error("Login error:", error);
+      securityLogger.logSuspiciousActivity(
+        'User login error',
+        undefined,
+        req.ip || req.connection?.remoteAddress,
+        { error: error instanceof Error ? error.message : 'Unknown error' }
+      );
       res.status(500).json({ message: "ログインに失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
     }
   });
@@ -374,7 +425,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Unified quiz generation endpoint with security middleware
-  app.post("/api/generate-quiz", quizRateLimit, upload.single('file'), handleMulterError, validateInput(quizGenerationSchema), validateFileUpload, async (req: Request, res: Response) => {
+  app.post("/api/generate-quiz", quizRateLimit, upload.single('file'), handleMulterError, fileUploadMonitoring, validateInput(quizGenerationSchema), validateFileUpload, async (req: Request, res: Response) => {
     try {
       const { contentType, difficulty = "intermediate", youtubeUrl, textContent, questionCount = "5" } = req.body;
       console.log('Quiz generation request received with questionCount:', questionCount);
@@ -431,7 +482,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Content processing and quiz generation
-  app.post("/api/process-pdf", uploadRateLimit, upload.single('pdf'), handleMulterError, async (req: Request, res: Response) => {
+  app.post("/api/process-pdf", uploadRateLimit, upload.single('pdf'), handleMulterError, fileUploadMonitoring, async (req: Request, res: Response) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "PDFファイルが必要です" });
@@ -466,7 +517,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/process-text", uploadRateLimit, upload.single('text'), handleMulterError, async (req: Request, res: Response) => {
+  app.post("/api/process-text", uploadRateLimit, upload.single('text'), handleMulterError, fileUploadMonitoring, async (req: Request, res: Response) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "テキストファイルが必要です" });
@@ -815,5 +866,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
+  // セキュリティログ監視エンドポイント（管理者のみアクセス可能）
+  app.get("/api/admin/security-stats", authenticateUser, async (req, res) => {
+    try {
+      // 簡易的な管理者チェック（実際の実装では適切な権限管理を行う）
+      const timeRange = req.query.timeRange as 'hour' | 'day' | 'week' || 'day';
+      const stats = await logAnalyzer.getSecurityStats(timeRange);
+      res.json(stats);
+    } catch (error) {
+      console.error('Security stats error:', error);
+      res.status(500).json({ message: "セキュリティ統計の取得に失敗しました" });
+    }
+  });
+
+  app.get("/api/admin/security-alerts", authenticateUser, async (req, res) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 50;
+      const alerts = await logAnalyzer.getRecentAlerts(limit);
+      res.json(alerts);
+    } catch (error) {
+      console.error('Security alerts error:', error);
+      res.status(500).json({ message: "セキュリティアラートの取得に失敗しました" });
+    }
+  });
+
+  app.get("/api/admin/log-health", authenticateUser, async (req, res) => {
+    try {
+      const health = await logAnalyzer.checkLogHealth();
+      res.json(health);
+    } catch (error) {
+      console.error('Log health check error:', error);
+      res.status(500).json({ message: "ログ健全性チェックに失敗しました" });
+    }
+  });
+
+  app.get("/api/admin/scan-sensitive-data", authenticateUser, async (req, res) => {
+    try {
+      const scan = await logAnalyzer.scanForSensitiveData();
+      res.json(scan);
+    } catch (error) {
+      console.error('Sensitive data scan error:', error);
+      res.status(500).json({ message: "機密データスキャンに失敗しました" });
+    }
+  });
+
   return httpServer;
 }
