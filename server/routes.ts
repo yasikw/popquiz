@@ -116,16 +116,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         password: hashedPassword,
       };
 
-      const user = await storage.createUser(userData);
+      const safeUser = await storage.createUser(userData);
+      
+      // For JWT token generation, we need to create a temporary user object with the original data
+      // Note: password is already hashed at this point
+      const userForJWT = {
+        id: safeUser.id,
+        username: safeUser.username,
+        email: safeUser.email,
+        password: hashedPassword, // Pass the hashed password for JWT
+        createdAt: safeUser.createdAt
+      };
       
       // Generate JWT tokens
-      const accessToken = generateAccessToken(user);
-      const refreshToken = generateRefreshToken(user);
+      const accessToken = generateAccessToken(userForJWT);
+      const refreshToken = generateRefreshToken(userForJWT);
       
-      // Return user without password and tokens
-      const { password: _, ...userWithoutPassword } = user;
+      // Return safe user data (already without password)
       res.json({
-        user: userWithoutPassword,
+        user: safeUser,
         accessToken,
         refreshToken,
         message: "ユーザー登録が完了しました"
@@ -254,7 +263,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     async (req, res) => {
     try {
       const updateData = req.body;
-      const user = await storage.updateUser(req.params.id, updateData);
+      const user = await storage.updateUser(req.params.id, updateData, req.user!.id);
       if (!user) {
         return res.status(404).json({ message: "ユーザーが見つかりません" });
       }
@@ -275,7 +284,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // 認証済みユーザーからuserIdを取得（セキュリティ修正）
       const userId = req.user!.id;
 
-      const user = await storage.getUser(userId);
+      // Get full user data for password comparison (internal method)
+      const user = await storage.getUserByUsername(req.user!.username);
       if (!user) {
         return res.status(404).json({ message: "ユーザーが見つかりません" });
       }
@@ -293,8 +303,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
       // パスワードを更新
-      const updatedUser = await storage.updateUserPassword(userId, hashedPassword);
-      if (!updatedUser) {
+      const success = await storage.updateUserPassword(userId, hashedPassword, userId);
+      if (!success) {
         return res.status(500).json({ message: "パスワード更新に失敗しました" });
       }
 
@@ -364,7 +374,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Unified quiz generation endpoint with security middleware
-  app.post("/api/generate-quiz", quizRateLimit, upload.single('file'), handleMulterError, validateInput(quizGenerationSchema), validateFileUpload, async (req, res) => {
+  app.post("/api/generate-quiz", quizRateLimit, upload.single('file'), handleMulterError, validateInput(quizGenerationSchema), validateFileUpload, async (req: Request, res: Response) => {
     try {
       const { contentType, difficulty = "intermediate", youtubeUrl, textContent, questionCount = "5" } = req.body;
       console.log('Quiz generation request received with questionCount:', questionCount);
@@ -421,7 +431,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Content processing and quiz generation
-  app.post("/api/process-pdf", uploadRateLimit, upload.single('pdf'), handleMulterError, async (req, res) => {
+  app.post("/api/process-pdf", uploadRateLimit, upload.single('pdf'), handleMulterError, async (req: Request, res: Response) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "PDFファイルが必要です" });
@@ -456,7 +466,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/process-text", uploadRateLimit, upload.single('text'), handleMulterError, async (req, res) => {
+  app.post("/api/process-text", uploadRateLimit, upload.single('text'), handleMulterError, async (req: Request, res: Response) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "テキストファイルが必要です" });
@@ -518,7 +528,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // User statistics (JWT認証・認可必須)
   app.get("/api/users/:userId/stats", authenticateUser, authorizeUser, validateParams(userIdParamSchema), async (req, res) => {
     try {
-      const stats = await storage.getUserStats(req.params.userId);
+      const stats = await storage.getUserStats(req.params.userId, req.user!.id);
       if (!stats) {
         return res.status(404).json({ message: "統計が見つかりません" });
       }
@@ -530,7 +540,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/users/:userId/sessions", authenticateUser, authorizeUser, validateParams(userIdParamSchema), validateQuery(paginationQuerySchema), async (req, res) => {
     try {
-      const sessions = await storage.getUserQuizSessions(req.params.userId);
+      const sessions = await storage.getUserQuizSessions(req.params.userId, req.user?.id || req.params.userId);
       res.json(sessions);
     } catch (error) {
       res.status(500).json({ message: "セッション履歴取得に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
@@ -578,7 +588,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         timeSpent: results.totalTimeSpent || 0,
       };
       
-      const session = await storage.createQuizSession(sessionData);
+      const session = await storage.createQuizSession(sessionData, userId);
       
       // Create questions with user answers if available
       if (quizData.questions && results.detailedResults) {
@@ -592,11 +602,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           timeSpent: result.timeSpent || 0,
         }));
         
-        await storage.createQuestions(questionsData);
+        await storage.createQuestions(questionsData, userId);
       }
 
       // Update user statistics
-      const currentStats = await storage.getUserStats(userId);
+      const currentStats = await storage.getUserStats(userId, userId);
       if (currentStats) {
         const accuracy = sessionData.totalQuestions > 0 ? (sessionData.score / sessionData.totalQuestions) : 0;
         const newCompletedQuizzes = currentStats.completedQuizzes + 1;
@@ -619,7 +629,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           completedQuizzes: newCompletedQuizzes,
           averageAccuracy: newAverageAccuracy,
           ...difficultyAccuracyUpdates
-        });
+        }, userId);
       }
       
       res.json({ 
@@ -640,7 +650,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/quiz-sessions", authenticateUser, authorizeResourceOwner('session'), async (req, res) => {
     try {
       const sessionData = insertQuizSessionSchema.parse(req.body);
-      const session = await storage.createQuizSession(sessionData);
+      const session = await storage.createQuizSession(sessionData, req.user!.id);
       res.json(session);
     } catch (error) {
       res.status(400).json({ message: "クイズセッション作成に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
@@ -653,7 +663,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ...q,
         sessionId: req.params.sessionId
       }));
-      const createdQuestions = await storage.createQuestions(questions);
+      const createdQuestions = await storage.createQuestions(questions, req.user!.id);
       res.json(createdQuestions);
     } catch (error) {
       res.status(400).json({ message: "質問作成に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
@@ -662,7 +672,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/users/:userId/sessions", async (req, res) => {
     try {
-      const sessions = await storage.getUserQuizSessions(req.params.userId);
+      const sessions = await storage.getUserQuizSessions(req.params.userId, req.user?.id || req.params.userId);
       res.json(sessions);
     } catch (error) {
       res.status(500).json({ message: "セッション取得に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
@@ -672,7 +682,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // User sessions with questions for detailed view (JWT認証・認可必須)
   app.get("/api/users/:userId/sessions-with-questions", authenticateUser, authorizeUser, async (req, res) => {
     try {
-      const sessionsWithQuestions = await storage.getUserQuizSessionsWithQuestions(req.params.userId);
+      const sessionsWithQuestions = await storage.getUserQuizSessionsWithQuestions(req.params.userId, req.user?.id || req.params.userId);
       res.json(sessionsWithQuestions);
     } catch (error) {
       res.status(500).json({ message: "詳細セッション取得に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
@@ -682,13 +692,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/users/:userId/stats", async (req, res) => {
     try {
       console.log(`Getting stats for user: ${req.params.userId}`);
-      let stats = await storage.getUserStats(req.params.userId);
+      let stats = await storage.getUserStats(req.params.userId, req.user?.id || req.params.userId);
       console.log(`Found existing stats:`, stats);
       
       // If no stats exist, calculate them from existing sessions
       if (!stats) {
         console.log(`No stats found, calculating from sessions...`);
-        stats = await storage.calculateAndUpdateUserStats(req.params.userId);
+        stats = await storage.calculateAndUpdateUserStats(req.params.userId, req.user?.id || req.params.userId);
         console.log(`Calculated stats:`, stats);
       }
       
@@ -707,7 +717,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/users/:userId/calculate-stats", authenticateUser, authorizeUser, async (req, res) => {
     try {
       console.log(`Manual stats calculation for user: ${req.params.userId}`);
-      const stats = await storage.calculateAndUpdateUserStats(req.params.userId);
+      const stats = await storage.calculateAndUpdateUserStats(req.params.userId, req.user!.id);
       console.log(`Manual calculation result:`, stats);
       res.json(stats);
     } catch (error) {
@@ -740,7 +750,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         timeSpent: results.totalTimeSpent,
       };
       
-      const session = await storage.createQuizSession(sessionData);
+      const session = await storage.createQuizSession(sessionData, userId);
       
       // Create questions with user answers (sanitized)
       const questionsData = results.detailedResults.map((result: any) => ({
@@ -754,11 +764,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         timeSpent: result.timeSpent,
       }));
       
-      await storage.createQuestions(questionsData);
+      await storage.createQuestions(questionsData, userId);
       
       // Update user statistics automatically
       console.log(`Updating stats for user: ${userId}`);
-      const updatedStats = await storage.calculateAndUpdateUserStats(userId);
+      const updatedStats = await storage.calculateAndUpdateUserStats(userId, userId);
       console.log(`Updated stats:`, updatedStats);
       
       res.json({ sessionId: session.id, message: "結果を保存しました" });
@@ -770,10 +780,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // User settings endpoints (JWT認証・認可必須)
   app.get("/api/users/:userId/settings", authenticateUser, authorizeUser, validateParams(userIdParamSchema), async (req, res) => {
     try {
-      const settings = await storage.getUserSettings(req.params.userId);
+      const settings = await storage.getUserSettings(req.params.userId, req.user!.id);
       if (!settings) {
         // Check if user exists before creating settings
-        const user = await storage.getUser(req.params.userId);
+        const user = await storage.getUser(req.params.userId, req.user!.id);
         if (!user) {
           return res.status(404).json({ message: "ユーザーが見つかりません" });
         }
@@ -783,7 +793,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           defaultDifficulty: "intermediate",
           questionCount: 5,
           timeLimit: 60,
-        });
+        }, req.user!.id);
         return res.json(defaultSettings);
       }
       res.json(settings);
@@ -796,7 +806,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/users/:userId/settings", authenticateUser, authorizeUser, validateParams(userIdParamSchema), validateInput(insertUserSettingsSchema.partial()), async (req, res) => {
     try {
       const settingsData = req.body;
-      const settings = await storage.updateUserSettings(req.params.userId, settingsData);
+      const settings = await storage.updateUserSettings(req.params.userId, settingsData, req.user!.id);
       res.json(settings);
     } catch (error) {
       console.error("Settings update error:", error);

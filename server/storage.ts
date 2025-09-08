@@ -897,160 +897,333 @@ export class DatabaseStorage implements IStorage {
     return sessionsWithQuestions;
   }
 
-  // Question operations
-  async createQuestions(insertQuestions: InsertQuestion[]): Promise<Question[]> {
-    const createdQuestions = await db
-      .insert(questions)
-      .values(insertQuestions)
-      .returning();
-    return createdQuestions;
+  // Question operations with authorization
+  async createQuestions(insertQuestions: InsertQuestion[], requestingUserId: string): Promise<Question[]> {
+    validateParam(userIdSchema, requestingUserId, "requesting user ID");
+    
+    try {
+      // Verify session ownership for authorization
+      if (insertQuestions.length > 0) {
+        const [session] = await db
+          .select({ userId: quizSessions.userId })
+          .from(quizSessions)
+          .where(eq(quizSessions.id, insertQuestions[0].sessionId));
+        
+        if (!session || session.userId !== requestingUserId) {
+          securityLog("createQuestions", requestingUserId, session?.userId, false);
+          throw new AuthorizationError("ユーザーは自分のセッションの問題のみ作成可能です");
+        }
+      }
+      
+      const createdQuestions = await db
+        .insert(questions)
+        .values(insertQuestions)
+        .returning();
+      
+      securityLog("createQuestions", requestingUserId, undefined, true);
+      return createdQuestions;
+    } catch (error) {
+      if (error instanceof AuthorizationError) {
+        throw error;
+      }
+      console.error("[STORAGE ERROR] Failed to create questions:", error);
+      throw new Error("問題の作成に失敗しました");
+    }
   }
 
-  async getSessionQuestions(sessionId: string): Promise<Question[]> {
-    return await db
-      .select()
-      .from(questions)
-      .where(eq(questions.sessionId, sessionId));
+  async getSessionQuestions(sessionId: string, requestingUserId: string): Promise<Question[]> {
+    validateParam(sessionIdSchema, sessionId, "session ID");
+    validateParam(userIdSchema, requestingUserId, "requesting user ID");
+    
+    try {
+      // Verify session ownership
+      const [session] = await db
+        .select({ userId: quizSessions.userId })
+        .from(quizSessions)
+        .where(eq(quizSessions.id, sessionId));
+      
+      if (!session || session.userId !== requestingUserId) {
+        securityLog("getSessionQuestions", requestingUserId, session?.userId, false);
+        throw new AuthorizationError("ユーザーは自分のセッションの問題のみアクセス可能です");
+      }
+      
+      const questionResults = await db
+        .select()
+        .from(questions)
+        .where(eq(questions.sessionId, sessionId));
+      
+      securityLog("getSessionQuestions", requestingUserId, session.userId, true);
+      return questionResults;
+    } catch (error) {
+      if (error instanceof AuthorizationError) {
+        throw error;
+      }
+      console.error("[STORAGE ERROR] Failed to get session questions:", error);
+      throw new Error("セッション問題の取得に失敗しました");
+    }
   }
 
-  async updateQuestion(id: string, updateData: Partial<InsertQuestion>): Promise<Question | undefined> {
-    const [question] = await db
-      .update(questions)
-      .set(updateData)
-      .where(eq(questions.id, id))
-      .returning();
-    return question || undefined;
+  async updateQuestion(id: string, updateData: Partial<InsertQuestion>, requestingUserId: string): Promise<Question | undefined> {
+    validateParam(questionIdSchema, id, "question ID");
+    validateParam(userIdSchema, requestingUserId, "requesting user ID");
+    
+    try {
+      // First get the question to verify session ownership
+      const [existingQuestion] = await db
+        .select({ sessionId: questions.sessionId })
+        .from(questions)
+        .where(eq(questions.id, id));
+      
+      if (!existingQuestion) return undefined;
+      
+      // Verify session ownership
+      const [session] = await db
+        .select({ userId: quizSessions.userId })
+        .from(quizSessions)
+        .where(eq(quizSessions.id, existingQuestion.sessionId));
+      
+      if (!session || session.userId !== requestingUserId) {
+        securityLog("updateQuestion", requestingUserId, session?.userId, false);
+        throw new AuthorizationError("ユーザーは自分のセッションの問題のみ更新可能です");
+      }
+      
+      const [question] = await db
+        .update(questions)
+        .set(updateData)
+        .where(eq(questions.id, id))
+        .returning();
+      
+      securityLog("updateQuestion", requestingUserId, session.userId, true);
+      return question || undefined;
+    } catch (error) {
+      if (error instanceof AuthorizationError) {
+        throw error;
+      }
+      console.error("[STORAGE ERROR] Failed to update question:", error);
+      throw new Error("問題の更新に失敗しました");
+    }
   }
 
-  // User stats operations
-  async getUserStats(userId: string): Promise<UserStats | undefined> {
-    const [stats] = await db.select().from(userStats).where(eq(userStats.userId, userId));
-    return stats || undefined;
+  // User stats operations with authorization
+  async getUserStats(userId: string, requestingUserId: string): Promise<UserStats | undefined> {
+    validateParam(userIdSchema, userId, "user ID");
+    validateParam(userIdSchema, requestingUserId, "requesting user ID");
+    
+    // Authorization: users can only access their own stats
+    if (userId !== requestingUserId) {
+      securityLog("getUserStats", requestingUserId, userId, false);
+      throw new AuthorizationError("ユーザーは自分の統計のみアクセス可能です");
+    }
+    
+    try {
+      const [stats] = await db.select().from(userStats).where(eq(userStats.userId, userId));
+      securityLog("getUserStats", requestingUserId, userId, true);
+      return stats || undefined;
+    } catch (error) {
+      console.error("[STORAGE ERROR] Failed to get user stats:", error);
+      throw new Error("ユーザー統計の取得に失敗しました");
+    }
   }
 
-  async updateUserStats(userId: string, updateData: Partial<InsertUserStats>): Promise<UserStats> {
-    // Try to update existing stats first
-    const [updated] = await db
-      .update(userStats)
-      .set(updateData)
-      .where(eq(userStats.userId, userId))
-      .returning();
+  async updateUserStats(userId: string, updateData: Partial<InsertUserStats>, requestingUserId: string): Promise<UserStats> {
+    validateParam(userIdSchema, userId, "user ID");
+    validateParam(userIdSchema, requestingUserId, "requesting user ID");
+    
+    // Authorization: users can only update their own stats
+    if (userId !== requestingUserId) {
+      securityLog("updateUserStats", requestingUserId, userId, false);
+      throw new AuthorizationError("ユーザーは自分の統計のみ更新可能です");
+    }
+    
+    try {
+      // Try to update existing stats first
+      const [updated] = await db
+        .update(userStats)
+        .set(updateData)
+        .where(eq(userStats.userId, userId))
+        .returning();
 
-    // If no stats exist, create new ones
-    if (!updated) {
-      const [newStats] = await db
-        .insert(userStats)
-        .values({
-          userId,
+      // If no stats exist, create new ones
+      if (!updated) {
+        const [newStats] = await db
+          .insert(userStats)
+          .values({
+            userId,
+            totalScore: 0,
+            completedQuizzes: 0,
+            averageAccuracy: 0,
+            beginnerAccuracy: 0,
+            intermediateAccuracy: 0,
+            advancedAccuracy: 0,
+            ...updateData,
+          })
+          .returning();
+        securityLog("updateUserStats", requestingUserId, userId, true);
+        return newStats;
+      }
+
+      securityLog("updateUserStats", requestingUserId, userId, true);
+      return updated;
+    } catch (error) {
+      console.error("[STORAGE ERROR] Failed to update user stats:", error);
+      throw new Error("ユーザー統計の更新に失敗しました");
+    }
+  }
+
+  async calculateAndUpdateUserStats(userId: string, requestingUserId: string): Promise<UserStats> {
+    validateParam(userIdSchema, userId, "user ID");
+    validateParam(userIdSchema, requestingUserId, "requesting user ID");
+    
+    // Authorization: users can only calculate their own stats
+    if (userId !== requestingUserId) {
+      securityLog("calculateAndUpdateUserStats", requestingUserId, userId, false);
+      throw new AuthorizationError("ユーザーは自分の統計のみ計算可能です");
+    }
+    
+    try {
+      const sessions = await this.getUserQuizSessions(userId, requestingUserId);
+      
+      if (sessions.length === 0) {
+        return this.updateUserStats(userId, {
           totalScore: 0,
           completedQuizzes: 0,
           averageAccuracy: 0,
           beginnerAccuracy: 0,
           intermediateAccuracy: 0,
           advancedAccuracy: 0,
+        }, requestingUserId);
+      }
+
+      const totalScore = sessions.reduce((sum, session) => sum + session.score, 0);
+      const completedQuizzes = sessions.length;
+      
+      const difficultyGroups = {
+        beginner: sessions.filter(s => s.difficulty === 'beginner'),
+        intermediate: sessions.filter(s => s.difficulty === 'intermediate'),
+        advanced: sessions.filter(s => s.difficulty === 'advanced'),
+      };
+
+      const calculateAccuracy = (sessionsGroup: QuizSession[]) => {
+        if (sessionsGroup.length === 0) return 0;
+        const totalAccuracy = sessionsGroup.reduce((sum, session) => 
+          sum + (session.score / session.totalQuestions * 100), 0);
+        return Math.round(totalAccuracy / sessionsGroup.length);
+      };
+
+      const beginnerAccuracy = calculateAccuracy(difficultyGroups.beginner);
+      const intermediateAccuracy = calculateAccuracy(difficultyGroups.intermediate);
+      const advancedAccuracy = calculateAccuracy(difficultyGroups.advanced);
+      
+      const overallAccuracy = sessions.reduce((sum, session) => 
+        sum + (session.score / session.totalQuestions * 100), 0) / sessions.length;
+
+      const statsData = {
+        totalScore,
+        completedQuizzes,
+        averageAccuracy: Math.round(overallAccuracy),
+        beginnerAccuracy,
+        intermediateAccuracy,
+        advancedAccuracy,
+      };
+      
+      securityLog("calculateAndUpdateUserStats", requestingUserId, userId, true);
+      return this.updateUserStats(userId, statsData, requestingUserId);
+    } catch (error) {
+      if (error instanceof AuthorizationError) {
+        throw error;
+      }
+      console.error("[STORAGE ERROR] Failed to calculate user stats:", error);
+      throw new Error("ユーザー統計の計算に失敗しました");
+    }
+  }
+
+  // User settings operations with authorization
+  async getUserSettings(userId: string, requestingUserId: string): Promise<UserSettings | undefined> {
+    validateParam(userIdSchema, userId, "user ID");
+    validateParam(userIdSchema, requestingUserId, "requesting user ID");
+    
+    // Authorization: users can only access their own settings
+    if (userId !== requestingUserId) {
+      securityLog("getUserSettings", requestingUserId, userId, false);
+      throw new AuthorizationError("ユーザーは自分の設定のみアクセス可能です");
+    }
+    
+    try {
+      const [settings] = await db.select().from(userSettings).where(eq(userSettings.userId, userId));
+      securityLog("getUserSettings", requestingUserId, userId, true);
+      return settings || undefined;
+    } catch (error) {
+      console.error("[STORAGE ERROR] Failed to get user settings:", error);
+      throw new Error("ユーザー設定の取得に失敗しました");
+    }
+  }
+
+  async updateUserSettings(userId: string, updateData: Partial<InsertUserSettings>, requestingUserId: string): Promise<UserSettings> {
+    validateParam(userIdSchema, userId, "user ID");
+    validateParam(userIdSchema, requestingUserId, "requesting user ID");
+    
+    // Authorization: users can only update their own settings
+    if (userId !== requestingUserId) {
+      securityLog("updateUserSettings", requestingUserId, userId, false);
+      throw new AuthorizationError("ユーザーは自分の設定のみ更新可能です");
+    }
+    
+    try {
+      // Try to update existing settings first
+      const [updated] = await db
+        .update(userSettings)
+        .set({
           ...updateData,
+          updatedAt: new Date(),
         })
+        .where(eq(userSettings.userId, userId))
         .returning();
-      return newStats;
+
+      // If no settings exist, create new ones
+      if (!updated) {
+        const [newSettings] = await db
+          .insert(userSettings)
+          .values({
+            userId,
+            defaultDifficulty: "intermediate",
+            questionCount: 5,
+            timeLimit: 60,
+            ...updateData,
+          })
+          .returning();
+        securityLog("updateUserSettings", requestingUserId, userId, true);
+        return newSettings;
+      }
+
+      securityLog("updateUserSettings", requestingUserId, userId, true);
+      return updated;
+    } catch (error) {
+      console.error("[STORAGE ERROR] Failed to update user settings:", error);
+      throw new Error("ユーザー設定の更新に失敗しました");
     }
-
-    return updated;
   }
 
-  async calculateAndUpdateUserStats(userId: string): Promise<UserStats> {
-    console.log(`Calculating stats for user: ${userId}`);
-    const sessions = await this.getUserQuizSessions(userId);
-    console.log(`Found ${sessions.length} sessions for user ${userId}`);
+  async createUserSettings(insertSettings: InsertUserSettings, requestingUserId: string): Promise<UserSettings> {
+    validateParam(userIdSchema, requestingUserId, "requesting user ID");
     
-    if (sessions.length === 0) {
-      console.log(`No sessions found, creating default stats`);
-      return this.updateUserStats(userId, {
-        totalScore: 0,
-        completedQuizzes: 0,
-        averageAccuracy: 0,
-        beginnerAccuracy: 0,
-        intermediateAccuracy: 0,
-        advancedAccuracy: 0,
-      });
+    // Authorization: users can only create their own settings
+    if (insertSettings.userId !== requestingUserId) {
+      securityLog("createUserSettings", requestingUserId, insertSettings.userId, false);
+      throw new AuthorizationError("ユーザーは自分の設定のみ作成可能です");
     }
-
-    const totalScore = sessions.reduce((sum, session) => sum + session.score, 0);
-    const completedQuizzes = sessions.length;
     
-    const difficultyGroups = {
-      beginner: sessions.filter(s => s.difficulty === 'beginner'),
-      intermediate: sessions.filter(s => s.difficulty === 'intermediate'),
-      advanced: sessions.filter(s => s.difficulty === 'advanced'),
-    };
-
-    const calculateAccuracy = (sessionsGroup: QuizSession[]) => {
-      if (sessionsGroup.length === 0) return 0;
-      const totalAccuracy = sessionsGroup.reduce((sum, session) => 
-        sum + (session.score / session.totalQuestions * 100), 0);
-      return Math.round(totalAccuracy / sessionsGroup.length);
-    };
-
-    const beginnerAccuracy = calculateAccuracy(difficultyGroups.beginner);
-    const intermediateAccuracy = calculateAccuracy(difficultyGroups.intermediate);
-    const advancedAccuracy = calculateAccuracy(difficultyGroups.advanced);
-    
-    const overallAccuracy = sessions.reduce((sum, session) => 
-      sum + (session.score / session.totalQuestions * 100), 0) / sessions.length;
-
-    const statsData = {
-      totalScore,
-      completedQuizzes,
-      averageAccuracy: Math.round(overallAccuracy),
-      beginnerAccuracy,
-      intermediateAccuracy,
-      advancedAccuracy,
-    };
-    
-    console.log(`Calculated stats data:`, statsData);
-    return this.updateUserStats(userId, statsData);
-  }
-
-  // User settings operations
-  async getUserSettings(userId: string): Promise<UserSettings | undefined> {
-    const [settings] = await db.select().from(userSettings).where(eq(userSettings.userId, userId));
-    return settings || undefined;
-  }
-
-  async updateUserSettings(userId: string, updateData: Partial<InsertUserSettings>): Promise<UserSettings> {
-    // Try to update existing settings first
-    const [updated] = await db
-      .update(userSettings)
-      .set({
-        ...updateData,
-        updatedAt: new Date(),
-      })
-      .where(eq(userSettings.userId, userId))
-      .returning();
-
-    // If no settings exist, create new ones
-    if (!updated) {
-      const [newSettings] = await db
+    try {
+      const [settings] = await db
         .insert(userSettings)
-        .values({
-          userId,
-          defaultDifficulty: "intermediate",
-          questionCount: 5,
-          timeLimit: 60,
-          ...updateData,
-        })
+        .values(insertSettings)
         .returning();
-      return newSettings;
+      
+      securityLog("createUserSettings", requestingUserId, insertSettings.userId, true);
+      return settings;
+    } catch (error) {
+      console.error("[STORAGE ERROR] Failed to create user settings:", error);
+      throw new Error("ユーザー設定の作成に失敗しました");
     }
-
-    return updated;
-  }
-
-  async createUserSettings(insertSettings: InsertUserSettings): Promise<UserSettings> {
-    const [settings] = await db
-      .insert(userSettings)
-      .values(insertSettings)
-      .returning();
-    return settings;
   }
 }
 
