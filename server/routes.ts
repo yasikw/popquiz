@@ -21,6 +21,10 @@ import {
   authenticateUser,
   refreshTokens 
 } from "./middleware/auth";
+import { 
+  authorizeUser, 
+  authorizeResourceOwner 
+} from "./middleware/authorization";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -231,10 +235,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // パスワード変更エンドポイント（JWT認証必須）
   app.post("/api/users/change-password", authenticateUser, async (req, res) => {
     try {
-      const { userId, currentPassword, newPassword } = req.body;
+      const { currentPassword, newPassword } = req.body;
 
-      if (!userId || !newPassword) {
-        return res.status(400).json({ message: "ユーザーIDと新しいパスワードが必要です" });
+      // 認証済みユーザーからuserIdを取得（セキュリティ修正）
+      const userId = req.user!.id;
+
+      if (!newPassword) {
+        return res.status(400).json({ message: "新しいパスワードが必要です" });
       }
 
       if (newPassword.length < 6) {
