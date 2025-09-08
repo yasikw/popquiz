@@ -1,6 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { type GeneratedQuiz } from "@shared/schema";
 import crypto from "crypto";
+import { SafeCache } from "../utils/cache.js";
 
 // Initialize Gemini AI
 const ai = new GoogleGenAI({ 
@@ -8,7 +9,7 @@ const ai = new GoogleGenAI({
 });
 
 // Cache for extracted text to avoid re-processing
-const textCache = new Map<string, string>();
+const textCache = new SafeCache();
 
 // Generate cache key for YouTube videos
 function generateYouTubeCacheKey(videoId: string): string {
@@ -17,9 +18,12 @@ function generateYouTubeCacheKey(videoId: string): string {
 
 // Debug function to show cache status
 export function getCacheStatus() {
+  const stats = textCache.getStats();
   return {
-    cacheSize: textCache.size,
-    keys: Array.from(textCache.keys())
+    cacheSize: stats.size,
+    maxSize: stats.maxSize,
+    oldestEntry: stats.oldestEntry,
+    newestEntry: stats.newestEntry
   };
 }
 
@@ -34,9 +38,10 @@ export async function extractTextFromYouTubeWithGemini(videoId: string, original
     
     // Check cache first
     const cacheKey = generateYouTubeCacheKey(videoId);
-    if (textCache.has(cacheKey)) {
+    const cachedContent = textCache.get(cacheKey);
+    if (cachedContent) {
       console.log('Using cached YouTube content for video:', videoId);
-      return textCache.get(cacheKey)!;
+      return cachedContent;
     }
     
     // Try to extract actual video content using multiple methods
@@ -155,9 +160,10 @@ export async function extractTextFromPDF(pdfBuffer: Buffer, pdfInfo?: any): Prom
     }
     
     // Check cache first
-    if (textCache.has(cacheKey)) {
+    const cachedText = textCache.get(cacheKey);
+    if (cachedText) {
       console.log('Using cached PDF text extraction');
-      return textCache.get(cacheKey)!;
+      return cachedText;
     }
     
     // Check if API key is available
@@ -334,7 +340,7 @@ JSON形式で回答してください。correctAnswerは0-3の数字です。`;
 }
 
 // Store previous questions to avoid repetition
-const previousQuestions = new Map<string, string[]>();
+const previousQuestions = new SafeCache();
 
 export async function generateQuizFromCachedPDF(pdfInfo: any, difficulty: string = "intermediate", questionCount: number = 5): Promise<GeneratedQuiz | null> {
   try {
@@ -345,33 +351,16 @@ export async function generateQuizFromCachedPDF(pdfInfo: any, difficulty: string
     const cacheKey = generateCacheKey(pdfInfo);
     console.log('Generated cache key:', cacheKey);
     
-    // Debug: Show all cached keys
-    console.log('Available cache keys:', Array.from(textCache.keys()));
+    // Debug: Show cache stats
+    console.log('Cache stats:', textCache.getStats());
     
     // Check if we have cached text
-    if (!textCache.has(cacheKey)) {
+    const cachedText = textCache.get(cacheKey);
+    if (!cachedText) {
       console.log('No cached text found for PDF:', pdfInfo.name);
       console.log('Cache key not found:', cacheKey);
-      
-      // Try to find cache with any available key containing PDF name
-      const availableKeys = Array.from(textCache.keys());
-      const matchingKey = availableKeys.find(key => {
-        // Try different matching strategies
-        return key.includes(pdfInfo.name.replace(/\s+/g, '')) || 
-               key.includes(pdfInfo.size.toString()) ||
-               textCache.get(key)?.includes('藤子'); // Content-based fallback
-      });
-      
-      if (matchingKey) {
-        console.log('Found alternative cache key:', matchingKey);
-        const cachedText = textCache.get(matchingKey)!;
-        return await generateQuizFromText(cachedText, difficulty, `PDFクイズ - ${pdfInfo.name}`, questionCount);
-      }
-      
       return null;
     }
-    
-    const cachedText = textCache.get(cacheKey)!;
     console.log('Found cached text, length:', cachedText.length);
     
     // Try multiple times to get different questions
@@ -387,12 +376,13 @@ export async function generateQuizFromCachedPDF(pdfInfo: any, difficulty: string
       // Check if questions are different from previous ones
       const currentQuestionTexts = quiz.questions.map(q => q.question);
       const previousKey = `${cacheKey}-${difficulty}`;
-      const prevQuestions = previousQuestions.get(previousKey) || [];
+      const prevQuestionsStr = previousQuestions.get(previousKey);
+      const prevQuestions = prevQuestionsStr ? JSON.parse(prevQuestionsStr) : [];
       
       // If this is the first generation or questions are sufficiently different
       if (prevQuestions.length === 0 || !areQuestionsSimilar(currentQuestionTexts, prevQuestions)) {
         // Store current questions for future comparison
-        previousQuestions.set(previousKey, currentQuestionTexts);
+        previousQuestions.set(previousKey, JSON.stringify(currentQuestionTexts));
         console.log('Generated sufficiently different questions');
         return quiz;
       }
@@ -448,17 +438,16 @@ export async function generateQuizFromCachedYouTube(videoId: string, difficulty:
     const cacheKey = generateYouTubeCacheKey(videoId);
     console.log('Generated YouTube cache key:', cacheKey);
     
-    // Debug: Show all cached keys
-    console.log('Available cache keys:', Array.from(textCache.keys()));
+    // Debug: Show cache stats
+    console.log('Cache stats:', textCache.getStats());
     
     // Check if we have cached text
-    if (!textCache.has(cacheKey)) {
+    const cachedText = textCache.get(cacheKey);
+    if (!cachedText) {
       console.log('No cached text found for YouTube video:', videoId);
       console.log('Cache key not found:', cacheKey);
       return null;
     }
-    
-    const cachedText = textCache.get(cacheKey)!;
     console.log('Found cached YouTube text, length:', cachedText.length);
     
     // Try multiple times to get different questions
@@ -474,12 +463,13 @@ export async function generateQuizFromCachedYouTube(videoId: string, difficulty:
       // Check if questions are different from previous ones
       const currentQuestionTexts = quiz.questions.map(q => q.question);
       const previousKey = `${cacheKey}-${difficulty}`;
-      const prevQuestions = previousQuestions.get(previousKey) || [];
+      const prevQuestionsStr = previousQuestions.get(previousKey);
+      const prevQuestions = prevQuestionsStr ? JSON.parse(prevQuestionsStr) : [];
       
       // If this is the first generation or questions are sufficiently different
       if (prevQuestions.length === 0 || !areQuestionsSimilar(currentQuestionTexts, prevQuestions)) {
         // Store current questions for future comparison
-        previousQuestions.set(previousKey, currentQuestionTexts);
+        previousQuestions.set(previousKey, JSON.stringify(currentQuestionTexts));
         console.log('Generated sufficiently different YouTube questions');
         return quiz;
       }
@@ -506,12 +496,12 @@ export async function generateQuizFromCachedText(textContent: string, difficulty
     console.log('Generated text cache key:', cacheKey);
     
     // Cache the text content if not already cached
-    if (!textCache.has(cacheKey)) {
+    let cachedText = textCache.get(cacheKey);
+    if (!cachedText) {
       textCache.set(cacheKey, textContent);
+      cachedText = textContent;
       console.log('Cached text content, length:', textContent.length);
     }
-    
-    const cachedText = textCache.get(cacheKey)!;
     console.log('Found cached text content, length:', cachedText.length);
     
     // Try multiple times to get different questions
@@ -527,12 +517,13 @@ export async function generateQuizFromCachedText(textContent: string, difficulty
       // Check if questions are different from previous ones
       const currentQuestionTexts = quiz.questions.map(q => q.question);
       const previousKey = `${cacheKey}-${difficulty}`;
-      const prevQuestions = previousQuestions.get(previousKey) || [];
+      const prevQuestionsStr = previousQuestions.get(previousKey);
+      const prevQuestions = prevQuestionsStr ? JSON.parse(prevQuestionsStr) : [];
       
       // If this is the first generation or questions are sufficiently different
       if (prevQuestions.length === 0 || !areQuestionsSimilar(currentQuestionTexts, prevQuestions)) {
         // Store current questions for future comparison
-        previousQuestions.set(previousKey, currentQuestionTexts);
+        previousQuestions.set(previousKey, JSON.stringify(currentQuestionTexts));
         console.log('Generated sufficiently different text questions');
         return quiz;
       }
