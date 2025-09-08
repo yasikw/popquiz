@@ -10,9 +10,17 @@ interface CacheItem {
 
 export class SafeCache {
   private cache: Map<string, CacheItem> = new Map();
-  private readonly TTL = 3600000; // 1時間（3600000ms）
-  private readonly MAX_SIZE = 100; // 最大サイズ（100エントリ）
+  private readonly TTL: number;
+  private readonly MAX_SIZE: number;
   private readonly CLEANUP_PERCENTAGE = 0.2; // クリーンアップ時に削除する割合（20%）
+
+  constructor(options?: { ttl?: number; maxSize?: number }) {
+    // 本番環境では長めのTTLと大きめのキャッシュサイズを使用
+    const isProduction = process.env.NODE_ENV === 'production';
+    
+    this.TTL = options?.ttl || (isProduction ? 7200000 : 3600000); // 本番: 2時間, 開発: 1時間
+    this.MAX_SIZE = options?.maxSize || (isProduction ? 200 : 100); // 本番: 200, 開発: 100
+  }
 
   /**
    * キャッシュにデータを設定
