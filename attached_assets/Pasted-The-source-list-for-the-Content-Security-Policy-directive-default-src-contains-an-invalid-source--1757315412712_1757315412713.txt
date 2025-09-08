@@ -1,0 +1,1829 @@
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+_app-40662cb38c7a5373.js:38 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+/t/maiss:1 The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+/t/maiss:1 The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+/t/maiss:1 The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 3
+_app-40662cb38c7a5373.js:38 [LaunchDarkly] LaunchDarkly client initialized
+/t/maiss:1 Uncaught (in promise) Object
+ UltraWide Extension Loaded!
+content.js:1 Uncaught (in promise) The message port closed before a response was received.
+UltraWide.bundle.js:1 UltraWide Extension Loaded!
+UltraWide.bundle.js:1 UltraWide Extension Loaded!
+ UltraWide Extension Loaded!
+ UltraWide Extension Loaded!
+/t/maiss:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error in event handler: TypeError: Cannot read properties of undefined (reading 'newValue')
+    at <URL>
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+framework-881ab84835822a04.js:1 Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Unrecognized feature: 'battery'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Unrecognized feature: 'layout-animations'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Unrecognized feature: 'navigation-override'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Unrecognized feature: 'oversized-images'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Unrecognized feature: 'publickey-credentials'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Unrecognized feature: 'speaker-selection'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Unrecognized feature: 'unoptimized-images'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Unrecognized feature: 'unsized-media'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Unrecognized feature: 'pointer-lock'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-881ab84835822a04.js:1
+framework-881ab84835822a04.js:1 Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-881ab84835822a04.js:1
+content.js:1 Uncaught (in promise) The message port closed before a response was received.
+content.js:1 Uncaught (in promise) The message port closed before a response was received.
+content.js:1 Uncaught (in promise) The message port closed before a response was received.
+content.js:1 Uncaught (in promise) The message port closed before a response was received.
+content.js:1 Uncaught (in promise) The message port closed before a response was received.
+content.js:1 Uncaught (in promise) The message port closed before a response was received.
+content.js:1 Uncaught (in promise) The message port closed before a response was received.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Unrecognized feature: 'ambient-light-sensor'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Unrecognized feature: 'battery'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Unrecognized feature: 'execution-while-not-rendered'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Unrecognized feature: 'execution-while-out-of-viewport'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Unrecognized feature: 'layout-animations'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Unrecognized feature: 'legacy-image-formats'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Unrecognized feature: 'navigation-override'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Unrecognized feature: 'oversized-images'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Unrecognized feature: 'publickey-credentials'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Unrecognized feature: 'speaker-selection'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Unrecognized feature: 'unoptimized-images'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+Refused to load the font '<URL>' because it violates the following Content Security Policy directive: "font-src 'self' <URL> <URL>".
+
+Refused to load the font '<URL>' because it violates the following Content Security Policy directive: "font-src 'self' <URL> <URL>".
+
+Refused to load the font '<URL>' because it violates the following Content Security Policy directive: "font-src 'self' <URL> <URL>".
+
+Refused to load the font '<URL>' because it violates the following Content Security Policy directive: "font-src 'self' <URL> <URL>".
+
+Refused to load the font '<URL>' because it violates the following Content Security Policy directive: "font-src 'self' <URL> <URL>".
+
+Refused to load the font '<URL>' because it violates the following Content Security Policy directive: "font-src 'self' <URL> <URL>".
+
+（インデックス）:1 Refused to load the script 'https://replit.com/public/js/replit-dev-banner.js' because it violates the following Content Security Policy directive: "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://cdn.jsdelivr.net". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback.
+
+UltraWide.bundle.js:1 UltraWide Extension Loaded!
+workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:142 Refused to load the script 'https://replit.com/public/js/beacon.js' because it violates the following Content Security Policy directive: "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://cdn.jsdelivr.net". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback.
+
+onIframeLoad @ workspace_iframe.html?initialPath=%2F&id=%3Ar21m%3A:142
+UltraWide.bundle.js:1 UltraWide Extension Loaded!
+UltraWide.bundle.js:1 UltraWide Extension Loaded!
+content.js:1 Uncaught (in promise) The message port closed before a response was received.
+bf4326cb-fa10-4d74-9417-5b054799971a-00-13syu5bhwn6m5.riker.replit.dev/api/auth/login:1  Failed to load resource: the server responded with a status of 403 (Forbidden)
+bf4326cb-fa10-4d74-9417-5b054799971a-00-13syu5bhwn6m5.riker.replit.dev/api/auth/login:1  Failed to load resource: the server responded with a status of 403 (Forbidden)
+Console.js:61 HOME: Loading state changed: Object
+Console.js:61 Quiz generation started: {currentType: 'pdf', selectedDifficulty: 'intermediate', questionCount: 5}
+Console.js:61 Parsed question count: 5
+Console.js:61 Quiz generation started: {currentType: 'text', selectedDifficulty: 'intermediate', questionCount: 5}
+Console.js:61 Parsed question count: 5
+Console.js:61 Quiz generation started: {currentType: 'text', selectedDifficulty: 'intermediate', questionCount: 5}
+Console.js:61 Parsed question count: 5
+Console.js:61 Quiz generation started: {currentType: 'text', selectedDifficulty: 'intermediate', questionCount: 5}
+Console.js:61 Parsed question count: 5
+Console.js:61 Setting loading state to true
+Console.js:61 Loading state set, isLoading should be true
+Console.js:61 Text content added, length: 12
+Console.js:61 Sending request to /api/generate-quiz
+Console.js:61 HOME: Loading state changed: {isLoading: true, loadingMessage: 'AIがクイズを生成中...'}
+injected.js:253  POST https://bf4326cb-fa10-4d74-9417-5b054799971a-00-13syu5bhwn6m5.riker.replit.dev/api/generate-quiz 403 (Forbidden)
+window.fetch @ Network.js:219
+apply @ injected.js:253
+handleQuizGeneration @ card-stack.tsx:301
+callCallback2 @ chunk-WERSD76P.js?v=3bc7b2ea:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=3bc7b2ea:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=3bc7b2ea:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-WERSD76P.js?v=3bc7b2ea:3736
+executeDispatch @ chunk-WERSD76P.js?v=3bc7b2ea:7014
+processDispatchQueueItemsInOrder @ chunk-WERSD76P.js?v=3bc7b2ea:7034
+processDispatchQueue @ chunk-WERSD76P.js?v=3bc7b2ea:7043
+dispatchEventsForPlugins @ chunk-WERSD76P.js?v=3bc7b2ea:7051
+（匿名） @ chunk-WERSD76P.js?v=3bc7b2ea:7174
+batchedUpdates$1 @ chunk-WERSD76P.js?v=3bc7b2ea:18913
+batchedUpdates @ chunk-WERSD76P.js?v=3bc7b2ea:3579
+dispatchEventForPluginEventSystem @ chunk-WERSD76P.js?v=3bc7b2ea:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-WERSD76P.js?v=3bc7b2ea:5478
+dispatchEvent @ chunk-WERSD76P.js?v=3bc7b2ea:5472
+dispatchDiscreteEvent @ chunk-WERSD76P.js?v=3bc7b2ea:5449
+Console.js:61 Response status: 403
+Console.js:61 Server error: {error: 'CSRF token validation failed', message: 'CSRFトークンが無効です。ページを再読み込みしてください。', code: 'INVALID_CSRF_TOKEN'}
+Mt.forEach.n.<computed> @ Console.js:61
+handleQuizGeneration @ card-stack.tsx:310
+await in handleQuizGeneration
+callCallback2 @ chunk-WERSD76P.js?v=3bc7b2ea:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=3bc7b2ea:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=3bc7b2ea:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-WERSD76P.js?v=3bc7b2ea:3736
+executeDispatch @ chunk-WERSD76P.js?v=3bc7b2ea:7014
+processDispatchQueueItemsInOrder @ chunk-WERSD76P.js?v=3bc7b2ea:7034
+processDispatchQueue @ chunk-WERSD76P.js?v=3bc7b2ea:7043
+dispatchEventsForPlugins @ chunk-WERSD76P.js?v=3bc7b2ea:7051
+（匿名） @ chunk-WERSD76P.js?v=3bc7b2ea:7174
+batchedUpdates$1 @ chunk-WERSD76P.js?v=3bc7b2ea:18913
+batchedUpdates @ chunk-WERSD76P.js?v=3bc7b2ea:3579
+dispatchEventForPluginEventSystem @ chunk-WERSD76P.js?v=3bc7b2ea:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-WERSD76P.js?v=3bc7b2ea:5478
+dispatchEvent @ chunk-WERSD76P.js?v=3bc7b2ea:5472
+dispatchDiscreteEvent @ chunk-WERSD76P.js?v=3bc7b2ea:5449
+Console.js:61 Quiz generation error: Error: CSRFトークンが無効です。ページを再読み込みしてください。
+    at handleQuizGeneration (card-stack.tsx:311:15)
+Mt.forEach.n.<computed> @ Console.js:61
+handleQuizGeneration @ card-stack.tsx:341
+await in handleQuizGeneration
+callCallback2 @ chunk-WERSD76P.js?v=3bc7b2ea:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=3bc7b2ea:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=3bc7b2ea:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-WERSD76P.js?v=3bc7b2ea:3736
+executeDispatch @ chunk-WERSD76P.js?v=3bc7b2ea:7014
+processDispatchQueueItemsInOrder @ chunk-WERSD76P.js?v=3bc7b2ea:7034
+processDispatchQueue @ chunk-WERSD76P.js?v=3bc7b2ea:7043
+dispatchEventsForPlugins @ chunk-WERSD76P.js?v=3bc7b2ea:7051
+（匿名） @ chunk-WERSD76P.js?v=3bc7b2ea:7174
+batchedUpdates$1 @ chunk-WERSD76P.js?v=3bc7b2ea:18913
+batchedUpdates @ chunk-WERSD76P.js?v=3bc7b2ea:3579
+dispatchEventForPluginEventSystem @ chunk-WERSD76P.js?v=3bc7b2ea:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-WERSD76P.js?v=3bc7b2ea:5478
+dispatchEvent @ chunk-WERSD76P.js?v=3bc7b2ea:5472
+dispatchDiscreteEvent @ chunk-WERSD76P.js?v=3bc7b2ea:5449
+Console.js:61 Setting loading state to false
+Console.js:61 Loading state cleared
+Console.js:61 HOME: Loading state changed: {isLoading: false, loadingMessage: ''}

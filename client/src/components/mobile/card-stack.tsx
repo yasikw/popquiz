@@ -8,6 +8,7 @@ import { type GeneratedQuiz, type UserSettings, type UserStats } from "@shared/s
 import { useQuery } from "@tanstack/react-query";
 import { getUserStats, getUserSessionsWithQuestions } from "@/lib/api";
 import { sanitizeUserInput, sanitizeURL, validateFile } from '@/lib/security';
+import { addCSRFHeaders } from '@/lib/csrf';
 
 interface CardStackProps {
   onQuizGenerated: (quiz: GeneratedQuiz) => void;
@@ -298,8 +299,12 @@ export default function CardStack({
       formData.append('questionCount', questionCount.toString());
 
       console.log('Sending request to /api/generate-quiz');
+      // Get CSRF headers for the request
+      const headers = await addCSRFHeaders();
+      
       const response = await fetch('/api/generate-quiz', {
         method: 'POST',
+        headers: headers,
         body: formData,
       });
 
