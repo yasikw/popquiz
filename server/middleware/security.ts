@@ -65,13 +65,7 @@ export const apiRateLimit = rateLimit({
     code: 'RATE_LIMIT_EXCEEDED'
   },
   standardHeaders: true,
-  legacyHeaders: false,
-  trustProxy: true, // Trust X-Forwarded-For headers
-  keyGenerator: (req) => {
-    // Use X-Forwarded-For if available, fallback to connection IP
-    const forwarded = req.get('X-Forwarded-For');
-    return forwarded ? forwarded.split(',')[0].trim() : req.ip;
-  }
+  legacyHeaders: false
 });
 
 // Upload rate limit - 10 uploads per hour per IP
@@ -84,12 +78,7 @@ export const uploadRateLimit = rateLimit({
     code: 'UPLOAD_RATE_LIMIT_EXCEEDED'
   },
   standardHeaders: true,
-  legacyHeaders: false,
-  trustProxy: true,
-  keyGenerator: (req) => {
-    const forwarded = req.get('X-Forwarded-For');
-    return forwarded ? forwarded.split(',')[0].trim() : req.ip;
-  }
+  legacyHeaders: false
 });
 
 // Strict rate limit for authentication endpoints
@@ -103,11 +92,6 @@ export const authRateLimit = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  trustProxy: true,
-  keyGenerator: (req) => {
-    const forwarded = req.get('X-Forwarded-For');
-    return forwarded ? forwarded.split(',')[0].trim() : req.ip;
-  },
   skipSuccessfulRequests: true // Don't count successful logins against the limit
 });
 
@@ -121,12 +105,7 @@ export const registerRateLimit = rateLimit({
     code: 'REGISTER_RATE_LIMIT_EXCEEDED'
   },
   standardHeaders: true,
-  legacyHeaders: false,
-  trustProxy: true,
-  keyGenerator: (req) => {
-    const forwarded = req.get('X-Forwarded-For');
-    return forwarded ? forwarded.split(',')[0].trim() : req.ip;
-  }
+  legacyHeaders: false
 });
 
 // Quiz generation rate limit - 20 quizzes per hour per IP
@@ -139,12 +118,7 @@ export const quizRateLimit = rateLimit({
     code: 'QUIZ_RATE_LIMIT_EXCEEDED'
   },
   standardHeaders: true,
-  legacyHeaders: false,
-  trustProxy: true,
-  keyGenerator: (req) => {
-    const forwarded = req.get('X-Forwarded-For');
-    return forwarded ? forwarded.split(',')[0].trim() : req.ip;
-  }
+  legacyHeaders: false
 });
 
 /**

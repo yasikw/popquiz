@@ -8,6 +8,9 @@ import multer from "multer";
 import { 
   apiRateLimit, 
   uploadRateLimit, 
+  authRateLimit,
+  registerRateLimit,
+  quizRateLimit,
   validateQuizInput, 
   validateFileUpload,
   sanitizeInput,
@@ -54,11 +57,14 @@ const handleMulterError = (err: any, req: Request, res: Response, next: NextFunc
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
+  // Configure Express to trust proxy headers for proper IP detection
+  app.set('trust proxy', true);
+  
   // Apply security middleware to all API routes
   app.use('/api/', apiRateLimit);
 
-  // Authentication endpoints (with input sanitization)
-  app.post("/api/auth/register", async (req, res) => {
+  // Authentication endpoints (with input sanitization and specific rate limiting)
+  app.post("/api/auth/register", registerRateLimit, async (req, res) => {
     try {
       let { username, email, password } = req.body;
 
@@ -110,7 +116,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/auth/login", async (req, res) => {
+  app.post("/api/auth/login", authRateLimit, async (req, res) => {
     try {
       let { username, password } = req.body;
 
@@ -357,7 +363,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Unified quiz generation endpoint with security middleware
-  app.post("/api/generate-quiz", uploadRateLimit, upload.single('file'), handleMulterError, validateQuizInput, validateFileUpload, async (req, res) => {
+  app.post("/api/generate-quiz", quizRateLimit, upload.single('file'), handleMulterError, validateQuizInput, validateFileUpload, async (req, res) => {
     try {
       const { contentType, difficulty = "intermediate", youtubeUrl, textContent, questionCount = "5" } = req.body;
       console.log('Quiz generation request received with questionCount:', questionCount);
@@ -414,7 +420,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Content processing and quiz generation
-  app.post("/api/process-pdf", upload.single('pdf'), handleMulterError, async (req, res) => {
+  app.post("/api/process-pdf", uploadRateLimit, upload.single('pdf'), handleMulterError, async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "PDFファイルが必要です" });
@@ -449,7 +455,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/process-text", upload.single('text'), handleMulterError, async (req, res) => {
+  app.post("/api/process-text", uploadRateLimit, upload.single('text'), handleMulterError, async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "テキストファイルが必要です" });
