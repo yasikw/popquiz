@@ -428,7 +428,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/generate-quiz", quizRateLimit, upload.single('file'), handleMulterError, fileUploadMonitoring, validateInput(quizGenerationSchema), validateFileUpload, async (req: Request, res: Response) => {
     try {
       const { contentType, difficulty = "intermediate", youtubeUrl, textContent, questionCount = "5" } = req.body;
-      console.log('Quiz generation request received with questionCount:', questionCount);
+      // Quiz generation logging handled by security middleware
       
       let extractedText = "";
       let title = "AIクイズ";
@@ -767,12 +767,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Manual stats calculation endpoint for debugging (JWT認証・認可必須)
   app.post("/api/users/:userId/calculate-stats", authenticateUser, authorizeUser, async (req, res) => {
     try {
-      console.log(`Manual stats calculation for user: ${req.params.userId}`);
       const stats = await storage.calculateAndUpdateUserStats(req.params.userId, req.user!.id);
-      console.log(`Manual calculation result:`, stats);
       res.json(stats);
     } catch (error) {
-      console.error(`Manual stats calculation error:`, error);
+      securityLogger.logSuspiciousActivity(
+        'Stats calculation error',
+        req.user?.id,
+        req.ip || req.connection?.remoteAddress,
+        { error: error instanceof Error ? error.message : 'Unknown error' }
+      );
       res.status(500).json({ message: "統計計算に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
     }
   });
@@ -818,9 +821,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.createQuestions(questionsData, userId);
       
       // Update user statistics automatically
-      console.log(`Updating stats for user: ${userId}`);
       const updatedStats = await storage.calculateAndUpdateUserStats(userId, userId);
-      console.log(`Updated stats:`, updatedStats);
       
       res.json({ sessionId: session.id, message: "結果を保存しました" });
     } catch (error) {
