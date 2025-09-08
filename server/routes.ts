@@ -63,7 +63,8 @@ const handleMulterError = (err: any, req: Request, res: Response, next: NextFunc
 export async function registerRoutes(app: Express): Promise<Server> {
   
   // Configure Express to trust proxy headers for proper IP detection
-  app.set('trust proxy', true);
+  // Use specific trust proxy setting for better security
+  app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']);
   
   // Apply security middleware to all API routes
   app.use('/api/', apiRateLimit);
