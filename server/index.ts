@@ -65,8 +65,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json({ limit: '50mb' })); // Increased limit for PDF uploads
-app.use(express.urlencoded({ extended: false, limit: '50mb' }));
+app.use(express.json({ limit: '5mb' })); // Balanced limit for security and functionality
+app.use(express.urlencoded({ extended: false, limit: '5mb' }));
 
 app.use((req, res, next) => {
   const start = Date.now();
