@@ -1,8 +1,22 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
+import { addCSRFHeaders, isCSRFError, handleCSRFError } from "./csrf";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
     const text = (await res.text()) || res.statusText;
+    const error = { status: res.status, message: text };
+    
+    // Handle CSRF errors
+    if (isCSRFError(error)) {
+      const tokenRefreshed = await handleCSRFError();
+      if (tokenRefreshed) {
+        // Mark this as a retryable CSRF error
+        const retryError = new Error(`${res.status}: ${text}`) as any;
+        retryError.isCSRFRetry = true;
+        throw retryError;
+      }
+    }
+    
     throw new Error(`${res.status}: ${text}`);
   }
 }
@@ -12,14 +26,37 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  const res = await fetch(url, {
-    method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
-  });
+  // Add CSRF headers for non-GET requests
+  const baseHeaders = data ? { "Content-Type": "application/json" } : {};
+  const headers = method.toUpperCase() !== 'GET' 
+    ? await addCSRFHeaders(baseHeaders)
+    : baseHeaders;
 
-  await throwIfResNotOk(res);
+  const makeRequest = async () => {
+    return fetch(url, {
+      method,
+      headers: method.toUpperCase() !== 'GET' 
+        ? await addCSRFHeaders(baseHeaders)
+        : baseHeaders,
+      body: data ? JSON.stringify(data) : undefined,
+      credentials: "include",
+    });
+  };
+
+  let res = await makeRequest();
+  
+  try {
+    await throwIfResNotOk(res);
+  } catch (error: any) {
+    // Retry once if it's a CSRF error that was handled
+    if (error.isCSRFRetry) {
+      res = await makeRequest();
+      await throwIfResNotOk(res);
+    } else {
+      throw error;
+    }
+  }
+  
   return res;
 }
 
@@ -29,6 +66,7 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
+    // GET requests typically don't need CSRF tokens, but include credentials for authentication
     const res = await fetch(queryKey.join("/") as string, {
       credentials: "include",
     });

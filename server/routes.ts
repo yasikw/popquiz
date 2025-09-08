@@ -28,6 +28,11 @@ import {
   authorizeUser, 
   authorizeResourceOwner 
 } from "./middleware/authorization";
+import { 
+  generateCSRFTokenEndpoint,
+  refreshCSRFToken,
+  csrfProtectionWithExceptions 
+} from "./middleware/csrf";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -62,6 +67,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Apply security middleware to all API routes
   app.use('/api/', apiRateLimit);
+  
+  // Apply CSRF protection to all API routes (with exceptions for public endpoints)
+  app.use('/api/', csrfProtectionWithExceptions);
+
+  // CSRF token endpoints (public endpoints)
+  app.get("/api/csrf-token", generateCSRFTokenEndpoint);
+  app.post("/api/csrf-token/refresh", refreshCSRFToken);
 
   // Authentication endpoints (with input sanitization and specific rate limiting)
   app.post("/api/auth/register", registerRateLimit, async (req, res) => {

@@ -1,5 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
@@ -64,6 +65,9 @@ app.use((req, res, next) => {
   
   next();
 });
+
+// Cookie parser middleware (required for CSRF protection)
+app.use(cookieParser());
 
 app.use(express.json({ limit: '5mb' })); // Balanced limit for security and functionality
 app.use(express.urlencoded({ extended: false, limit: '5mb' }));
