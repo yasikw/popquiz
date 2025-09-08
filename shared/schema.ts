@@ -241,6 +241,7 @@ export const insertUserSettingsSchema = createInsertSchema(userSettings, {
 
 // Types
 export type User = typeof users.$inferSelect;
+export type SafeUser = Omit<User, 'password'>; // Safe user type without password for API responses
 export type InsertUser = z.infer<typeof insertUserSchema>;
 
 export type QuizSession = typeof quizSessions.$inferSelect;

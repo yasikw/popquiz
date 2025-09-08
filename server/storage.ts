@@ -1,37 +1,79 @@
-import { type User, type InsertUser, type QuizSession, type InsertQuizSession, type Question, type InsertQuestion, type UserStats, type InsertUserStats, type UserSettings, type InsertUserSettings, users, userSettings, quizSessions, questions, userStats } from "@shared/schema";
+import { type User, type SafeUser, type InsertUser, type QuizSession, type InsertQuizSession, type Question, type InsertQuestion, type UserStats, type InsertUserStats, type UserSettings, type InsertUserSettings, users, userSettings, quizSessions, questions, userStats } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
+import { z } from "zod";
+
+// Authorization error class
+export class AuthorizationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AuthorizationError';
+  }
+}
+
+// Parameter validation schemas
+const userIdSchema = z.string().uuid("無効なユーザーIDです");
+const sessionIdSchema = z.string().uuid("無効なセッションIDです");
+const questionIdSchema = z.string().uuid("無効な問題IDです");
+const usernameSchema = z.string().min(3).max(50);
+
+// Validation helper
+function validateParam<T>(schema: z.ZodSchema<T>, value: unknown, paramName: string): T {
+  const result = schema.safeParse(value);
+  if (!result.success) {
+    throw new Error(`Invalid ${paramName}: ${result.error.issues[0]?.message || 'Validation failed'}`);
+  }
+  return result.data;
+}
+
+// Logging helper for security-sensitive operations
+function securityLog(operation: string, requestingUserId: string, targetUserId?: string, success: boolean = true) {
+  const logData = {
+    timestamp: new Date().toISOString(),
+    operation,
+    requestingUserId,
+    targetUserId,
+    success
+  };
+  
+  if (success) {
+    console.log(`[SECURITY] ${operation}:`, logData);
+  } else {
+    console.warn(`[SECURITY VIOLATION] ${operation}:`, logData);
+  }
+}
 
 export interface IStorage {
-  // User operations
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  updateUser(id: string, user: Partial<InsertUser>): Promise<User | undefined>;
-  updateUserPassword(id: string, hashedPassword: string): Promise<User | undefined>;
+  // User operations (secure - return SafeUser without password)
+  getUser(id: string, requestingUserId: string): Promise<SafeUser | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>; // Internal use only for authentication
+  getSafeUserByUsername(username: string, requestingUserId: string): Promise<SafeUser | undefined>;
+  createUser(user: InsertUser): Promise<SafeUser>; // Returns safe user data
+  updateUser(id: string, user: Partial<InsertUser>, requestingUserId: string): Promise<SafeUser | undefined>;
+  updateUserPassword(id: string, hashedPassword: string, requestingUserId: string): Promise<boolean>;
 
-  // Quiz session operations
-  createQuizSession(session: InsertQuizSession): Promise<QuizSession>;
-  getQuizSession(id: string): Promise<QuizSession | undefined>;
-  getUserQuizSessions(userId: string): Promise<QuizSession[]>;
-  getUserSessions(userId: string): Promise<QuizSession[]>;
-  getUserQuizSessionsWithQuestions(userId: string): Promise<(QuizSession & { questions: Question[] })[]>;
+  // Quiz session operations (with authorization)
+  createQuizSession(session: InsertQuizSession, requestingUserId: string): Promise<QuizSession>;
+  getQuizSession(id: string, requestingUserId: string): Promise<QuizSession | undefined>;
+  getUserQuizSessions(userId: string, requestingUserId: string): Promise<QuizSession[]>;
+  getUserSessions(userId: string, requestingUserId: string): Promise<QuizSession[]>;
+  getUserQuizSessionsWithQuestions(userId: string, requestingUserId: string): Promise<(QuizSession & { questions: Question[] })[]>;
 
-  // Question operations
-  createQuestions(questions: InsertQuestion[]): Promise<Question[]>;
-  getSessionQuestions(sessionId: string): Promise<Question[]>;
-  updateQuestion(id: string, question: Partial<InsertQuestion>): Promise<Question | undefined>;
+  // Question operations (with authorization)
+  createQuestions(questions: InsertQuestion[], requestingUserId: string): Promise<Question[]>;
+  getSessionQuestions(sessionId: string, requestingUserId: string): Promise<Question[]>;
+  updateQuestion(id: string, question: Partial<InsertQuestion>, requestingUserId: string): Promise<Question | undefined>;
 
-  // User stats operations
-  getUserStats(userId: string): Promise<UserStats | undefined>;
-  updateUserStats(userId: string, stats: Partial<InsertUserStats>): Promise<UserStats>;
-  calculateAndUpdateUserStats(userId: string): Promise<UserStats>;
+  // User stats operations (with authorization)
+  getUserStats(userId: string, requestingUserId: string): Promise<UserStats | undefined>;
+  updateUserStats(userId: string, stats: Partial<InsertUserStats>, requestingUserId: string): Promise<UserStats>;
+  calculateAndUpdateUserStats(userId: string, requestingUserId: string): Promise<UserStats>;
 
-  // User settings operations
-  getUserSettings(userId: string): Promise<UserSettings | undefined>;
-  updateUserSettings(userId: string, settings: Partial<InsertUserSettings>): Promise<UserSettings>;
-  createUserSettings(settings: InsertUserSettings): Promise<UserSettings>;
+  // User settings operations (with authorization)
+  getUserSettings(userId: string, requestingUserId: string): Promise<UserSettings | undefined>;
+  updateUserSettings(userId: string, settings: Partial<InsertUserSettings>, requestingUserId: string): Promise<UserSettings>;
+  createUserSettings(settings: InsertUserSettings, requestingUserId: string): Promise<UserSettings>;
 }
 
 export class MemStorage implements IStorage {
