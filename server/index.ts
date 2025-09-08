@@ -1,10 +1,15 @@
 import express, { type Request, Response, NextFunction } from "express";
+import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { getCorsConfig, corsErrorHandler } from "./config/cors.js";
 
 const app = express();
+
+// CORS middleware - must be applied before other middleware
+app.use(cors(getCorsConfig()));
 
 // Security middleware - must be applied first
 app.use(helmet({
@@ -83,6 +88,9 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   }
   next(err);
 });
+
+// CORS error handling middleware
+app.use(corsErrorHandler);
 
 app.use((req, res, next) => {
   const start = Date.now();
