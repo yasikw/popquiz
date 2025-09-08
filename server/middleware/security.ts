@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import rateLimit from 'express-rate-limit';
 import DOMPurify from 'dompurify';
 import { JSDOM } from 'jsdom';
 
@@ -50,42 +51,101 @@ export function validateYouTubeURL(url: string): boolean {
 }
 
 /**
- * Rate limiting middleware
+ * Rate limiting middleware using express-rate-limit
+ * Provides better security against IP spoofing and proxy attacks
  */
-class RateLimit {
-  private attempts: Map<string, number[]> = new Map();
-  
-  constructor(
-    private maxAttempts: number = 10,
-    private windowMs: number = 60000 // 1 minute
-  ) {}
 
-  middleware = (req: Request, res: Response, next: NextFunction) => {
-    const clientId = req.ip || 'unknown';
-    const now = Date.now();
-    const attempts = this.attempts.get(clientId) || [];
-    
-    // Remove old attempts outside the window
-    const validAttempts = attempts.filter(
-      timestamp => now - timestamp < this.windowMs
-    );
+// General API rate limit - 100 requests per hour per IP
+export const apiRateLimit = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 100,
+  message: {
+    error: 'Too many requests',
+    message: 'リクエストが多すぎます。1時間後に再試行してください。',
+    code: 'RATE_LIMIT_EXCEEDED'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  trustProxy: true, // Trust X-Forwarded-For headers
+  keyGenerator: (req) => {
+    // Use X-Forwarded-For if available, fallback to connection IP
+    const forwarded = req.get('X-Forwarded-For');
+    return forwarded ? forwarded.split(',')[0].trim() : req.ip;
+  }
+});
 
-    if (validAttempts.length >= this.maxAttempts) {
-      return res.status(429).json({ 
-        error: 'Too many requests. Please try again later.' 
-      });
-    }
+// Upload rate limit - 10 uploads per hour per IP
+export const uploadRateLimit = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10,
+  message: {
+    error: 'Too many file uploads',
+    message: 'ファイルアップロードが多すぎます。1時間後に再試行してください。',
+    code: 'UPLOAD_RATE_LIMIT_EXCEEDED'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  trustProxy: true,
+  keyGenerator: (req) => {
+    const forwarded = req.get('X-Forwarded-For');
+    return forwarded ? forwarded.split(',')[0].trim() : req.ip;
+  }
+});
 
-    // Add current attempt
-    validAttempts.push(now);
-    this.attempts.set(clientId, validAttempts);
-    
-    next();
-  };
-}
+// Strict rate limit for authentication endpoints
+export const authRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 attempts per 15 minutes
+  message: {
+    error: 'Too many authentication attempts',
+    message: '認証試行回数が多すぎます。15分後に再試行してください。',
+    code: 'AUTH_RATE_LIMIT_EXCEEDED'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  trustProxy: true,
+  keyGenerator: (req) => {
+    const forwarded = req.get('X-Forwarded-For');
+    return forwarded ? forwarded.split(',')[0].trim() : req.ip;
+  },
+  skipSuccessfulRequests: true // Don't count successful logins against the limit
+});
 
-export const apiRateLimit = new RateLimit(10, 60000).middleware; // 10 requests per minute
-export const uploadRateLimit = new RateLimit(5, 60000).middleware; // 5 uploads per minute
+// Registration rate limit - 3 registrations per hour per IP
+export const registerRateLimit = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 3,
+  message: {
+    error: 'Too many registration attempts',
+    message: 'アカウント作成試行回数が多すぎます。1時間後に再試行してください。',
+    code: 'REGISTER_RATE_LIMIT_EXCEEDED'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  trustProxy: true,
+  keyGenerator: (req) => {
+    const forwarded = req.get('X-Forwarded-For');
+    return forwarded ? forwarded.split(',')[0].trim() : req.ip;
+  }
+});
+
+// Quiz generation rate limit - 20 quizzes per hour per IP
+export const quizRateLimit = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 20,
+  message: {
+    error: 'Too many quiz generation requests',
+    message: 'クイズ生成リクエストが多すぎます。1時間後に再試行してください。',
+    code: 'QUIZ_RATE_LIMIT_EXCEEDED'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  trustProxy: true,
+  keyGenerator: (req) => {
+    const forwarded = req.get('X-Forwarded-For');
+    return forwarded ? forwarded.split(',')[0].trim() : req.ip;
+  }
+});
 
 /**
  * Input validation middleware for quiz generation
