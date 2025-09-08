@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import { Eye, EyeOff, BookOpen, Sparkles, Trophy, Users } from "lucide-react";
 import bgImage from "@assets/BG_1754455391940.png";
 import logoImage from "@assets/AIquiz logo_1754457435636.png";
@@ -33,15 +34,9 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: loginUsername,
-          password: loginPassword,
-        }),
+      const response = await apiRequest('POST', '/api/auth/login', {
+        username: loginUsername,
+        password: loginPassword,
       });
 
       if (!response.ok) {
@@ -92,16 +87,10 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     }
 
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: registerUsername,
-          email: registerEmail,
-          password: registerPassword,
-        }),
+      const response = await apiRequest('POST', '/api/auth/register', {
+        username: registerUsername,
+        email: registerEmail,
+        password: registerPassword,
       });
 
       if (!response.ok) {
