@@ -23,8 +23,10 @@ const getAllowedOrigins = (): string[] => {
     
     return [...productionOrigins, ...defaultProductionOrigins].filter(Boolean);
   } else {
-    // 開発環境: localhost系ドメインを許可
-    return [
+    // 開発環境: ALLOWED_ORIGINS環境変数があればそれを使用、なければデフォルト
+    const customOrigins = process.env.ALLOWED_ORIGINS?.split(',').map(origin => origin.trim()) || [];
+    
+    const defaultDevelopmentOrigins = [
       'http://localhost:3000',
       'http://localhost:5000',
       'http://localhost:5173', // Vite default port
@@ -37,7 +39,10 @@ const getAllowedOrigins = (): string[] => {
       // Replit domains
       `https://${process.env.REPL_SLUG}--${process.env.REPL_OWNER}.repl.co`,
       ...(process.env.REPLIT_DOMAINS?.split(',') || []).map(domain => `https://${domain}`)
-    ].filter(Boolean);
+    ];
+    
+    // カスタムオリジンがある場合はそれを優先、デフォルトも追加
+    return [...customOrigins, ...defaultDevelopmentOrigins].filter(Boolean);
   }
 };
 
