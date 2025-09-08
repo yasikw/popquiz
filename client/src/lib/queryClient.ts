@@ -26,18 +26,16 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  // Add CSRF headers for non-GET requests
-  const baseHeaders = data ? { "Content-Type": "application/json" } : {};
-  const headers = method.toUpperCase() !== 'GET' 
-    ? await addCSRFHeaders(baseHeaders)
-    : baseHeaders;
+  const makeRequest = async (): Promise<Response> => {
+    // Build headers properly for TypeScript
+    const baseHeaders: Record<string, string> = data ? { "Content-Type": "application/json" } : {};
+    const headers = method.toUpperCase() !== 'GET' 
+      ? await addCSRFHeaders(baseHeaders)
+      : baseHeaders;
 
-  const makeRequest = async () => {
     return fetch(url, {
       method,
-      headers: method.toUpperCase() !== 'GET' 
-        ? await addCSRFHeaders(baseHeaders)
-        : baseHeaders,
+      headers,
       body: data ? JSON.stringify(data) : undefined,
       credentials: "include",
     });
