@@ -21,12 +21,13 @@ declare global {
 }
 
 // JWT設定
-const JWT_SECRET = process.env.JWT_SECRET!;
+const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET!;
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
 const JWT_EXPIRES_IN = '24h';
-const JWT_REFRESH_EXPIRES_IN = '7d';
+const JWT_REFRESH_EXPIRES_IN = '3d'; // 7d → 3d に短縮
 
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is required');
+if (!JWT_ACCESS_SECRET || !JWT_REFRESH_SECRET) {
+  throw new Error('JWT_ACCESS_SECRET and JWT_REFRESH_SECRET environment variables are required');
 }
 
 /**
