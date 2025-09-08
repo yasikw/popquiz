@@ -39,7 +39,7 @@ export function generateAccessToken(user: User): string {
     username: user.username
   };
 
-  return jwt.sign(payload, JWT_SECRET, {
+  return jwt.sign(payload, JWT_ACCESS_SECRET, {
     expiresIn: JWT_EXPIRES_IN,
     issuer: 'japanese-quiz-app',
     audience: 'japanese-quiz-users'
@@ -55,7 +55,7 @@ export function generateRefreshToken(user: User): string {
     username: user.username
   };
 
-  return jwt.sign(payload, JWT_SECRET, {
+  return jwt.sign(payload, JWT_REFRESH_SECRET, {
     expiresIn: JWT_REFRESH_EXPIRES_IN,
     issuer: 'japanese-quiz-app',
     audience: 'japanese-quiz-users'
