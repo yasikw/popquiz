@@ -5,6 +5,8 @@
 import { Router, Request, Response } from 'express';
 import { logCSPViolation, getCSPStats } from '../middleware/csp.js';
 import { CSPReport } from '../config/csp.js';
+import { cspAnalyzer } from '../utils/csp-analyzer';
+import { deploymentManager } from '../utils/deployment-manager';
 
 const router = Router();
 
@@ -26,6 +28,31 @@ router.post('/csp-report', (req: Request, res: Response) => {
     
     // CSP違反をログに記録
     logCSPViolation(violation, req);
+    
+    // 詳細分析システムに違反を追加
+    const violationData = {
+      timestamp: new Date().toISOString(),
+      documentUri: violation['document-uri'],
+      violatedDirective: violation['violated-directive'],
+      effectiveDirective: violation['effective-directive'],
+      blockedUri: violation['blocked-uri'],
+      originalPolicy: violation['original-policy'],
+      disposition: violation['disposition'],
+      sourceFile: violation['source-file'],
+      lineNumber: violation['line-number'],
+      columnNumber: violation['column-number'],
+      sample: violation['script-sample'],
+      userAgent: req.get('User-Agent') || '',
+      clientIP: req.ip || req.connection.remoteAddress || ''
+    };
+    
+    cspAnalyzer.addViolation(violationData);
+    
+    // アラート判定
+    if (cspAnalyzer.shouldAlert(violationData)) {
+      console.log('🚨 CSP Critical Violation Alert:', violationData);
+      // 実際のプロダクションではSlack/メール通知など
+    }
     
     // 簡単な分析情報を生成
     const analysis = {
@@ -175,5 +202,143 @@ function isKnownCSPIssue(violation: any): boolean {
     violation['document-uri']?.includes(issue)
   );
 }
+
+/**
+ * CSP分析レポート取得エンドポイント
+ */
+router.get('/csp-analysis', (req: Request, res: Response) => {
+  try {
+    const summary = cspAnalyzer.getViolationSummary();
+    const weeklyReport = cspAnalyzer.generateWeeklyReport();
+    const deploymentReport = deploymentManager.generateDeploymentReport();
+    
+    res.json({
+      success: true,
+      data: {
+        violationSummary: summary,
+        weeklyReport,
+        deploymentStatus: deploymentReport
+      },
+      message: 'CSP分析レポートを取得しました'
+    });
+  } catch (error) {
+    console.error('❌ CSP Analysis Error:', error);
+    res.status(500).json({
+      error: 'Failed to get CSP analysis',
+      message: 'CSP分析レポートの取得に失敗しました'
+    });
+  }
+});
+
+/**
+ * Level2移行準備状況エンドポイント
+ */
+router.get('/csp-readiness', (req: Request, res: Response) => {
+  try {
+    const readiness = cspAnalyzer.assessLevel2Readiness();
+    const deploymentStatus = deploymentManager.getDeploymentStatus();
+    
+    res.json({
+      success: true,
+      data: {
+        migrationReadiness: readiness,
+        deploymentStatus,
+        autoAdvanceCheck: deploymentManager.checkAutoAdvance()
+      },
+      message: '移行準備状況を取得しました'
+    });
+  } catch (error) {
+    console.error('❌ CSP Readiness Error:', error);
+    res.status(500).json({
+      error: 'Failed to assess readiness',
+      message: '移行準備状況の評価に失敗しました'
+    });
+  }
+});
+
+/**
+ * デプロイメントフェーズ進行エンドポイント（開発環境のみ）
+ */
+router.post('/csp-advance-phase', (req: Request, res: Response) => {
+  if (process.env.NODE_ENV !== 'development') {
+    return res.status(404).json({ error: 'Not found' });
+  }
+  
+  try {
+    const result = deploymentManager.advancePhase();
+    
+    if (result.success) {
+      deploymentManager.saveDeploymentHistory('phase_advance', {
+        previousPhase: deploymentManager.getDeploymentStatus().currentPhase,
+        newPhase: result.newPhase,
+        automatic: false
+      });
+    }
+    
+    res.json({
+      success: result.success,
+      message: result.message,
+      data: result.newPhase ? {
+        newPhase: result.newPhase,
+        deploymentStatus: deploymentManager.getDeploymentStatus()
+      } : null
+    });
+  } catch (error) {
+    console.error('❌ Phase Advance Error:', error);
+    res.status(500).json({
+      error: 'Failed to advance phase',
+      message: 'フェーズ進行に失敗しました'
+    });
+  }
+});
+
+/**
+ * 週次レポート生成エンドポイント
+ */
+router.get('/csp-weekly-report', (req: Request, res: Response) => {
+  try {
+    const weeklyReport = cspAnalyzer.generateWeeklyReport();
+    const deploymentReport = deploymentManager.generateDeploymentReport();
+    
+    // 統合週次レポート
+    const consolidatedReport = {
+      reportDate: new Date().toISOString(),
+      period: weeklyReport.period,
+      executive: {
+        currentPhase: deploymentReport.phase,
+        readyForNextPhase: deploymentReport.status.readyForNextPhase,
+        totalViolations: weeklyReport.summary.totalViolations,
+        criticalIssues: weeklyReport.summary.criticalIssues,
+        overallHealth: weeklyReport.summary.criticalIssues === 0 ? 'Good' : 'Needs Attention'
+      },
+      security: {
+        violationSummary: weeklyReport.summary,
+        topViolations: weeklyReport.topViolations,
+        migrationReadiness: weeklyReport.migrationReadiness
+      },
+      deployment: {
+        status: deploymentReport.status,
+        recommendations: deploymentReport.recommendations,
+        nextSteps: deploymentReport.nextSteps
+      },
+      actionItems: [
+        ...weeklyReport.actionItems,
+        ...deploymentReport.nextSteps
+      ]
+    };
+    
+    res.json({
+      success: true,
+      data: consolidatedReport,
+      message: '週次レポートを生成しました'
+    });
+  } catch (error) {
+    console.error('❌ Weekly Report Error:', error);
+    res.status(500).json({
+      error: 'Failed to generate weekly report',
+      message: '週次レポートの生成に失敗しました'
+    });
+  }
+});
 
 export { router as cspRouter };
