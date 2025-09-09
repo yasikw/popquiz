@@ -2,6 +2,7 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { extractTextFromPDF, generateQuizFromText, generateQuizFromCachedPDF, generateQuizFromCachedYouTube, generateQuizFromCachedText, getCacheStatus } from "./services/gemini";
+import { cspRouter } from "./routes/csp.js";
 import { extractYouTubeSubtitles } from "./services/youtube";
 import { 
   insertUserSchema, 
@@ -90,6 +91,9 @@ const handleMulterError = (err: any, req: Request, res: Response, next: NextFunc
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // CSP レポート機能のルーター追加
+  app.use('/api', cspRouter);
+  
   // セキュリティ監視ミドルウェアを全体に適用
   app.use(abnormalTrafficDetection);
   app.use(authFailureMonitoring);

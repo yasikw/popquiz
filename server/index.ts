@@ -5,54 +5,25 @@ import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { getCorsConfig, corsErrorHandler } from "./config/cors.js";
+import { generateCSPNonce, applyCSP } from "./middleware/csp.js";
+import { getCurrentCSPConfig } from "./config/csp.js";
 
 const app = express();
 
 // CORS middleware - must be applied before other middleware
 app.use(cors(getCorsConfig()));
 
-// Security middleware - must be applied first
+// CSP nonce generation - must be before other middleware
+app.use(generateCSPNonce);
+
+// Disable default helmet CSP (we'll use our custom CSP)
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: [
-        "'self'", 
-        "'unsafe-inline'", // Required for Vite in development
-        "'unsafe-eval'", // Required for Vite in development
-        "https://www.googletagmanager.com",
-        "https://cdn.jsdelivr.net"
-      ],
-      styleSrc: [
-        "'self'", 
-        "'unsafe-inline'", // Required for Tailwind CSS
-        "https://cdnjs.cloudflare.com",
-        "https://fonts.googleapis.com"
-      ],
-      imgSrc: [
-        "'self'", 
-        "data:", 
-        "blob:",
-        "https:",
-        "http:" // Allow external images for quiz content
-      ],
-      connectSrc: [
-        "'self'",
-        "wss://localhost:*", // WebSocket for Vite HMR
-        "https://generativelanguage.googleapis.com" // Gemini API
-      ],
-      fontSrc: [
-        "'self'",
-        "https://fonts.gstatic.com",
-        "https://cdnjs.cloudflare.com"
-      ],
-      objectSrc: ["'none'"],
-      mediaSrc: ["'self'", "blob:", "data:"],
-      frameSrc: ["'self'", "https://www.youtube.com", "https://youtube.com"]
-    }
-  },
+  contentSecurityPolicy: false, // Disabled - using custom CSP middleware
   crossOriginEmbedderPolicy: false, // Disabled for external content compatibility
 }));
+
+// Apply custom CSP with nonce support
+app.use(applyCSP);
 
 // Additional security headers
 app.use((req, res, next) => {
