@@ -4,20 +4,28 @@ This is an AI-powered Japanese language quiz application that generates interact
 
 ## Recent Changes (January 13, 2025)
 
-✓ **Comprehensive Security Implementation**
+✓ **YouTube Data API v3 Migration & Compliance**
+  - **Security Enhancement**: Removed non-compliant youtubei.js unofficial API package
+  - **Official API Integration**: Implemented YouTube Data API v3 with googleapis library
+  - **Comprehensive Rate Limiting**: Added quota management (10,000 units/day) and request throttling
+  - **Fallback System**: Primary official API with Gemini Vision fallback for enhanced reliability
+  - **API Monitoring**: Real-time quota usage tracking, error rate monitoring, and health checks
+  - **Security Logging**: Detailed audit trail for all YouTube API operations and compliance tracking
+  - **Administrative Dashboard**: Added /api/admin/youtube-stats and /api/admin/youtube-health endpoints
+  - **Quota Alerts**: Automatic warnings at 80% usage, service protection at 95% capacity
+  - **SRT Caption Processing**: Safe extraction of text content from official subtitle formats
+  - **Error Recovery**: Graceful degradation with detailed error messages and retry guidance
+
+✓ **Image Security & SSRF Protection**
   - Added Helmet middleware for security headers (XSS protection, Content Security Policy, clickjacking prevention)
   - Implemented DOMPurify for client-side and server-side input sanitization
-  - Created comprehensive security validation library with input/URL/file validation functions
+  - **Image Loading Restrictions**: Implemented domain whitelist for trusted image sources only
+  - **SSRF Attack Prevention**: Created secure image proxy server with validation
+  - **CSP Image Controls**: Restricted img-src to self, data, blob, and whitelisted domains
   - Applied rate limiting to API endpoints (10 requests/minute general, 5 uploads/minute)
-  - Added input sanitization to all user inputs (forms, URLs, text content)
-  - Enhanced file upload validation with security checks for dangerous file patterns
-  - Implemented Content Security Policy with appropriate directives for the application
-  - Added server-side input validation middleware for quiz generation endpoints
-  - Sanitized authentication inputs (usernames, emails) to prevent injection attacks
-  - Enhanced YouTube URL validation with security-focused regex patterns
+  - Enhanced file upload validation with Content-Type verification and magic number checks
   - **Fixed XSS vulnerabilities**: Replaced dangerouslySetInnerHTML with safe CSS injection method
   - **Enhanced API security**: Added input sanitization to all API endpoints including quiz results
-  - **Strengthened data validation**: Applied sanitization to all user-generated content before storage
 
 ## Previous Changes (January 8, 2025)
 
@@ -105,8 +113,9 @@ Preferred communication style: Simple, everyday language.
 ## Content Processing Pipeline
 - **PDF Processing**: File upload → Gemini Vision API → text extraction → quiz generation
 - **Text Processing**: Direct text file upload → content parsing → quiz generation
-- **YouTube Integration**: URL input → subtitle extraction (placeholder for future implementation)
+- **YouTube Integration**: URL input → YouTube Data API v3 captions → quiz generation (with Gemini fallback)
 - **Difficulty Adjustment**: AI prompt engineering based on selected difficulty level
+- **API Compliance**: Official YouTube Data API v3 with comprehensive quota management
 
 ## Performance and Caching
 - **Query Caching**: TanStack React Query with infinite stale time for optimal performance
