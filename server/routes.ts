@@ -83,6 +83,12 @@ import {
   validateImageUrlMiddleware,
   enforceImageContentType 
 } from "./middleware/image-validation";
+import { 
+  beforeYouTubeAPICall,
+  recordYouTubeAPIResult,
+  getYouTubeAPIStats,
+  getYouTubeAPIHealth 
+} from "./middleware/youtube-monitoring";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -571,7 +577,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/process-youtube", async (req, res) => {
+  app.post("/api/process-youtube", beforeYouTubeAPICall, async (req, res) => {
     try {
       let { url, difficulty = "intermediate", title = "YouTube動画クイズ", questionCount = "5" } = req.body;
       
@@ -599,8 +605,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate quiz from subtitles
       const quiz = await generateQuizFromText(subtitles, difficulty, title, parseInt(questionCount));
       
+      // Record successful API usage
+      recordYouTubeAPIResult(true, 50); // Estimate quota cost
+      
       res.json(quiz);
     } catch (error) {
+      // Record failed API usage
+      recordYouTubeAPIResult(false, 0);
+      
       res.status(500).json({ message: "YouTube処理に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
     }
   });
@@ -955,6 +967,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // 画像プロキシエンドポイント（SSRF攻撃防止）
   app.get("/api/image-proxy", imageProxyRateLimit, imageProxyHandler);
+
+  // YouTube API監視エンドポイント
+  app.get("/api/admin/youtube-stats", authenticateUser, getYouTubeAPIStats);
+  app.get("/api/admin/youtube-health", getYouTubeAPIHealth);
 
   return httpServer;
 }
