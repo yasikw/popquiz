@@ -96,23 +96,23 @@ export function validateParams<T extends z.ZodType>(schema: T) {
 }
 
 // Recursively sanitize string values in an object
-function sanitizeObjectInputs(obj: any): any {
+function sanitizeObjectInputs<T>(obj: T): T {
   if (obj === null || obj === undefined) {
     return obj;
   }
   
   if (typeof obj === 'string') {
-    return sanitizeInput(obj);
+    return sanitizeInput(obj) as T;
   }
   
   if (Array.isArray(obj)) {
-    return obj.map(item => sanitizeObjectInputs(item));
+    return obj.map(item => sanitizeObjectInputs(item)) as T;
   }
   
-  if (typeof obj === 'object') {
-    const sanitized: any = {};
+  if (typeof obj === 'object' && obj !== null) {
+    const sanitized = {} as T;
     for (const [key, value] of Object.entries(obj)) {
-      sanitized[key] = sanitizeObjectInputs(value);
+      (sanitized as Record<string, unknown>)[key] = sanitizeObjectInputs(value);
     }
     return sanitized;
   }

@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { type GeneratedQuiz } from "@shared/schema";
 import { useState } from "react";
+import type { ContentQuizRequest, PDFQuizRequest, YouTubeQuizRequest, TextQuizRequest } from "@shared/types";
 
 interface ResultsSectionProps {
   quiz: GeneratedQuiz;
@@ -54,7 +55,7 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
       console.log('Last content type:', lastContentType);
       console.log('All localStorage keys:', Object.keys(localStorage));
       
-      let requestBody: any = {
+      let requestBody: Partial<ContentQuizRequest> = {
         difficulty: settings.difficulty || settings.defaultDifficulty || 'intermediate',
         questionCount: settings.questionCount || 5,
       };
@@ -69,7 +70,7 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
         }
         
         const pdfInfo = JSON.parse(savedPdfFile);
-        requestBody.pdfInfo = pdfInfo;
+        (requestBody as PDFQuizRequest).pdfInfo = pdfInfo;
         console.log('Added PDF info to request body:', requestBody);
       } else if (lastContentType === 'youtube') {
         // Get the stored YouTube video ID
@@ -80,7 +81,7 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
         }
         
         const youtubeInfo = JSON.parse(savedYouTubeInfo);
-        requestBody.youtubeVideoId = youtubeInfo.videoId;
+        (requestBody as YouTubeQuizRequest).youtubeVideoId = youtubeInfo.videoId;
         console.log('Added YouTube info to request body:', requestBody);
       } else if (lastContentType === 'text') {
         // Get the stored text content
@@ -90,7 +91,7 @@ export default function ResultsSection({ quiz, onNewQuiz, onRetryQuiz, onViewSta
           throw new Error('テキスト内容が見つかりません');
         }
         
-        requestBody.textContent = savedTextContent;
+        (requestBody as TextQuizRequest).textContent = savedTextContent;
         console.log('Added text content to request body:', requestBody);
       } else {
         console.log('Unsupported content type. Available types: pdf, youtube, text');

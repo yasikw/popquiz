@@ -1,5 +1,6 @@
 import { apiRequest } from "./queryClient";
 import { type GeneratedQuiz, type User, type QuizSession, type Question, type UserStats } from "@shared/schema";
+import type { QuizResultsData } from "@shared/types";
 
 
 
@@ -128,7 +129,7 @@ export async function updateUserStats(userId: string, stats: Partial<UserStats>)
 }
 
 // Submit quiz results
-export async function submitQuizResults(userId: string, quizData: GeneratedQuiz & { contentType?: string }, results: any) {
+export async function submitQuizResults(userId: string, quizData: GeneratedQuiz & { contentType?: string }, results: QuizResultsData) {
   const response = await fetch('/api/quiz-results', {
     method: 'POST',
     headers: {

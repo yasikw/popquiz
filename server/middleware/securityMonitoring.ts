@@ -1,16 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 import { securityLogger, SecurityLogLevel, SecurityEventType } from '../utils/securityLogger';
 import rateLimit from 'express-rate-limit';
+import type { SecureAuthenticatedUser, SecureRequest } from '@shared/types';
 
-// Express Request型の拡張
+// Express Request型の拡張 (using secure types)
 interface ExtendedRequest extends Request {
   sessionID?: string;
   session?: {
     lastUserAgent?: string;
     lastIpAddress?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
-  user?: any; // 柔軟な型定義に変更
+  user?: SecureAuthenticatedUser;
 }
 
 // 異常なトラフィックパターンを検知するミドルウェア

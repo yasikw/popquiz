@@ -647,7 +647,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create questions with user answers if available
       if (quizData.questions && results.detailedResults) {
-        const questionsData = results.detailedResults.map((result: any, index: number) => ({
+        const questionsData = results.detailedResults.map((result, index: number) => ({
           sessionId: session.id,
           questionText: result.question || quizData.questions[index]?.question || "",
           options: quizData.questions[index]?.options || [],
@@ -669,8 +669,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const newAverageAccuracy = newCompletedQuizzes > 0 ? 
           ((currentStats.averageAccuracy * currentStats.completedQuizzes) + accuracy) / newCompletedQuizzes : 0;
 
-        // Update difficulty-specific accuracy
-        const difficultyAccuracyUpdates: any = {};
+        // Update difficulty-specific accuracy  
+        const difficultyAccuracyUpdates: Partial<{
+          beginnerAccuracy: number;
+          intermediateAccuracy: number;
+          advancedAccuracy: number;
+        }> = {};
         if (sessionData.difficulty === "beginner") {
           difficultyAccuracyUpdates.beginnerAccuracy = accuracy;
         } else if (sessionData.difficulty === "intermediate") {
@@ -714,7 +718,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/quiz-sessions/:sessionId/questions", authenticateUser, async (req, res) => {
     try {
-      const questions = req.body.map((q: any) => insertQuestionSchema.parse({
+      const questions = req.body.map((q) => insertQuestionSchema.parse({
         ...q,
         sessionId: req.params.sessionId
       }));
@@ -811,10 +815,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const session = await storage.createQuizSession(sessionData, userId);
       
       // Create questions with user answers (sanitized)
-      const questionsData = results.detailedResults.map((result: any) => ({
+      const questionsData = results.detailedResults.map((result) => ({
         sessionId: session.id,
         questionText: sanitizeInput(result.question || ""),
-        options: (quizData.questions.find((q: any) => q.question === result.question)?.options || [])
+        options: (quizData.questions.find((q) => q.question === result.question)?.options || [])
           .map((option: string) => sanitizeInput(option)),
         correctAnswer: sanitizeInput(result.correctAnswer || ""),
         explanation: sanitizeInput(result.explanation || ""),
