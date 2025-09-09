@@ -38,9 +38,9 @@ router.post('/csp-report', (req: Request, res: Response) => {
       blockedUri: violation['blocked-uri'],
       originalPolicy: violation['original-policy'],
       disposition: violation['disposition'],
-      sourceFile: violation['source-file'],
-      lineNumber: violation['line-number'],
-      columnNumber: violation['column-number'],
+      sourceFile: (violation as any)['source-file'],
+      lineNumber: (violation as any)['line-number'],
+      columnNumber: (violation as any)['column-number'],
       sample: violation['script-sample'],
       userAgent: req.get('User-Agent') || '',
       clientIP: req.ip || req.connection.remoteAddress || ''
