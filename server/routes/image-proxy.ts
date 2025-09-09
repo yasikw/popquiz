@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { imageProxy } from '../services/image-proxy';
 import { securityLogger, SecurityEventType, SecurityLogLevel } from '../utils/securityLogger';
 import { authenticateUser } from '../middleware/auth';
+import { authorizeAdmin } from '../middleware/authorization';
 
 const router = Router();
 
@@ -180,7 +181,7 @@ router.get('/proxy', imageProxyRateLimit, async (req: Request, res: Response) =>
  * Cache statistics endpoint (admin only)
  * GET /cache/stats
  */
-router.get('/cache/stats', authenticateUser, adminRateLimit, async (req: Request, res: Response) => {
+router.get('/cache/stats', authenticateUser, authorizeAdmin, adminRateLimit, async (req: Request, res: Response) => {
   try {
     const stats = imageProxy.getCacheStats();
     
@@ -226,7 +227,7 @@ router.get('/cache/stats', authenticateUser, adminRateLimit, async (req: Request
  * Cache management endpoint (admin only)
  * POST /cache/clear
  */
-router.post('/cache/clear', authenticateUser, adminRateLimit, async (req: Request, res: Response) => {
+router.post('/cache/clear', authenticateUser, authorizeAdmin, adminRateLimit, async (req: Request, res: Response) => {
   try {
     imageProxy.clearCache();
 

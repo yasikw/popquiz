@@ -62,8 +62,8 @@ export function authorizeUser(
 }
 
 /**
- * 管理者権限チェック用のミドルウェア（将来の拡張用）
- * 現在はユーザーテーブルにroleフィールドがないため、実装を保留
+ * 管理者権限チェック用のミドルウェア
+ * 環境変数ADMIN_USER_IDSで指定されたユーザーIDのみ管理者権限を付与
  */
 export function authorizeAdmin(
   req: Request,
@@ -73,31 +73,37 @@ export function authorizeAdmin(
   try {
     if (!req.user) {
       res.status(401).json({ 
-        error: 'Unauthorized',
-        message: '認証が必要です' 
+        error: 'Authentication required' 
       });
       return;
     }
 
-    // TODO: ユーザーテーブルにroleフィールドを追加した際に実装
-    // if (req.user.role !== 'admin') {
-    //   res.status(403).json({ 
-    //     error: 'Forbidden',
-    //     message: '管理者権限が必要です' 
-    //   });
-    //   return;
-    // }
-
-    res.status(501).json({ 
-      error: 'Not Implemented',
-      message: '管理者権限機能は未実装です' 
-    });
+    // 環境変数から管理者ユーザーIDリストを取得
+    const adminUserIds = process.env.ADMIN_USER_IDS?.split(',').map(id => id.trim()) || [];
     
+    if (adminUserIds.length === 0) {
+      console.error('⚠️ ADMIN_USER_IDS environment variable not configured');
+      res.status(503).json({ 
+        error: 'Service unavailable' 
+      });
+      return;
+    }
+
+    // 現在のユーザーが管理者リストに含まれているかチェック
+    if (!adminUserIds.includes(req.user.id)) {
+      res.status(403).json({ 
+        error: 'Insufficient privileges' 
+      });
+      return;
+    }
+
+    // 管理者認証成功 - 次のミドルウェアに進む
+    next();
+
   } catch (error) {
     console.error('Admin authorization error:', error);
     res.status(500).json({ 
-      error: 'Internal Server Error',
-      message: '管理者権限チェック中にエラーが発生しました' 
+      error: 'Authorization failed' 
     });
   }
 }

@@ -141,7 +141,9 @@ export const cspConfig: CSPLevels = {
       imgSrc: [
         "'self'", 
         "data:",
-        // blobやhttps:は除去（厳格）
+        "blob:", // Blob URLs for image processing
+        // Allow image proxy URLs
+        "/api/image/proxy*"
       ],
       connectSrc: [
         "'self'",
