@@ -366,7 +366,10 @@ export default function CardStack({
             {/* Background slider */}
             <div 
               className={`absolute top-1 bottom-1 w-1/3 bg-gradient-to-r ${currentType.color} rounded-lg transition-transform duration-300 ease-out`}
-              style={{ transform: `translateX(${currentUploadType * 100}%)` }}
+              style={{
+                '--slider-position': `${currentUploadType * 100}%`,
+                transform: 'translateX(var(--slider-position))'
+              } as React.CSSProperties}
             />
             
             {uploadTypes.map((type, index) => (
@@ -504,7 +507,10 @@ export default function CardStack({
             {/* Background slider */}
             <div 
               className={`absolute top-1 bottom-1 w-1/3 bg-gradient-to-r ${currentDiff.color} rounded-lg transition-transform duration-300 ease-out`}
-              style={{ transform: `translateX(${currentDifficultyIndex * 100}%)` }}
+              style={{
+                '--slider-position': `${currentDifficultyIndex * 100}%`,
+                transform: 'translateX(var(--slider-position))'
+              } as React.CSSProperties}
             />
             
             {difficulties.map((diff, index) => (
