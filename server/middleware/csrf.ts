@@ -1,66 +1,226 @@
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
+import { securityLogger } from '../utils/securityLogger.js';
 
 /**
- * Modern CSRF protection middleware using Double Submit Cookie pattern
- * Suitable for JWT-based authentication systems
+ * Enhanced CSRF protection middleware using Double Submit Cookie pattern
+ * Includes additional security features and monitoring
  */
 
-// Generate a secure random token
-export function generateCSRFToken(): string {
-  return crypto.randomBytes(32).toString('hex');
+// Token storage for server-side validation
+interface CSRFTokenData {
+  token: string;
+  createdAt: number;
+  ipAddress: string;
 }
 
-// Validate CSRF token from both cookie and header
-function validateCSRFToken(cookieToken: string, headerToken: string): boolean {
+// In-memory token store for validation (consider Redis for production clusters)
+const tokenStore = new Map<string, CSRFTokenData>();
+const TOKEN_EXPIRY = 3600000; // 1 hour
+const MAX_TOKENS_PER_IP = 10;
+
+// Clean expired tokens periodically
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, data] of tokenStore.entries()) {
+    if (now - data.createdAt > TOKEN_EXPIRY) {
+      tokenStore.delete(key);
+    }
+  }
+}, 300000); // Clean every 5 minutes
+
+// Generate a secure random token with enhanced entropy
+export function generateCSRFToken(ipAddress: string = ''): string {
+  const timestamp = Date.now();
+  const randomBytes = crypto.randomBytes(32);
+  const entropy = crypto.randomBytes(16);
+  
+  // Create HMAC with additional entropy
+  const hmac = crypto.createHmac('sha256', process.env.JWT_SECRET || 'default-secret');
+  hmac.update(randomBytes);
+  hmac.update(timestamp.toString());
+  hmac.update(entropy);
+  
+  const token = hmac.digest('hex');
+  
+  // Store token with metadata for validation
+  tokenStore.set(token, {
+    token,
+    createdAt: timestamp,
+    ipAddress
+  });
+  
+  // Clean up old tokens for this IP to prevent memory exhaustion
+  cleanupTokensForIP(ipAddress);
+  
+  return token;
+}
+
+// Clean up old tokens for a specific IP address
+function cleanupTokensForIP(ipAddress: string): void {
+  const tokensForIP = Array.from(tokenStore.entries())
+    .filter(([_, data]) => data.ipAddress === ipAddress)
+    .sort((a, b) => b[1].createdAt - a[1].createdAt);
+  
+  // Keep only the most recent MAX_TOKENS_PER_IP tokens
+  if (tokensForIP.length > MAX_TOKENS_PER_IP) {
+    const tokensToRemove = tokensForIP.slice(MAX_TOKENS_PER_IP);
+    tokensToRemove.forEach(([token]) => tokenStore.delete(token));
+  }
+}
+
+// Enhanced CSRF token validation with server-side verification
+function validateCSRFToken(cookieToken: string, headerToken: string, ipAddress: string = ''): boolean {
   if (!cookieToken || !headerToken) {
+    securityLogger.warn('CSRF validation failed: Missing tokens', {
+      hasCookie: !!cookieToken,
+      hasHeader: !!headerToken,
+      ipAddress
+    });
     return false;
   }
   
-  // Use timing-safe comparison to prevent timing attacks
-  return crypto.timingSafeEqual(
-    Buffer.from(cookieToken, 'hex'),
-    Buffer.from(headerToken, 'hex')
-  );
+  // Validate token format (64 hex characters)
+  const tokenRegex = /^[a-f0-9]{64}$/;
+  if (!tokenRegex.test(cookieToken) || !tokenRegex.test(headerToken)) {
+    securityLogger.warn('CSRF validation failed: Invalid token format', { ipAddress });
+    return false;
+  }
+  
+  // Check if tokens match using timing-safe comparison
+  let tokensMatch = false;
+  try {
+    tokensMatch = crypto.timingSafeEqual(
+      Buffer.from(cookieToken, 'hex'),
+      Buffer.from(headerToken, 'hex')
+    );
+  } catch (error) {
+    securityLogger.error('CSRF validation error: Buffer comparison failed', { 
+      error: error instanceof Error ? error.message : 'Unknown error',
+      ipAddress 
+    });
+    return false;
+  }
+  
+  if (!tokensMatch) {
+    securityLogger.warn('CSRF validation failed: Token mismatch', { ipAddress });
+    return false;
+  }
+  
+  // Verify token exists in server-side store and is not expired
+  const tokenData = tokenStore.get(cookieToken);
+  if (!tokenData) {
+    securityLogger.warn('CSRF validation failed: Token not found in store', { ipAddress });
+    return false;
+  }
+  
+  const now = Date.now();
+  if (now - tokenData.createdAt > TOKEN_EXPIRY) {
+    tokenStore.delete(cookieToken);
+    securityLogger.warn('CSRF validation failed: Token expired', { 
+      tokenAge: now - tokenData.createdAt,
+      ipAddress 
+    });
+    return false;
+  }
+  
+  // Optional: Verify IP address match (can be disabled for mobile users)
+  if (process.env.CSRF_STRICT_IP === 'true' && tokenData.ipAddress !== ipAddress) {
+    securityLogger.warn('CSRF validation failed: IP address mismatch', {
+      originalIP: tokenData.ipAddress,
+      currentIP: ipAddress
+    });
+    return false;
+  }
+  
+  return true;
 }
 
-// CSRF token generation endpoint
+// Enhanced CSRF token generation endpoint with rate limiting
 export function generateCSRFTokenEndpoint(req: Request, res: Response) {
-  const token = generateCSRFToken();
+  const ipAddress = req.ip || req.connection.remoteAddress || 'unknown';
   
-  // Set CSRF token as secure, httpOnly cookie
+  // Rate limiting check
+  const recentTokensForIP = Array.from(tokenStore.values())
+    .filter(data => data.ipAddress === ipAddress && (Date.now() - data.createdAt) < 60000) // Last minute
+    .length;
+  
+  if (recentTokensForIP >= 5) {
+    securityLogger.warn('CSRF token generation rate limit exceeded', {
+      ipAddress,
+      recentTokenCount: recentTokensForIP
+    });
+    return res.status(429).json({
+      error: 'Rate limit exceeded',
+      message: 'CSRFトークンの生成回数が制限を超えています。しばらく待ってから再試行してください。',
+      code: 'CSRF_RATE_LIMIT'
+    });
+  }
+  
+  const token = generateCSRFToken(ipAddress);
+  
+  // Set CSRF token as secure, httpOnly cookie with enhanced security
   res.cookie('_csrf', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 3600000 // 1 hour
+    maxAge: TOKEN_EXPIRY,
+    path: '/', // Explicit path
+    ...(process.env.NODE_ENV === 'production' && { domain: process.env.COOKIE_DOMAIN })
   });
   
-  // Also return token in response for SPA usage
+  securityLogger.info('CSRF token generated', {
+    ipAddress,
+    userAgent: req.get('User-Agent'),
+    timestamp: new Date().toISOString()
+  });
+  
+  // Return token in response for SPA usage
   res.json({ 
     csrfToken: token,
-    message: 'CSRF token generated successfully'
+    message: 'CSRF token generated successfully',
+    expiresIn: TOKEN_EXPIRY
   });
 }
 
-// CSRF protection middleware
+// Enhanced CSRF protection middleware with comprehensive logging
 export function csrfProtection(req: Request, res: Response, next: NextFunction) {
   // Skip CSRF protection for safe HTTP methods
   if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
     return next();
   }
   
+  const ipAddress = req.ip || req.connection.remoteAddress || 'unknown';
+  const userAgent = req.get('User-Agent') || 'unknown';
   const cookieToken = req.cookies._csrf;
-  const headerToken = req.headers['x-csrf-token'] as string || 
-                     req.headers['x-xsrf-token'] as string;
+  const headerToken = (req.headers['x-csrf-token'] as string) || 
+                     (req.headers['x-xsrf-token'] as string);
   
-  if (!validateCSRFToken(cookieToken, headerToken)) {
+  if (!validateCSRFToken(cookieToken, headerToken, ipAddress)) {
+    securityLogger.warn('CSRF attack attempt detected', {
+      ipAddress,
+      userAgent,
+      method: req.method,
+      url: req.url,
+      hasCookie: !!cookieToken,
+      hasHeader: !!headerToken,
+      timestamp: new Date().toISOString()
+    });
+    
     return res.status(403).json({
       error: 'CSRF token validation failed',
       message: 'CSRFトークンが無効です。ページを再読み込みしてください。',
-      code: 'INVALID_CSRF_TOKEN'
+      code: 'INVALID_CSRF_TOKEN',
+      timestamp: new Date().toISOString()
     });
   }
+  
+  // Log successful CSRF validation for audit purposes
+  securityLogger.info('CSRF validation successful', {
+    ipAddress,
+    method: req.method,
+    url: req.url
+  });
   
   next();
 }
@@ -68,9 +228,13 @@ export function csrfProtection(req: Request, res: Response, next: NextFunction) 
 // Public endpoints that should be excluded from CSRF protection
 const publicEndpoints = [
   '/api/auth/login',
-  '/api/auth/register',
+  '/api/auth/register', 
   '/api/auth/refresh-token',
-  '/api/csrf-token'
+  '/api/csrf-token',
+  '/api/csrf-token/refresh',
+  '/api/csp-report', // CSP violation reports
+  '/api/health', // Health check endpoints
+  '/api/csrf-stats' // CSRF statistics (if implemented)
 ];
 
 // CSRF middleware with exceptions for public endpoints
@@ -89,19 +253,63 @@ export function csrfProtectionWithExceptions(req: Request, res: Response, next: 
   return csrfProtection(req, res, next);
 }
 
-// Refresh CSRF token (useful for long-lived sessions)
+// Enhanced CSRF token refresh with cleanup
 export function refreshCSRFToken(req: Request, res: Response) {
-  const newToken = generateCSRFToken();
+  const ipAddress = req.ip || req.connection.remoteAddress || 'unknown';
+  const oldToken = req.cookies._csrf;
+  
+  // Remove old token from store
+  if (oldToken && tokenStore.has(oldToken)) {
+    tokenStore.delete(oldToken);
+  }
+  
+  const newToken = generateCSRFToken(ipAddress);
   
   res.cookie('_csrf', newToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 3600000 // 1 hour
+    maxAge: TOKEN_EXPIRY,
+    path: '/',
+    ...(process.env.NODE_ENV === 'production' && { domain: process.env.COOKIE_DOMAIN })
+  });
+  
+  securityLogger.info('CSRF token refreshed', {
+    ipAddress,
+    userAgent: req.get('User-Agent'),
+    oldTokenPresent: !!oldToken
   });
   
   res.json({ 
     csrfToken: newToken,
-    message: 'CSRF token refreshed successfully'
+    message: 'CSRF token refreshed successfully',
+    expiresIn: TOKEN_EXPIRY,
+    timestamp: new Date().toISOString()
   });
+}
+
+// Get CSRF protection statistics (for monitoring)
+export function getCSRFStats(): {
+  activeTokens: number;
+  oldestTokenAge: number;
+  tokensPerIP: Record<string, number>;
+} {
+  const now = Date.now();
+  const tokensPerIP: Record<string, number> = {};
+  let oldestTokenAge = 0;
+  
+  for (const [_, data] of tokenStore.entries()) {
+    const age = now - data.createdAt;
+    if (age > oldestTokenAge) {
+      oldestTokenAge = age;
+    }
+    
+    tokensPerIP[data.ipAddress] = (tokensPerIP[data.ipAddress] || 0) + 1;
+  }
+  
+  return {
+    activeTokens: tokenStore.size,
+    oldestTokenAge,
+    tokensPerIP
+  };
 }
