@@ -61,7 +61,6 @@
     "connect-pg-simple": "^10.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "csurf": "^1.11.0",
     "date-fns": "^3.6.0",
     "dompurify": "^3.2.6",
     "drizzle-orm": "^0.39.1",
