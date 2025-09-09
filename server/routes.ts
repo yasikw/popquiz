@@ -92,6 +92,8 @@ import {
 import { securityLogAggregator } from "./utils/securityLogAggregator";
 import { realTimeAlertSystem } from "./utils/realTimeAlertSystem";
 import { securityAnomalyDetector } from "./utils/securityAnomalyDetector";
+import { logRetentionManager } from "./utils/logRetentionManager";
+import { comprehensiveSecurityMiddleware } from "./middleware/comprehensiveSecurityMonitoring";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
