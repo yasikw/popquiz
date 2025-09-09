@@ -42,7 +42,7 @@ export function validateImageUpload(req: Request, res: Response, next: NextFunct
     
     // 成功ログ
     securityLogger.log(
-      'info',
+      'INFO',
       'IMAGE_UPLOAD_SUCCESS', 
       'Image upload validated successfully',
       {
