@@ -83,8 +83,8 @@ class CSPViolationMonitor {
       SecurityEventType.SUSPICIOUS_ACTIVITY,
       `CSP violation detected: ${directive}`,
       {
-        ipAddress: clientIP,
-        userAgent,
+        ipAddress: clientIP || undefined,
+        userAgent: userAgent || undefined,
         metadata: {
           violatedDirective: report['violated-directive'],
           blockedUri: report['blocked-uri'],
@@ -107,8 +107,8 @@ class CSPViolationMonitor {
         SecurityEventType.SUSPICIOUS_ACTIVITY,
         `High-priority CSP violation alert: ${directive}`,
         {
-          ipAddress: clientIP,
-          userAgent,
+          ipAddress: clientIP || undefined,
+          userAgent: userAgent || undefined,
           metadata: {
             alertReason: directive.includes('img-src') ? 'POTENTIAL_DATA_EXFILTRATION' : 'HIGH_FREQUENCY_VIOLATIONS',
             violatedDirective: directive,
@@ -143,18 +143,20 @@ const cspMonitor = new CSPViolationMonitor();
 /**
  * Express middleware to handle CSP violation reports
  */
-export function cspViolationHandler(req: Request, res: Response, next: NextFunction): void {
+export function cspViolationHandler(req: Request, res: Response): void {
   try {
     // Validate the CSP violation report format
     const violation = req.body as CSPViolationWrapper;
     
     if (!violation || !violation['csp-report']) {
-      return res.status(400).json({ error: 'Invalid CSP violation report format' });
+      res.status(400).json({ error: 'Invalid CSP violation report format' });
+      return;
     }
 
     const report = violation['csp-report'];
     if (!report['violated-directive'] || !report['blocked-uri']) {
-      return res.status(400).json({ error: 'Missing required CSP violation fields' });
+      res.status(400).json({ error: 'Missing required CSP violation fields' });
+      return;
     }
 
     // Process the violation
@@ -173,7 +175,7 @@ export function cspViolationHandler(req: Request, res: Response, next: NextFunct
       SecurityEventType.SUSPICIOUS_ACTIVITY,
       'Error processing CSP violation report',
       {
-        ipAddress: req.ip,
+        ipAddress: req.ip || undefined,
         metadata: {
           error: error instanceof Error ? error.message : 'Unknown error',
           rawBody: req.body

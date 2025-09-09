@@ -70,7 +70,10 @@ export const productionHelmetConfig: HelmetOptions = {
       upgradeInsecureRequests: [],
       
       // Block all mixed content
-      blockAllMixedContent: []
+      blockAllMixedContent: [],
+      
+      // CSP violation reporting
+      reportTo: 'csp-violation-report'
     }
     
     // Note: CSP violation reporting should be configured separately
