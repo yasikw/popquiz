@@ -13,16 +13,22 @@ import { authorizeAdmin } from '../middleware/authorization';
 
 const router = Router();
 
-// Rate limiting for image proxy requests
+// Rate limiting for image proxy requests with enhanced security
 const imageProxyRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 50, // 50 requests per window per IP
   message: {
-    error: 'Too many image proxy requests',
-    retryAfter: '15 minutes'
+    error: 'Rate limit exceeded',
+    retryAfter: 900 // seconds instead of text
   },
   standardHeaders: true,
   legacyHeaders: false,
+  // Enhanced key generation with IPv6 support
+  keyGenerator: (req, res) => {
+    const ip = req.ip || req.connection?.remoteAddress || 'unknown';
+    const userAgent = req.get('User-Agent')?.slice(0, 50) || 'unknown';
+    return `${ip}-${userAgent}`;
+  },
   handler: (req, res) => {
     securityLogger.log(
       SecurityLogLevel.WARNING,
@@ -40,8 +46,8 @@ const imageProxyRateLimit = rateLimit({
       }
     );
     res.status(429).json({
-      error: 'Too many image proxy requests',
-      retryAfter: '15 minutes'
+      error: 'Rate limit exceeded',
+      retryAfter: 900
     });
   }
 });

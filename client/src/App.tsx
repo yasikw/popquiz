@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useCSRF } from "@/hooks/useCSRF";
 import Home from "@/pages/home";
 import LoginPage from "@/pages/login";
+import ImageDemo from "@/pages/ImageDemo";
 import NotFound from "@/pages/not-found";
 import { type User } from "@shared/schema";
 import bgImage from "@assets/BG_1754455391940.png";
@@ -73,6 +74,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={() => <Home user={currentUser} onLogout={handleLogout} />} />
+      <Route path="/image-demo" component={ImageDemo} />
       <Route component={NotFound} />
     </Switch>
   );
