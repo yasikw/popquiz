@@ -66,7 +66,8 @@ class SecureImageProxy {
     const now = Date.now();
     let cleaned = 0;
 
-    for (const [key, entry] of this.cache.entries()) {
+    const entries = Array.from(this.cache.entries());
+    for (const [key, entry] of entries) {
       if (now - entry.timestamp.getTime() > this.CACHE_TTL) {
         this.currentCacheSize -= entry.processedSize;
         this.cache.delete(key);
@@ -76,16 +77,16 @@ class SecureImageProxy {
 
     // Also clean up least accessed entries if cache is too large
     if (this.currentCacheSize > this.MAX_CACHE_SIZE || this.cache.size > this.MAX_CACHE_ENTRIES) {
-      const entries = Array.from(this.cache.entries())
+      const sortedEntries = Array.from(this.cache.entries())
         .sort(([, a], [, b]) => a.accessCount - b.accessCount);
 
       const toRemove = Math.max(
-        entries.length - this.MAX_CACHE_ENTRIES,
-        Math.ceil(entries.length * 0.2) // Remove 20% of entries
+        sortedEntries.length - this.MAX_CACHE_ENTRIES,
+        Math.ceil(sortedEntries.length * 0.2) // Remove 20% of entries
       );
 
-      for (let i = 0; i < toRemove && i < entries.length; i++) {
-        const [key, entry] = entries[i];
+      for (let i = 0; i < toRemove && i < sortedEntries.length; i++) {
+        const [key, entry] = sortedEntries[i];
         this.currentCacheSize -= entry.processedSize;
         this.cache.delete(key);
         cleaned++;
@@ -140,7 +141,7 @@ class SecureImageProxy {
   /**
    * Process image with Sharp
    */
-  private async processImage(buffer: Buffer, options: ImageProxyOptions, originalContentType: string): Promise<Buffer> {
+  private async processImageWithSharp(buffer: Buffer, options: ImageProxyOptions, originalContentType: string): Promise<Buffer> {
     let sharpInstance = sharp(buffer);
 
     // Resize image if dimensions specified
@@ -205,7 +206,7 @@ class SecureImageProxy {
           SecurityEventType.SUSPICIOUS_ACTIVITY,
           'Image served from cache',
           {
-            ipAddress: clientIP,
+            ipAddress: clientIP || undefined,
             metadata: {
               url: url,
               cacheHit: true,
@@ -228,7 +229,7 @@ class SecureImageProxy {
       if (!optionsValidation.valid) {
         return {
           success: false,
-          error: optionsValidation.error,
+          error: optionsValidation.error || 'Invalid processing options',
           securityRisk: 'INVALID_PROCESSING_OPTIONS'
         };
       }
@@ -241,19 +242,19 @@ class SecureImageProxy {
           SecurityEventType.SUSPICIOUS_ACTIVITY,
           'Image proxy URL validation failed',
           {
-            ipAddress: clientIP,
+            ipAddress: clientIP || undefined,
             metadata: {
               url: url,
-              validationError: urlValidation.error,
-              securityRisk: urlValidation.securityRisk
+              validationError: urlValidation.error || 'Unknown validation error',
+              securityRisk: urlValidation.securityRisk || 'Unknown security risk'
             }
           }
         );
 
         return {
           success: false,
-          error: urlValidation.error,
-          securityRisk: urlValidation.securityRisk
+          error: urlValidation.error || 'URL validation failed',
+          securityRisk: urlValidation.securityRisk || 'Unknown security risk'
         };
       }
 
@@ -262,8 +263,8 @@ class SecureImageProxy {
       if (!contentValidation.valid) {
         return {
           success: false,
-          error: contentValidation.error,
-          securityRisk: contentValidation.securityRisk
+          error: contentValidation.error || 'Content validation failed',
+          securityRisk: contentValidation.securityRisk || 'Unknown security risk'
         };
       }
 
@@ -295,7 +296,7 @@ class SecureImageProxy {
           SecurityEventType.SUSPICIOUS_ACTIVITY,
           'Invalid image content type in proxy request',
           {
-            ipAddress: clientIP,
+            ipAddress: clientIP || undefined,
             metadata: {
               url: url,
               contentType: contentType,
@@ -325,7 +326,7 @@ class SecureImageProxy {
       }
 
       // Process image
-      const processedBuffer = await this.processImage(originalBuffer, options, contentType);
+      const processedBuffer = await this.processImageWithSharp(originalBuffer, options, contentType);
       const processedSize = processedBuffer.length;
 
       // Determine final content type
@@ -353,7 +354,7 @@ class SecureImageProxy {
         SecurityEventType.SUSPICIOUS_ACTIVITY,
         'Image successfully processed through proxy',
         {
-          ipAddress: clientIP,
+          ipAddress: clientIP || undefined,
           metadata: {
             url: url,
             originalSize: originalSize,
@@ -379,7 +380,7 @@ class SecureImageProxy {
         SecurityEventType.SUSPICIOUS_ACTIVITY,
         'Image proxy processing error',
         {
-          ipAddress: clientIP,
+          ipAddress: clientIP || undefined,
           metadata: {
             url: url,
             error: error instanceof Error ? error.message : 'Unknown error',

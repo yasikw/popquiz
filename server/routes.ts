@@ -65,6 +65,7 @@ import {
 } from "./middleware/csrf";
 import { imageUrlValidationMiddleware } from "./middleware/image-validator";
 import { cspViolationHandler, getCSPMetrics } from "./middleware/csp-violation-handler";
+import { imageProxyRouter } from "./routes/image-proxy";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -95,6 +96,9 @@ const handleMulterError = (err: any, req: Request, res: Response, next: NextFunc
 export async function registerRoutes(app: Express): Promise<Server> {
   // CSP レポート機能のルーター追加
   app.use('/api', cspRouter);
+  
+  // Image proxy routes
+  app.use('/api/image', imageProxyRouter);
   
   // セキュリティ監視ミドルウェアを全体に適用
   app.use(abnormalTrafficDetection);
