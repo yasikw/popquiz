@@ -136,13 +136,11 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
   return (
     <div 
-      className="min-h-screen flex flex-col relative"
+      className="min-h-screen flex flex-col relative bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: `url(${bgImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}
+        '--bg-image': `url(${bgImage})`,
+        backgroundImage: 'var(--bg-image)'
+      } as React.CSSProperties}
     >
       {/* Overlay for better text readability */}
       <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]"></div>
