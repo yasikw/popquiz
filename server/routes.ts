@@ -94,6 +94,8 @@ import { realTimeAlertSystem } from "./utils/realTimeAlertSystem";
 import { securityAnomalyDetector } from "./utils/securityAnomalyDetector";
 import { logRetentionManager } from "./utils/logRetentionManager";
 import { comprehensiveSecurityMiddleware } from "./middleware/comprehensiveSecurityMonitoring";
+import { unifiedErrorMiddleware, unifiedErrorHandler, asyncErrorCatcher } from "./middleware/unifiedErrorHandler";
+import { errorTrackingSystem } from "./utils/errorTrackingSystem";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -1033,5 +1035,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // エラー監視・統計API
+  app.get("/api/admin/errors/stats", authenticateUser, asyncErrorCatcher(async (req, res) => {
+    const hoursBack = parseInt(req.query.hours as string) || 24;
+    const stats = await unifiedErrorHandler.getErrorStats(hoursBack);
+    res.json(stats);
+  }));
+
+  app.get("/api/admin/errors/patterns", authenticateUser, asyncErrorCatcher(async (req, res) => {
+    const hoursBack = parseInt(req.query.hours as string) || 24;
+    const patterns = await unifiedErrorHandler.detectErrorPatterns(hoursBack);
+    res.json(patterns);
+  }));
+
+  app.get("/api/admin/errors/dashboard", authenticateUser, asyncErrorCatcher(async (req, res) => {
+    const dashboardData = await unifiedErrorHandler.getDashboardData();
+    res.json(dashboardData);
+  }));
+
+  app.post("/api/admin/errors/:errorId/resolve", authenticateUser, asyncErrorCatcher(async (req, res) => {
+    const { errorId } = req.params;
+    const { resolutionNotes } = req.body;
+    
+    const resolved = await errorTrackingSystem.resolveError(errorId, resolutionNotes);
+    
+    if (resolved) {
+      res.json({ message: "エラーが解決済みとしてマークされました" });
+    } else {
+      res.status(404).json({ message: "指定されたエラーが見つかりません" });
+    }
+  }));
+
+  // ログ保存期間管理API
+  app.get("/api/admin/logs/retention/stats", authenticateUser, async (req, res) => {
+    try {
+      const stats = await logRetentionManager.getStorageStats();
+      res.json(stats);
+    } catch (error) {
+      console.error("Error getting log retention stats:", error);
+      res.status(500).json({ message: "ログ保存統計の取得に失敗しました" });
+    }
+  });
+
+  app.post("/api/admin/logs/retention/maintenance", authenticateUser, async (req, res) => {
+    try {
+      const { logType } = req.body;
+      const results = await logRetentionManager.performMaintenance(logType);
+      res.json({
+        message: "メンテナンスが完了しました",
+        results
+      });
+    } catch (error) {
+      console.error("Error performing log maintenance:", error);
+      res.status(500).json({ message: "ログメンテナンスに失敗しました" });
+    }
+  });
+
+  // Apply unified error handler as the final middleware
+  app.use(unifiedErrorMiddleware);
+  
   return httpServer;
 }
