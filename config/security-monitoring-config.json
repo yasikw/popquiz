@@ -1,0 +1,327 @@
+{
+  "monitoringConfiguration": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-09-09T05:54:50.471Z",
+    "environment": "production"
+  },
+  
+  "realTimeMonitoring": {
+    "description": "リアルタイムセキュリティ監視設定",
+    "enabledMetrics": [
+      "security_alerts",
+      "csrf_violations", 
+      "xss_attempts",
+      "admin_access_attempts",
+      "rate_limit_violations",
+      "authentication_failures",
+      "suspicious_requests"
+    ],
+    "alertThresholds": {
+      "securityIncidents": {
+        "value": 5,
+        "period": "1m",
+        "description": "5件/分でアラート発動"
+      },
+      "authFailures": {
+        "value": 10,
+        "period": "1m", 
+        "description": "認証失敗10回/分でアラート"
+      },
+      "rateLimitHits": {
+        "value": 50,
+        "period": "1m",
+        "description": "レート制限50回/分でアラート"
+      },
+      "csrfViolations": {
+        "value": 3,
+        "period": "1m",
+        "description": "CSRF違反3回/分で緊急アラート"
+      },
+      "adminAccessAttempts": {
+        "value": 3,
+        "period": "5m",
+        "description": "管理API不正アクセス3回/5分でアラート"
+      }
+    },
+    "alertChannels": [
+      {
+        "type": "email",
+        "enabled": true,
+        "recipients": ["security@company.com", "devops@company.com"],
+        "urgencyLevels": ["high", "critical"]
+      },
+      {
+        "type": "slack",
+        "enabled": true,
+        "webhook": "${SLACK_SECURITY_WEBHOOK}",
+        "urgencyLevels": ["medium", "high", "critical"]
+      },
+      {
+        "type": "sms",
+        "enabled": false,
+        "urgencyLevels": ["critical"]
+      }
+    ]
+  },
+
+  "periodicReporting": {
+    "daily": {
+      "enabled": true,
+      "schedule": "0 9 * * *",
+      "reports": [
+        {
+          "name": "security_incidents_summary",
+          "description": "セキュリティインシデント日次サマリー",
+          "metrics": [
+            "total_security_events",
+            "blocked_attacks",
+            "false_positive_rate",
+            "response_times"
+          ]
+        },
+        {
+          "name": "error_pattern_analysis", 
+          "description": "エラー発生パターン分析",
+          "metrics": [
+            "error_categories",
+            "error_frequency",
+            "geographic_distribution",
+            "user_agent_patterns"
+          ]
+        },
+        {
+          "name": "user_behavior_anomalies",
+          "description": "ユーザー行動異常検知",
+          "metrics": [
+            "unusual_access_patterns",
+            "suspicious_user_agents", 
+            "geographic_anomalies",
+            "timing_anomalies"
+          ]
+        }
+      ]
+    },
+
+    "weekly": {
+      "enabled": true,
+      "schedule": "0 10 * * 1",
+      "assessments": [
+        {
+          "name": "security_score_trend",
+          "description": "セキュリティスコア傾向分析",
+          "lookbackPeriod": "30d",
+          "benchmarks": ["previous_week", "previous_month", "baseline"]
+        },
+        {
+          "name": "threat_pattern_detection",
+          "description": "新たな脅威パターン検出", 
+          "analysisTypes": [
+            "attack_vector_evolution",
+            "malicious_payload_patterns",
+            "botnet_activity",
+            "zero_day_indicators"
+          ]
+        },
+        {
+          "name": "security_optimization_recommendations",
+          "description": "セキュリティ設定最適化提案",
+          "focus_areas": [
+            "csp_policy_refinement",
+            "rate_limiting_adjustment",
+            "authentication_strengthening", 
+            "monitoring_enhancement"
+          ]
+        }
+      ]
+    },
+
+    "monthly": {
+      "enabled": true,
+      "schedule": "0 11 1 * *",
+      "audits": [
+        {
+          "name": "comprehensive_security_audit",
+          "description": "包括的セキュリティ監査",
+          "scope": [
+            "vulnerability_assessment",
+            "penetration_testing",
+            "compliance_verification",
+            "security_architecture_review"
+          ]
+        },
+        {
+          "name": "compliance_assessment",
+          "description": "コンプライアンス評価",
+          "standards": ["OWASP_Top_10", "GDPR", "SOC2", "ISO27001"]
+        },
+        {
+          "name": "security_policy_review",
+          "description": "セキュリティポリシー見直し",
+          "areas": [
+            "access_control_policies",
+            "data_retention_policies", 
+            "incident_response_procedures",
+            "security_training_requirements"
+          ]
+        }
+      ]
+    }
+  },
+
+  "dashboardConfiguration": {
+    "realTimeDashboard": {
+      "enabled": true,
+      "refreshInterval": "5s",
+      "widgets": [
+        {
+          "type": "security_alerts_counter",
+          "title": "リアルタイムセキュリティアラート",
+          "timeRange": "1h"
+        },
+        {
+          "type": "attack_map",
+          "title": "攻撃元地理分布",
+          "showBlockedOnly": true
+        },
+        {
+          "type": "top_attacked_endpoints",
+          "title": "最も狙われるエンドポイント",
+          "limit": 10
+        },
+        {
+          "type": "security_score_gauge",
+          "title": "現在のセキュリティスコア",
+          "thresholds": [70, 85, 95]
+        }
+      ]
+    },
+    
+    "executiveDashboard": {
+      "enabled": true,
+      "refreshInterval": "1h",
+      "widgets": [
+        {
+          "type": "security_kpi_summary",
+          "title": "セキュリティKPI要約",
+          "kpis": ["incidents_prevented", "mean_detection_time", "false_positive_rate"]
+        },
+        {
+          "type": "compliance_status",
+          "title": "コンプライアンス状況",
+          "standards": ["OWASP", "GDPR", "SOC2"]
+        },
+        {
+          "type": "risk_assessment_trend",
+          "title": "リスク評価トレンド",
+          "timeRange": "30d"
+        }
+      ]
+    }
+  },
+
+  "incidentResponse": {
+    "automaticResponse": {
+      "enabled": true,
+      "rules": [
+        {
+          "condition": "csrf_violation_burst",
+          "threshold": "5_per_minute",
+          "action": "temporary_ip_block",
+          "duration": "15m"
+        },
+        {
+          "condition": "brute_force_attack",
+          "threshold": "20_failed_auths_per_5m",
+          "action": "progressive_rate_limit",
+          "escalation": "exponential"
+        },
+        {
+          "condition": "xss_injection_attempt",
+          "threshold": "any_detection",
+          "action": "log_and_block",
+          "notify": "immediate"
+        },
+        {
+          "condition": "admin_api_breach_attempt",
+          "threshold": "3_unauthorized_per_5m",
+          "action": "emergency_lockdown",
+          "notify": "critical_alert"
+        }
+      ]
+    },
+
+    "escalationProcedure": {
+      "level1": {
+        "description": "自動対応",
+        "timeframe": "0-5分",
+        "actions": ["automatic_blocking", "log_generation", "metric_recording"]
+      },
+      "level2": {
+        "description": "DevOpsチーム通知",
+        "timeframe": "5-15分", 
+        "actions": ["team_notification", "preliminary_analysis", "containment_measures"]
+      },
+      "level3": {
+        "description": "セキュリティ専門家介入",
+        "timeframe": "15-30分",
+        "actions": ["expert_analysis", "threat_assessment", "coordinated_response"]
+      },
+      "level4": {
+        "description": "経営陣通知・外部支援",
+        "timeframe": "30分-2時間",
+        "actions": ["executive_notification", "external_security_firm", "legal_consultation"]
+      }
+    }
+  },
+
+  "dataRetention": {
+    "securityLogs": {
+      "hotStorage": "90d",
+      "warmStorage": "1y", 
+      "coldStorage": "7y",
+      "description": "セキュリティログの階層化保存"
+    },
+    "incidentData": {
+      "retention": "permanent",
+      "encryption": "AES256",
+      "description": "インシデントデータの永続保存"
+    },
+    "metricsData": {
+      "realTime": "7d",
+      "aggregated": "2y",
+      "description": "メトリクスデータの圧縮保存"
+    }
+  },
+
+  "integrations": {
+    "siem": {
+      "enabled": false,
+      "provider": "splunk",
+      "endpoint": "${SIEM_ENDPOINT}",
+      "authentication": "${SIEM_API_KEY}"
+    },
+    "threatIntelligence": {
+      "enabled": false,
+      "providers": ["virustotal", "abuseipdb"],
+      "updateInterval": "1h"
+    },
+    "vulnerabilityScanning": {
+      "enabled": true,
+      "provider": "internal",
+      "schedule": "daily"
+    }
+  },
+
+  "performanceMetrics": {
+    "securityOverhead": {
+      "maxLatencyIncrease": "50ms",
+      "maxCpuOverhead": "5%",
+      "maxMemoryOverhead": "100MB"
+    },
+    "monitoringLimits": {
+      "maxLogsPerSecond": 1000,
+      "maxAlertsPerHour": 100,
+      "maxStorageGrowthPerDay": "1GB"
+    }
+  }
+}
