@@ -30,9 +30,9 @@ export async function validateImageUrl(imageUrl: string): Promise<ImageValidatio
       const error = `Protocol ${url.protocol} not allowed. Only HTTPS permitted.`;
       securityLogger.log(
         SecurityLogLevel.WARNING,
-        SecurityEventType.SECURITY_VIOLATION,
+        SecurityEventType.SUSPICIOUS_ACTIVITY,
         'Invalid image protocol attempted',
-        { url: imageUrl, protocol: url.protocol }
+        { metadata: { url: imageUrl, protocol: url.protocol } }
       );
       return { valid: false, error, securityRisk: 'INVALID_PROTOCOL' };
     }
@@ -46,9 +46,9 @@ export async function validateImageUrl(imageUrl: string): Promise<ImageValidatio
       const error = `Domain ${url.hostname} not in whitelist`;
       securityLogger.log(
         SecurityLogLevel.WARNING,
-        SecurityEventType.SECURITY_VIOLATION,
+        SecurityEventType.SUSPICIOUS_ACTIVITY,
         'Unauthorized domain access attempted',
-        { url: imageUrl, hostname: url.hostname, allowedDomains: config.allowedDomains }
+        { metadata: { url: imageUrl, hostname: url.hostname, allowedDomains: config.allowedDomains } }
       );
       return { valid: false, error, securityRisk: 'UNAUTHORIZED_DOMAIN' };
     }
@@ -58,9 +58,9 @@ export async function validateImageUrl(imageUrl: string): Promise<ImageValidatio
       const error = 'Private IP addresses and internal networks not allowed';
       securityLogger.log(
         SecurityLogLevel.ERROR,
-        SecurityEventType.SECURITY_VIOLATION,
+        SecurityEventType.SUSPICIOUS_ACTIVITY,
         'SSRF attempt detected - private IP access',
-        { url: imageUrl, hostname: url.hostname, type: 'PRIVATE_IP_ACCESS' }
+        { metadata: { url: imageUrl, hostname: url.hostname, type: 'PRIVATE_IP_ACCESS' } }
       );
       return { valid: false, error, securityRisk: 'SSRF_PRIVATE_IP' };
     }
@@ -70,9 +70,9 @@ export async function validateImageUrl(imageUrl: string): Promise<ImageValidatio
       const error = 'Loopback addresses not allowed in production';
       securityLogger.log(
         SecurityLogLevel.ERROR,
-        SecurityEventType.SECURITY_VIOLATION,
+        SecurityEventType.SUSPICIOUS_ACTIVITY,
         'SSRF attempt detected - loopback access',
-        { url: imageUrl, hostname: url.hostname, type: 'LOOPBACK_ACCESS' }
+        { metadata: { url: imageUrl, hostname: url.hostname, type: 'LOOPBACK_ACCESS' } }
       );
       return { valid: false, error, securityRisk: 'SSRF_LOOPBACK' };
     }
@@ -82,9 +82,9 @@ export async function validateImageUrl(imageUrl: string): Promise<ImageValidatio
       const error = `Port ${url.port} not allowed`;
       securityLogger.log(
         SecurityLogLevel.WARNING,
-        SecurityEventType.SECURITY_VIOLATION,
+        SecurityEventType.SUSPICIOUS_ACTIVITY,
         'Suspicious port access attempted',
-        { url: imageUrl, port: url.port }
+        { metadata: { url: imageUrl, port: url.port } }
       );
       return { valid: false, error, securityRisk: 'SUSPICIOUS_PORT' };
     }
@@ -95,9 +95,9 @@ export async function validateImageUrl(imageUrl: string): Promise<ImageValidatio
     const error = `Invalid URL format: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`;
     securityLogger.log(
       SecurityLogLevel.WARNING,
-      SecurityEventType.SECURITY_VIOLATION,
+      SecurityEventType.SUSPICIOUS_ACTIVITY,
       'Malformed URL attempted',
-      { url: imageUrl, error: error }
+      { metadata: { url: imageUrl, error: error } }
     );
     return { valid: false, error, securityRisk: 'MALFORMED_URL' };
   }
@@ -150,13 +150,18 @@ export async function validateImageContent(imageUrl: string): Promise<ImageValid
   const config = getImageSecurityConfig();
   
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), config.timeout);
+    
     const response = await fetch(imageUrl, {
       method: 'HEAD', // Only get headers, not content
-      timeout: config.timeout,
+      signal: controller.signal,
       headers: {
         'User-Agent': 'AI-Quiz-Security-Validator/1.0'
       }
     });
+    
+    clearTimeout(timeoutId);
     
     if (!response.ok) {
       return { 
@@ -171,9 +176,9 @@ export async function validateImageContent(imageUrl: string): Promise<ImageValid
     if (!contentType || !config.allowedMimeTypes.includes(contentType)) {
       securityLogger.log(
         SecurityLogLevel.WARNING,
-        SecurityEventType.SECURITY_VIOLATION,
+        SecurityEventType.SUSPICIOUS_ACTIVITY,
         'Invalid image content type',
-        { url: imageUrl, contentType, allowedTypes: config.allowedMimeTypes }
+        { metadata: { url: imageUrl, contentType, allowedTypes: config.allowedMimeTypes } }
       );
       return { 
         valid: false, 
@@ -197,9 +202,9 @@ export async function validateImageContent(imageUrl: string): Promise<ImageValid
   } catch (fetchError) {
     securityLogger.log(
       SecurityLogLevel.ERROR,
-      SecurityEventType.SECURITY_VIOLATION,
+      SecurityEventType.SUSPICIOUS_ACTIVITY,
       'Image validation network error',
-      { url: imageUrl, error: fetchError instanceof Error ? fetchError.message : 'Unknown error' }
+      { metadata: { url: imageUrl, error: fetchError instanceof Error ? fetchError.message : 'Unknown error' } }
     );
     return { 
       valid: false, 
@@ -250,12 +255,14 @@ export function imageUrlValidationMiddleware(req: Request, res: Response, next: 
       if (invalidResults.length > 0) {
         securityLogger.log(
           SecurityLogLevel.WARNING,
-          SecurityEventType.SECURITY_VIOLATION,
+          SecurityEventType.SUSPICIOUS_ACTIVITY,
           'Image validation failed in request',
           { 
-            ip: req.ip,
+            ipAddress: req.ip,
             userAgent: req.get('User-Agent'),
-            invalidUrls: invalidResults.map(r => ({ error: r.error, risk: r.securityRisk }))
+            metadata: {
+              invalidUrls: invalidResults.map(r => ({ error: r.error, risk: r.securityRisk }))
+            }
           }
         );
         
@@ -274,9 +281,9 @@ export function imageUrlValidationMiddleware(req: Request, res: Response, next: 
     .catch(error => {
       securityLogger.log(
         SecurityLogLevel.ERROR,
-        SecurityEventType.SECURITY_VIOLATION,
+        SecurityEventType.SUSPICIOUS_ACTIVITY,
         'Image validation middleware error',
-        { error: error.message, ip: req.ip }
+        { ipAddress: req.ip, metadata: { error: error.message } }
       );
       
       res.status(500).json({

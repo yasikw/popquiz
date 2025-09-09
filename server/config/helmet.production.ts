@@ -6,6 +6,7 @@
  */
 
 import { HelmetOptions } from 'helmet';
+import { getCSPImageSources } from '../../config/image-security';
 
 export const productionHelmetConfig: HelmetOptions = {
   // Content Security Policy - Very strict for production
@@ -30,12 +31,8 @@ export const productionHelmetConfig: HelmetOptions = {
         "'sha256-your-critical-css-hash-here'"
       ],
       
-      // Images - Restrict to specific sources
-      imgSrc: [
-        "'self'",
-        "data:",
-        "https://secure-image-sources.com" // Replace with actual trusted sources
-      ],
+      // Images - Restrict to whitelisted sources only
+      imgSrc: getCSPImageSources(),
       
       // API connections - Restrict to necessary endpoints
       connectSrc: [
@@ -159,13 +156,7 @@ export const developmentHelmetConfig: HelmetOptions = {
         "https://cdnjs.cloudflare.com",
         "https://fonts.googleapis.com"
       ],
-      imgSrc: [
-        "'self'", 
-        "data:", 
-        "blob:",
-        "https:",
-        "http:" // Allow external images for quiz content
-      ],
+      imgSrc: getCSPImageSources(), // Use domain whitelist even in development
       connectSrc: [
         "'self'",
         "wss://localhost:*", // WebSocket for Vite HMR

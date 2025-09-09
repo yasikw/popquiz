@@ -63,6 +63,8 @@ import {
   refreshCSRFToken,
   csrfProtectionWithExceptions 
 } from "./middleware/csrf";
+import { imageUrlValidationMiddleware } from "./middleware/image-validator";
+import { cspViolationHandler, getCSPMetrics } from "./middleware/csp-violation-handler";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -99,6 +101,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(authFailureMonitoring);
   app.use(securityHeadersMonitoring);
   app.use(sessionHijackDetection);
+  app.use(imageUrlValidationMiddleware); // Image URL security validation
   
   // Configure Express to trust proxy headers for proper IP detection
   // Use specific trust proxy setting for better security
@@ -876,6 +879,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
   // セキュリティログ監視エンドポイント（管理者のみアクセス可能）
+  // CSP violation reporting endpoint
+  app.post("/security/csp-violation-report", cspViolationHandler);
+
+  // Image security metrics endpoint  
+  app.get("/api/admin/image-security-metrics", authenticateUser, async (req, res) => {
+    try {
+      const metrics = getCSPMetrics();
+      res.json({
+        cspViolations: metrics,
+        message: "Image security metrics retrieved successfully"
+      });
+    } catch (error) {
+      console.error('Image security metrics error:', error);
+      res.status(500).json({ message: "画像セキュリティメトリクス取得に失敗しました" });
+    }
+  });
+
   app.get("/api/admin/security-stats", authenticateUser, async (req, res) => {
     try {
       // 簡易的な管理者チェック（実際の実装では適切な権限管理を行う）
