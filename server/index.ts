@@ -18,6 +18,11 @@ app.use(cspNonceMiddleware);
 app.use(cspViolationDetector);
 app.use(cspDebugInfo);
 
+// HTML nonce injection middleware
+import { htmlNonceInjection, cspViolationReporter } from './middleware/html-injection.js';
+app.use(htmlNonceInjection);
+app.use(cspViolationReporter);
+
 // Security middleware with disabled CSP (handled by our custom middleware)
 app.use(helmet({
   contentSecurityPolicy: false, // Disabled - handled by our custom CSP middleware
