@@ -85,8 +85,6 @@ class ImageErrorBoundary extends Component<ImageErrorBoundaryProps, ImageErrorBo
     if (this.state.retryCount < this.maxRetries) {
       this.setState({
         hasError: false,
-        error: undefined,
-        errorInfo: undefined,
         retryCount: this.state.retryCount + 1
       });
     }
@@ -95,8 +93,6 @@ class ImageErrorBoundary extends Component<ImageErrorBoundaryProps, ImageErrorBo
   private handleReset = () => {
     this.setState({
       hasError: false,
-      error: undefined,
-      errorInfo: undefined,
       retryCount: 0
     });
   };
