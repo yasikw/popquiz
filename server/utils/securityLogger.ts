@@ -45,7 +45,7 @@ interface SecurityLogEntry {
 }
 
 // 機密情報をサニタイズする関数
-function sanitizeForLogging(data: any): any {
+function sanitizeForLogging(data: unknown): unknown {
   if (typeof data !== 'object' || data === null) {
     return data;
   }
@@ -350,11 +350,11 @@ class SecurityLogger {
 export const securityLogger = new SecurityLogger();
 
 // Express用のミドルウェア
-export function securityLoggingMiddleware(req: any, res: any, next: any): void {
+export function securityLoggingMiddleware(req: Request, res: Response, next: NextFunction): void {
   const startTime = Date.now();
   const originalSend = res.send;
 
-  res.send = function(data: any) {
+  res.send = function(data: unknown) {
     const responseTime = Date.now() - startTime;
     
     // レスポンス完了時にログ記録

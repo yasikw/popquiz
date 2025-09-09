@@ -58,6 +58,12 @@ import {
 } from "./middleware/authorization";
 import { logAnalyzer } from "./utils/logAnalyzer";
 import { 
+  HttpError, 
+  isHttpError, 
+  assertIsObject,
+  isObject 
+} from "@shared/types";
+import { 
   generateCSRFTokenEndpoint,
   refreshCSRFToken,
   csrfProtectionWithExceptions 
@@ -76,7 +82,7 @@ const upload = multer({
 });
 
 // Multer error handling middleware
-const handleMulterError = (err: any, req: Request, res: Response, next: NextFunction) => {
+const handleMulterError = (err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
       return res.status(413).json({
@@ -648,15 +654,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create questions with user answers if available
       if (quizData.questions && results.detailedResults) {
-        const questionsData = results.detailedResults.map((result: any, index: number) => ({
-          sessionId: session.id,
-          questionText: result.question || quizData.questions[index]?.question || "",
-          options: quizData.questions[index]?.options || [],
-          correctAnswer: result.correctAnswer ?? quizData.questions[index]?.correctAnswer ?? 0,
-          explanation: result.explanation || quizData.questions[index]?.explanation || "",
-          userAnswer: result.userAnswer,
-          timeSpent: result.timeSpent || 0,
-        }));
+        const questionsData = results.detailedResults.map((result: unknown, index: number) => {
+          assertIsObject(result, 'quiz result');
+          return {
+            sessionId: session.id,
+            questionText: (result as any).question || quizData.questions[index]?.question || "",
+            options: quizData.questions[index]?.options || [],
+            correctAnswer: (result as any).correctAnswer ?? quizData.questions[index]?.correctAnswer ?? 0,
+            explanation: (result as any).explanation || quizData.questions[index]?.explanation || "",
+            userAnswer: (result as any).userAnswer,
+            timeSpent: (result as any).timeSpent || 0,
+          };
+        });
         
         await storage.createQuestions(questionsData, userId);
       }
@@ -671,7 +680,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ((currentStats.averageAccuracy * currentStats.completedQuizzes) + accuracy) / newCompletedQuizzes : 0;
 
         // Update difficulty-specific accuracy
-        const difficultyAccuracyUpdates: any = {};
+        const difficultyAccuracyUpdates: Record<string, number> = {};
         if (sessionData.difficulty === "beginner") {
           difficultyAccuracyUpdates.beginnerAccuracy = accuracy;
         } else if (sessionData.difficulty === "intermediate") {
@@ -715,10 +724,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/quiz-sessions/:sessionId/questions", authenticateUser, async (req, res) => {
     try {
-      const questions = req.body.map((q: any) => insertQuestionSchema.parse({
-        ...q,
-        sessionId: req.params.sessionId
-      }));
+      const questions = req.body.map((q: unknown) => {
+        assertIsObject(q, 'question data');
+        return insertQuestionSchema.parse({
+          ...(q as any),
+          sessionId: req.params.sessionId
+        });
+      });
       const createdQuestions = await storage.createQuestions(questions, req.user!.id);
       res.json(createdQuestions);
     } catch (error) {
