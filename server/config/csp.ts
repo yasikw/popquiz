@@ -211,6 +211,11 @@ export function buildCSPHeader(config: CSPConfig, nonce: string): string {
       return;
     }
     
+    // valuesが配列であることを確認
+    if (!Array.isArray(values)) {
+      return;
+    }
+    
     // ディレクティブ名をケバブケースに変換
     const directiveName = key.replace(/([A-Z])/g, '-$1').toLowerCase();
     

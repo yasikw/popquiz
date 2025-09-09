@@ -5,52 +5,22 @@ import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { getCorsConfig, corsErrorHandler } from "./config/cors.js";
+import { cspNonceMiddleware, cspViolationDetector, cspDebugInfo } from "./middleware/csp.js";
+import { cspReportHandler } from "./config/csp.js";
 
 const app = express();
 
 // CORS middleware - must be applied before other middleware
 app.use(cors(getCorsConfig()));
 
-// Security middleware - must be applied first
+// CSP nonce generation middleware - must be applied early
+app.use(cspNonceMiddleware);
+app.use(cspViolationDetector);
+app.use(cspDebugInfo);
+
+// Security middleware with disabled CSP (handled by our custom middleware)
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: [
-        "'self'", 
-        "'unsafe-inline'", // Required for Vite in development
-        "'unsafe-eval'", // Required for Vite in development
-        "https://www.googletagmanager.com",
-        "https://cdn.jsdelivr.net"
-      ],
-      styleSrc: [
-        "'self'", 
-        "'unsafe-inline'", // Required for Tailwind CSS
-        "https://cdnjs.cloudflare.com",
-        "https://fonts.googleapis.com"
-      ],
-      imgSrc: [
-        "'self'", 
-        "data:", 
-        "blob:",
-        "https:",
-        "http:" // Allow external images for quiz content
-      ],
-      connectSrc: [
-        "'self'",
-        "wss://localhost:*", // WebSocket for Vite HMR
-        "https://generativelanguage.googleapis.com" // Gemini API
-      ],
-      fontSrc: [
-        "'self'",
-        "https://fonts.gstatic.com",
-        "https://cdnjs.cloudflare.com"
-      ],
-      objectSrc: ["'none'"],
-      mediaSrc: ["'self'", "blob:", "data:"],
-      frameSrc: ["'self'", "https://www.youtube.com", "https://youtube.com"]
-    }
-  },
+  contentSecurityPolicy: false, // Disabled - handled by our custom CSP middleware
   crossOriginEmbedderPolicy: false, // Disabled for external content compatibility
 }));
 
@@ -76,6 +46,9 @@ app.use(cookieParser());
 
 app.use(express.json({ limit: '5mb' })); // Balanced limit for security and functionality
 app.use(express.urlencoded({ extended: false, limit: '5mb' }));
+
+// CSP report endpoint - must be before other routes
+app.post('/api/csp-report', express.json({ type: 'application/csp-report' }), cspReportHandler);
 
 // Payload size error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
