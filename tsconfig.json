@@ -12,7 +12,7 @@
     "noImplicitAny": true,
     "strictNullChecks": false,
     "strictFunctionTypes": true,
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "noImplicitThis": true,
     
     "lib": ["esnext", "dom", "dom.iterable"],

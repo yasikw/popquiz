@@ -54,7 +54,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         localStorage.setItem('refreshToken', userData.refreshToken);
       }
       
-      onLogin(userData.user.username, userData.user.id, userData.user.email);
+      onLogin(userData.user.username, userData.user.id);
       
       toast({
         title: "ログイン成功",
@@ -117,7 +117,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         localStorage.setItem('refreshToken', userData.refreshToken);
       }
       
-      onLogin(userData.user.username, userData.user.id, userData.user.email);
+      onLogin(userData.user.username, userData.user.id);
 
       toast({
         title: "登録成功",
