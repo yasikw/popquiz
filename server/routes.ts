@@ -89,6 +89,9 @@ import {
   getYouTubeAPIStats,
   getYouTubeAPIHealth 
 } from "./middleware/youtube-monitoring";
+import { securityLogAggregator } from "./utils/securityLogAggregator";
+import { realTimeAlertSystem } from "./utils/realTimeAlertSystem";
+import { securityAnomalyDetector } from "./utils/securityAnomalyDetector";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -971,6 +974,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // YouTube API監視エンドポイント
   app.get("/api/admin/youtube-stats", authenticateUser, getYouTubeAPIStats);
   app.get("/api/admin/youtube-health", getYouTubeAPIHealth);
+
+  // セキュリティ監視ダッシュボードAPI
+  app.get("/api/admin/security/dashboard", authenticateUser, async (req, res) => {
+    try {
+      const timeRange = parseInt(req.query.hours as string) || 24;
+      const metrics = await securityLogAggregator.generateDashboardMetrics(timeRange);
+      res.json(metrics);
+    } catch (error) {
+      console.error("Error generating security dashboard:", error);
+      res.status(500).json({ message: "ダッシュボードデータの生成に失敗しました" });
+    }
+  });
+
+  app.get("/api/admin/security/timeseries", authenticateUser, async (req, res) => {
+    try {
+      const metric = req.query.metric as 'events' | 'threats' | 'alerts' || 'events';
+      const timeRange = parseInt(req.query.hours as string) || 24;
+      const interval = parseInt(req.query.interval as string) || 60;
+      
+      const data = await securityLogAggregator.getTimeSeriesData(metric, timeRange, interval);
+      res.json(data);
+    } catch (error) {
+      console.error("Error generating time series data:", error);
+      res.status(500).json({ message: "時系列データの生成に失敗しました" });
+    }
+  });
+
+  app.get("/api/admin/security/realtime", authenticateUser, async (req, res) => {
+    try {
+      const stats = await securityLogAggregator.getRealTimeStats();
+      res.json(stats);
+    } catch (error) {
+      console.error("Error getting real-time stats:", error);
+      res.status(500).json({ message: "リアルタイム統計の取得に失敗しました" });
+    }
+  });
+
+  app.get("/api/admin/security/alerts", authenticateUser, async (req, res) => {
+    try {
+      const alertStats = realTimeAlertSystem.getAlertStats();
+      res.json(alertStats);
+    } catch (error) {
+      console.error("Error getting alert stats:", error);
+      res.status(500).json({ message: "アラート統計の取得に失敗しました" });
+    }
+  });
+
+  app.get("/api/admin/security/anomalies", authenticateUser, async (req, res) => {
+    try {
+      const detectionStatus = securityAnomalyDetector.getDetectionStatus();
+      res.json(detectionStatus);
+    } catch (error) {
+      console.error("Error getting anomaly detection status:", error);
+      res.status(500).json({ message: "異常検知状況の取得に失敗しました" });
+    }
+  });
 
   return httpServer;
 }
