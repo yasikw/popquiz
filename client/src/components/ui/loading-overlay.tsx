@@ -16,7 +16,7 @@ export default function LoadingOverlay({ isVisible, message }: LoadingOverlayPro
             {message || "コンテンツを解析し、最適なクイズを作成しています。"}
           </p>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div className="bg-primary h-2 rounded-full animate-pulse" style={{ width: "65%" }}></div>
+            <div className="bg-primary h-2 rounded-full animate-pulse w-[65%]"></div>
           </div>
           <p className="text-xs text-gray-500 mt-2">通常1-2分で完了します</p>
         </div>
