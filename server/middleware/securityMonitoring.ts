@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { securityLogger, SecurityLogLevel, SecurityEventType } from '../utils/securityLogger';
 import rateLimit from 'express-rate-limit';
 import type { SecureAuthenticatedUser, SecureRequest } from '@shared/types';
+import type { User } from '@shared/schema';
 
 // Express Request型の拡張 (using secure types)
 interface ExtendedRequest extends Request {
@@ -11,7 +12,7 @@ interface ExtendedRequest extends Request {
     lastIpAddress?: string;
     [key: string]: unknown;
   };
-  user?: SecureAuthenticatedUser;
+  user?: User;
 }
 
 // 異常なトラフィックパターンを検知するミドルウェア
