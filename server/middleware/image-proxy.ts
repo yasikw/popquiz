@@ -56,15 +56,20 @@ export async function imageProxyHandler(req: Request, res: Response): Promise<vo
     }
     
     // 画像フェッチ
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒タイムアウト
+    
     const fetchResponse = await fetch(url, {
       method: 'GET',
       headers: {
         'User-Agent': 'AI-Quiz-App/1.0 (Image Proxy)',
         'Accept': 'image/*',
       },
-      timeout: 10000, // 10秒タイムアウト
+      signal: controller.signal,
       size: 5 * 1024 * 1024, // 5MB制限
     });
+    
+    clearTimeout(timeoutId);
     
     if (!fetchResponse.ok) {
       res.status(fetchResponse.status).json({
@@ -121,7 +126,7 @@ export async function imageProxyHandler(req: Request, res: Response): Promise<vo
     
     // 成功ログ
     securityLogger.log(
-      'INFO', 
+      'info', 
       'IMAGE_PROXY_SUCCESS',
       'Image successfully proxied',
       {
@@ -162,7 +167,7 @@ export async function imageProxyHandler(req: Request, res: Response): Promise<vo
  * 画像URL変換ミドルウェア
  * 外部画像URLを内部プロキシURL に変換
  */
-export function transformImageUrls(req: Request, res: Response, next: NextFunction): void {
+export function transformImageUrls(_req: Request, res: Response, next: NextFunction): void {
   const originalSend = res.send;
   
   res.send = function(data: any) {

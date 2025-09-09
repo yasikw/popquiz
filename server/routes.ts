@@ -73,6 +73,11 @@ import {
   toggleCSPEnforcement, 
   clearCSPViolations 
 } from "./middleware/gradual-csp";
+import { 
+  imageProxyHandler, 
+  imageProxyRateLimit, 
+  transformImageUrls 
+} from "./middleware/image-proxy";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -934,6 +939,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/admin/csp-enforcement", authenticateUser, toggleCSPEnforcement);
   
   app.delete("/api/admin/csp-violations", authenticateUser, clearCSPViolations);
+  
+  // 画像プロキシエンドポイント（SSRF攻撃防止）
+  app.get("/api/image-proxy", imageProxyRateLimit, imageProxyHandler);
 
   return httpServer;
 }

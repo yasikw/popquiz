@@ -64,8 +64,7 @@ export const productionCSPConfig: CSPConfig = {
     imgSrc: [
       "'self'",
       "data:",
-      "blob:",
-      "https:"
+      "blob:"
     ],
     connectSrc: [
       "'self'",
@@ -108,9 +107,10 @@ export const stagingCSPConfig: CSPConfig = {
     imgSrc: [
       "'self'",
       "data:",
-      "blob:", 
-      "https:",
-      "http:" // Allow HTTP for testing
+      "blob:",
+      "https://lh3.googleusercontent.com",
+      "https://images.unsplash.com",
+      "https://cdn.pixabay.com"
     ],
     connectSrc: [
       "'self'",
@@ -156,8 +156,10 @@ export const developmentCSPConfig: CSPConfig = {
       "'self'",
       "data:",
       "blob:",
-      "https:",
-      "http:" // Allow HTTP for development
+      "https://lh3.googleusercontent.com",
+      "https://images.unsplash.com",
+      "https://cdn.pixabay.com",
+      "http://localhost:*" // Allow local images for development only
     ],
     connectSrc: [
       "'self'",
