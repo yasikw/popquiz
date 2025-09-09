@@ -6,7 +6,28 @@
     "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
     "noEmit": true,
     "module": "ESNext",
+    
+    // Strict Type Checking Options
     "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    
+    // Additional Checks
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitThis": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    
+    // Module Resolution
     "lib": ["esnext", "dom", "dom.iterable"],
     "jsx": "preserve",
     "esModuleInterop": true,
