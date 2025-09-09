@@ -1,6 +1,5 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 import { addCSRFHeaders, isCSRFError, handleCSRFError } from "./csrf";
-import { HttpError, isHttpError } from "@shared/types";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
@@ -12,8 +11,7 @@ async function throwIfResNotOk(res: Response) {
       const tokenRefreshed = await handleCSRFError();
       if (tokenRefreshed) {
         // Mark this as a retryable CSRF error
-        const retryError = new Error(`${res.status}: ${text}`) as HttpError;
-        retryError.status = res.status;
+        const retryError = new Error(`${res.status}: ${text}`) as any;
         retryError.isCSRFRetry = true;
         throw retryError;
       }
@@ -54,9 +52,9 @@ export async function apiRequest(
   
   try {
     await throwIfResNotOk(res);
-  } catch (error: unknown) {
+  } catch (error: any) {
     // Retry once if it's a CSRF error that was handled
-    if (isHttpError(error) && error.isCSRFRetry) {
+    if (error.isCSRFRetry) {
       res = await makeRequest();
       await throwIfResNotOk(res);
     } else {

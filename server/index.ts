@@ -5,31 +5,52 @@ import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { getCorsConfig, corsErrorHandler } from "./config/cors.js";
-import { cspNonceMiddleware, cspViolationDetector, cspDebugInfo } from "./middleware/csp.js";
-import { cspReportHandler } from "./config/csp.js";
-import { gradualCSPEnforcement } from "./middleware/gradual-csp.js";
 
 const app = express();
 
 // CORS middleware - must be applied before other middleware
 app.use(cors(getCorsConfig()));
 
-// CSP nonce generation middleware - must be applied early
-app.use(cspNonceMiddleware);
-app.use(cspViolationDetector);
-app.use(cspDebugInfo);
-
-// HTML nonce injection middleware
-import { htmlNonceInjection, cspViolationReporter } from './middleware/html-injection.js';
-app.use(htmlNonceInjection);
-app.use(cspViolationReporter);
-
-// 段階的CSP強化ミドルウェア
-app.use(gradualCSPEnforcement);
-
-// Security middleware with disabled CSP (handled by our custom middleware)
+// Security middleware - must be applied first
 app.use(helmet({
-  contentSecurityPolicy: false, // Disabled - handled by our custom CSP middleware
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'", 
+        "'unsafe-inline'", // Required for Vite in development
+        "'unsafe-eval'", // Required for Vite in development
+        "https://www.googletagmanager.com",
+        "https://cdn.jsdelivr.net"
+      ],
+      styleSrc: [
+        "'self'", 
+        "'unsafe-inline'", // Required for Tailwind CSS
+        "https://cdnjs.cloudflare.com",
+        "https://fonts.googleapis.com"
+      ],
+      imgSrc: [
+        "'self'", 
+        "data:", 
+        "blob:",
+        "https:",
+        "http:" // Allow external images for quiz content
+      ],
+      connectSrc: [
+        "'self'",
+        "wss://localhost:*", // WebSocket for Vite HMR
+        "https://generativelanguage.googleapis.com" // Gemini API
+      ],
+      fontSrc: [
+        "'self'",
+        "https://fonts.gstatic.com",
+        "https://cdnjs.cloudflare.com"
+      ],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'", "blob:", "data:"],
+      frameSrc: ["'self'", "https://www.youtube.com", "https://youtube.com"]
+    }
+  },
   crossOriginEmbedderPolicy: false, // Disabled for external content compatibility
 }));
 
@@ -56,9 +77,6 @@ app.use(cookieParser());
 app.use(express.json({ limit: '5mb' })); // Balanced limit for security and functionality
 app.use(express.urlencoded({ extended: false, limit: '5mb' }));
 
-// CSP report endpoint - must be before other routes
-app.post('/api/csp-report', express.json({ type: 'application/csp-report' }), cspReportHandler);
-
 // Payload size error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (err.type === 'entity.too.large') {
@@ -73,9 +91,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 // CORS error handling middleware
 app.use(corsErrorHandler);
-
-// Import unified error handling system
-import { unifiedErrorMiddleware } from "./middleware/unifiedErrorHandler";
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -110,8 +125,13 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  // Unified error handling middleware (replaces the basic error handler)
-  app.use(unifiedErrorMiddleware);
+  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    const status = err.status || err.statusCode || 500;
+    const message = err.message || "Internal Server Error";
+
+    res.status(status).json({ message });
+    throw err;
+  });
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route

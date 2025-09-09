@@ -58,44 +58,10 @@ import {
 } from "./middleware/authorization";
 import { logAnalyzer } from "./utils/logAnalyzer";
 import { 
-  HttpError, 
-  isHttpError, 
-  assertIsObject,
-  isObject 
-} from "@shared/types";
-import { 
   generateCSRFTokenEndpoint,
   refreshCSRFToken,
   csrfProtectionWithExceptions 
 } from "./middleware/csrf";
-import { 
-  cspAnalysisReport, 
-  toggleCSPEnforcement, 
-  clearCSPViolations 
-} from "./middleware/gradual-csp";
-import { 
-  imageProxyHandler, 
-  imageProxyRateLimit, 
-  transformImageUrls 
-} from "./middleware/image-proxy";
-import { 
-  validateImageUpload, 
-  validateImageUrlMiddleware,
-  enforceImageContentType 
-} from "./middleware/image-validation";
-import { 
-  beforeYouTubeAPICall,
-  recordYouTubeAPIResult,
-  getYouTubeAPIStats,
-  getYouTubeAPIHealth 
-} from "./middleware/youtube-monitoring";
-import { securityLogAggregator } from "./utils/securityLogAggregator";
-import { realTimeAlertSystem } from "./utils/realTimeAlertSystem";
-import { securityAnomalyDetector } from "./utils/securityAnomalyDetector";
-import { logRetentionManager } from "./utils/logRetentionManager";
-import { comprehensiveSecurityMiddleware } from "./middleware/comprehensiveSecurityMonitoring";
-import { unifiedErrorMiddleware, unifiedErrorHandler, asyncErrorCatcher } from "./middleware/unifiedErrorHandler";
-import { errorTrackingSystem } from "./utils/errorTrackingSystem";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -104,16 +70,8 @@ const upload = multer({
   }
 });
 
-// 画像専用アップロード設定（セキュリティ強化）
-const imageUpload = multer({
-  storage: multer.memoryStorage(),
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB for images
-  }
-});
-
 // Multer error handling middleware
-const handleMulterError = (err: Error, req: Request, res: Response, next: NextFunction) => {
+const handleMulterError = (err: any, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
       return res.status(413).json({
@@ -584,7 +542,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/process-youtube", beforeYouTubeAPICall, async (req, res) => {
+  app.post("/api/process-youtube", async (req, res) => {
     try {
       let { url, difficulty = "intermediate", title = "YouTube動画クイズ", questionCount = "5" } = req.body;
       
@@ -612,14 +570,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate quiz from subtitles
       const quiz = await generateQuizFromText(subtitles, difficulty, title, parseInt(questionCount));
       
-      // Record successful API usage
-      recordYouTubeAPIResult(true, 50); // Estimate quota cost
-      
       res.json(quiz);
     } catch (error) {
-      // Record failed API usage
-      recordYouTubeAPIResult(false, 0);
-      
       res.status(500).json({ message: "YouTube処理に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
     }
   });
@@ -691,18 +643,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create questions with user answers if available
       if (quizData.questions && results.detailedResults) {
-        const questionsData = results.detailedResults.map((result: unknown, index: number) => {
-          assertIsObject(result, 'quiz result');
-          return {
-            sessionId: session.id,
-            questionText: (result as any).question || quizData.questions[index]?.question || "",
-            options: quizData.questions[index]?.options || [],
-            correctAnswer: (result as any).correctAnswer ?? quizData.questions[index]?.correctAnswer ?? 0,
-            explanation: (result as any).explanation || quizData.questions[index]?.explanation || "",
-            userAnswer: (result as any).userAnswer,
-            timeSpent: (result as any).timeSpent || 0,
-          };
-        });
+        const questionsData = results.detailedResults.map((result: any, index: number) => ({
+          sessionId: session.id,
+          questionText: result.question || quizData.questions[index]?.question || "",
+          options: quizData.questions[index]?.options || [],
+          correctAnswer: result.correctAnswer ?? quizData.questions[index]?.correctAnswer ?? 0,
+          explanation: result.explanation || quizData.questions[index]?.explanation || "",
+          userAnswer: result.userAnswer,
+          timeSpent: result.timeSpent || 0,
+        }));
         
         await storage.createQuestions(questionsData, userId);
       }
@@ -717,7 +666,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ((currentStats.averageAccuracy * currentStats.completedQuizzes) + accuracy) / newCompletedQuizzes : 0;
 
         // Update difficulty-specific accuracy
-        const difficultyAccuracyUpdates: Record<string, number> = {};
+        const difficultyAccuracyUpdates: any = {};
         if (sessionData.difficulty === "beginner") {
           difficultyAccuracyUpdates.beginnerAccuracy = accuracy;
         } else if (sessionData.difficulty === "intermediate") {
@@ -761,13 +710,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/quiz-sessions/:sessionId/questions", authenticateUser, async (req, res) => {
     try {
-      const questions = req.body.map((q: unknown) => {
-        assertIsObject(q, 'question data');
-        return insertQuestionSchema.parse({
-          ...(q as any),
-          sessionId: req.params.sessionId
-        });
-      });
+      const questions = req.body.map((q: any) => insertQuestionSchema.parse({
+        ...q,
+        sessionId: req.params.sessionId
+      }));
       const createdQuestions = await storage.createQuestions(questions, req.user!.id);
       res.json(createdQuestions);
     } catch (error) {
@@ -965,134 +911,5 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // CSP管理エンドポイント
-  app.get("/api/admin/csp-analysis", authenticateUser, cspAnalysisReport);
-  
-  app.post("/api/admin/csp-enforcement", authenticateUser, toggleCSPEnforcement);
-  
-  app.delete("/api/admin/csp-violations", authenticateUser, clearCSPViolations);
-  
-  // 画像プロキシエンドポイント（SSRF攻撃防止）
-  app.get("/api/image-proxy", imageProxyRateLimit, imageProxyHandler);
-
-  // YouTube API監視エンドポイント
-  app.get("/api/admin/youtube-stats", authenticateUser, getYouTubeAPIStats);
-  app.get("/api/admin/youtube-health", getYouTubeAPIHealth);
-
-  // セキュリティ監視ダッシュボードAPI
-  app.get("/api/admin/security/dashboard", authenticateUser, async (req, res) => {
-    try {
-      const timeRange = parseInt(req.query.hours as string) || 24;
-      const metrics = await securityLogAggregator.generateDashboardMetrics(timeRange);
-      res.json(metrics);
-    } catch (error) {
-      console.error("Error generating security dashboard:", error);
-      res.status(500).json({ message: "ダッシュボードデータの生成に失敗しました" });
-    }
-  });
-
-  app.get("/api/admin/security/timeseries", authenticateUser, async (req, res) => {
-    try {
-      const metric = req.query.metric as 'events' | 'threats' | 'alerts' || 'events';
-      const timeRange = parseInt(req.query.hours as string) || 24;
-      const interval = parseInt(req.query.interval as string) || 60;
-      
-      const data = await securityLogAggregator.getTimeSeriesData(metric, timeRange, interval);
-      res.json(data);
-    } catch (error) {
-      console.error("Error generating time series data:", error);
-      res.status(500).json({ message: "時系列データの生成に失敗しました" });
-    }
-  });
-
-  app.get("/api/admin/security/realtime", authenticateUser, async (req, res) => {
-    try {
-      const stats = await securityLogAggregator.getRealTimeStats();
-      res.json(stats);
-    } catch (error) {
-      console.error("Error getting real-time stats:", error);
-      res.status(500).json({ message: "リアルタイム統計の取得に失敗しました" });
-    }
-  });
-
-  app.get("/api/admin/security/alerts", authenticateUser, async (req, res) => {
-    try {
-      const alertStats = realTimeAlertSystem.getAlertStats();
-      res.json(alertStats);
-    } catch (error) {
-      console.error("Error getting alert stats:", error);
-      res.status(500).json({ message: "アラート統計の取得に失敗しました" });
-    }
-  });
-
-  app.get("/api/admin/security/anomalies", authenticateUser, async (req, res) => {
-    try {
-      const detectionStatus = securityAnomalyDetector.getDetectionStatus();
-      res.json(detectionStatus);
-    } catch (error) {
-      console.error("Error getting anomaly detection status:", error);
-      res.status(500).json({ message: "異常検知状況の取得に失敗しました" });
-    }
-  });
-
-  // エラー監視・統計API
-  app.get("/api/admin/errors/stats", authenticateUser, asyncErrorCatcher(async (req, res) => {
-    const hoursBack = parseInt(req.query.hours as string) || 24;
-    const stats = await unifiedErrorHandler.getErrorStats(hoursBack);
-    res.json(stats);
-  }));
-
-  app.get("/api/admin/errors/patterns", authenticateUser, asyncErrorCatcher(async (req, res) => {
-    const hoursBack = parseInt(req.query.hours as string) || 24;
-    const patterns = await unifiedErrorHandler.detectErrorPatterns(hoursBack);
-    res.json(patterns);
-  }));
-
-  app.get("/api/admin/errors/dashboard", authenticateUser, asyncErrorCatcher(async (req, res) => {
-    const dashboardData = await unifiedErrorHandler.getDashboardData();
-    res.json(dashboardData);
-  }));
-
-  app.post("/api/admin/errors/:errorId/resolve", authenticateUser, asyncErrorCatcher(async (req, res) => {
-    const { errorId } = req.params;
-    const { resolutionNotes } = req.body;
-    
-    const resolved = await errorTrackingSystem.resolveError(errorId, resolutionNotes);
-    
-    if (resolved) {
-      res.json({ message: "エラーが解決済みとしてマークされました" });
-    } else {
-      res.status(404).json({ message: "指定されたエラーが見つかりません" });
-    }
-  }));
-
-  // ログ保存期間管理API
-  app.get("/api/admin/logs/retention/stats", authenticateUser, async (req, res) => {
-    try {
-      const stats = await logRetentionManager.getStorageStats();
-      res.json(stats);
-    } catch (error) {
-      console.error("Error getting log retention stats:", error);
-      res.status(500).json({ message: "ログ保存統計の取得に失敗しました" });
-    }
-  });
-
-  app.post("/api/admin/logs/retention/maintenance", authenticateUser, async (req, res) => {
-    try {
-      const { logType } = req.body;
-      const results = await logRetentionManager.performMaintenance(logType);
-      res.json({
-        message: "メンテナンスが完了しました",
-        results
-      });
-    } catch (error) {
-      console.error("Error performing log maintenance:", error);
-      res.status(500).json({ message: "ログメンテナンスに失敗しました" });
-    }
-  });
-
-  // Apply unified error handler as the final middleware
-  app.use(unifiedErrorMiddleware);
-  
   return httpServer;
 }
