@@ -36,7 +36,7 @@ function Router() {
       id: userId,
       username,
       email: email || null,
-      password: null,
+      password: "",
       createdAt: new Date(),
     };
     setCurrentUser(user);

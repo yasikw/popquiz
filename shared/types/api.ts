@@ -26,7 +26,7 @@ export interface QuizResultDetail {
   question: string;
   correctAnswer: number; // 0-3 index
   explanation: string;
-  userAnswer: number; // 0-3 index  
+  userAnswer: number | null; // 0-3 index, null if unanswered
   timeSpent: number; // seconds
 }
 
