@@ -62,6 +62,11 @@ import {
   refreshCSRFToken,
   csrfProtectionWithExceptions 
 } from "./middleware/csrf";
+import { 
+  cspAnalysisReport, 
+  toggleCSPEnforcement, 
+  clearCSPViolations 
+} from "./middleware/gradual-csp";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -910,6 +915,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "機密データスキャンに失敗しました" });
     }
   });
+
+  // CSP管理エンドポイント
+  app.get("/api/admin/csp-analysis", authenticateUser, cspAnalysisReport);
+  
+  app.post("/api/admin/csp-enforcement", authenticateUser, toggleCSPEnforcement);
+  
+  app.delete("/api/admin/csp-violations", authenticateUser, clearCSPViolations);
 
   return httpServer;
 }

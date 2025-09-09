@@ -91,7 +91,7 @@ async function runXSSSecurityTest() {
     console.log('\n🔍 CSP設定内容の検証:');
     
     // unsafe-inline/unsafe-evalの確認
-    if (activeCSP.includes(\"'unsafe-inline'\")) {
+    if (activeCSP.includes("'unsafe-inline'")) {
       console.log(`⚠️ WARN: 'unsafe-inline'が許可されています（セキュリティリスク）`);
       warnings++;
     } else {
@@ -99,7 +99,7 @@ async function runXSSSecurityTest() {
       testsPassed++;
     }
     
-    if (activeCSP.includes(\"'unsafe-eval'\")) {
+    if (activeCSP.includes("'unsafe-eval'")) {
       if (process.env.NODE_ENV === 'development') {
         console.log(`⚠️ WARN: 'unsafe-eval'が開発環境で許可されています`);
         warnings++;
@@ -122,7 +122,7 @@ async function runXSSSecurityTest() {
     }
     
     // default-srcの確認
-    if (activeCSP.includes(\"default-src 'self'\")) {
+    if (activeCSP.includes("default-src 'self'")) {
       console.log(`✅ PASS: default-src 'self'が設定されています`);
       testsPassed++;
     } else {

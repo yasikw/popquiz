@@ -7,6 +7,7 @@ import { setupVite, serveStatic, log } from "./vite";
 import { getCorsConfig, corsErrorHandler } from "./config/cors.js";
 import { cspNonceMiddleware, cspViolationDetector, cspDebugInfo } from "./middleware/csp.js";
 import { cspReportHandler } from "./config/csp.js";
+import { gradualCSPEnforcement } from "./middleware/gradual-csp.js";
 
 const app = express();
 
@@ -22,6 +23,9 @@ app.use(cspDebugInfo);
 import { htmlNonceInjection, cspViolationReporter } from './middleware/html-injection.js';
 app.use(htmlNonceInjection);
 app.use(cspViolationReporter);
+
+// 段階的CSP強化ミドルウェア
+app.use(gradualCSPEnforcement);
 
 // Security middleware with disabled CSP (handled by our custom middleware)
 app.use(helmet({
