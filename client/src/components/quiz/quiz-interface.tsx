@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import CircularProgress from "@/components/ui/circular-progress";
 import { type GeneratedQuiz } from "@shared/schema";
 import { submitQuizResults } from "@/lib/api";
+import { CheckCircle, XCircle, ChevronRight, ChevronLeft, ArrowRight } from "lucide-react";
 
 interface QuizInterfaceProps {
   quiz: GeneratedQuiz;
@@ -12,92 +12,91 @@ interface QuizInterfaceProps {
   onQuizCompleted: () => void;
 }
 
+type QuizPhase = "answering" | "result" | "explanation";
+
 export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInterfaceProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>(
     new Array(quiz.questions.length).fill(null)
   );
-  const [timeLeft, setTimeLeft] = useState(60); // 60 seconds per question
+  const [timeLeft, setTimeLeft] = useState(60);
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [questionTimes, setQuestionTimes] = useState<number[]>(
     new Array(quiz.questions.length).fill(0)
   );
-  const [autoNext, setAutoNext] = useState(false);
   const [timeLimit, setTimeLimit] = useState(60);
+  const [phase, setPhase] = useState<QuizPhase>("answering");
+  const [resultAnimating, setResultAnimating] = useState(false);
 
   const currentQuestion = quiz.questions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
 
-  // Load quiz settings on mount
   useEffect(() => {
     const savedSettings = localStorage.getItem('quizSettings');
     if (savedSettings) {
       const settings = JSON.parse(savedSettings);
-      setAutoNext(settings.autoNext ?? false);
       setTimeLimit(settings.timeLimit || 60);
       setTimeLeft(settings.timeLimit || 60);
-      console.log('Quiz settings loaded:', { autoNext: settings.autoNext, timeLimit: settings.timeLimit });
     }
   }, []);
 
-  // Timer effect
   useEffect(() => {
+    if (phase !== "answering") return;
     if (timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
     } else {
-      // Auto-advance when time runs out
-      handleNextQuestion();
+      handleTimeUp();
     }
-  }, [timeLeft]);
+  }, [timeLeft, phase]);
 
-  // Reset timer and start time when question changes
   useEffect(() => {
-    setTimeLeft(timeLimit);
-    setQuestionStartTime(Date.now());
-    setSelectedAnswer(userAnswers[currentQuestionIndex]);
+    if (phase === "answering") {
+      setTimeLeft(timeLimit);
+      setQuestionStartTime(Date.now());
+      setSelectedAnswer(userAnswers[currentQuestionIndex]);
+    }
   }, [currentQuestionIndex, timeLimit]);
 
+  const handleTimeUp = () => {
+    const newAnswers = [...userAnswers];
+    newAnswers[currentQuestionIndex] = null;
+    setUserAnswers(newAnswers);
+    setSelectedAnswer(null);
+    showResult();
+  };
+
   const handleAnswerSelect = (answerIndex: number) => {
-    console.log('Answer selection started:', {
-      selectedAnswer: answerIndex,
-      currentQuestionIndex,
-      questionText: currentQuestion.question.substring(0, 50) + '...'
-    });
-    
+    if (phase !== "answering") return;
+
     setSelectedAnswer(answerIndex);
     const newAnswers = [...userAnswers];
     newAnswers[currentQuestionIndex] = answerIndex;
     setUserAnswers(newAnswers);
-    
-    console.log('Answer recorded:', {
-      answerIndex,
-      currentQuestionIndex,
-      newAnswers: newAnswers.map((ans, idx) => ({
-        questionIndex: idx,
-        selectedAnswer: ans,
-        isCurrentQuestion: idx === currentQuestionIndex
-      }))
-    });
-    
-    // Auto advance to next question if enabled
-    if (autoNext) {
-      console.log('Auto-advance starting in 1 second...');
-      setTimeout(() => {
-        console.log('Auto-advance executing with answers:', newAnswers);
-        // Pass the updated answers to ensure latest state
-        handleNextQuestionWithAnswers(newAnswers);
-      }, 1000); // Wait 1 second to show selection, then advance
-    }
+
+    showResult();
+  };
+
+  const showResult = () => {
+    setResultAnimating(true);
+    setPhase("result");
+    setTimeout(() => setResultAnimating(false), 100);
+  };
+
+  const isCurrentAnswerCorrect = () => {
+    const answer = userAnswers[currentQuestionIndex];
+    return answer !== null && answer !== undefined && answer === currentQuestion.correctAnswer;
+  };
+
+  const handleGoToExplanation = () => {
+    setPhase("explanation");
+  };
+
+  const handleBackToResult = () => {
+    setPhase("result");
   };
 
   const handleNextQuestion = () => {
-    handleNextQuestionWithAnswers(userAnswers);
-  };
-
-  const handleNextQuestionWithAnswers = (currentAnswers: (number | null)[]) => {
-    // Record time spent on current question
     const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
     const newTimes = [...questionTimes];
     newTimes[currentQuestionIndex] = timeSpent;
@@ -105,45 +104,18 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
 
     if (currentQuestionIndex < quiz.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setPhase("answering");
+      setSelectedAnswer(null);
     } else {
-      handleQuizCompleteWithData(currentAnswers, newTimes);
+      handleQuizCompleteWithData(userAnswers, newTimes);
     }
-  };
-
-  const handlePreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-  };
-
-  const handleSkipQuestion = () => {
-    const newAnswers = [...userAnswers];
-    newAnswers[currentQuestionIndex] = null;
-    setUserAnswers(newAnswers);
-    handleNextQuestion();
-  };
-
-  const handleQuizComplete = () => {
-    handleQuizCompleteWithData(userAnswers, questionTimes);
   };
 
   const handleQuizCompleteWithData = async (finalAnswers: (number | null)[], currentTimes: number[]) => {
-    // Record final question time
     const finalTimeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
     const finalTimes = [...currentTimes];
     finalTimes[currentQuestionIndex] = finalTimeSpent;
 
-    console.log("=== Quiz Completion Debug ===");
-    console.log("Final answers array:", finalAnswers);
-    console.log("Questions and answers verification:");
-    quiz.questions.forEach((question, index) => {
-      console.log(`Q${index + 1}: ${question.question.substring(0, 40)}...`);
-      console.log(`  User selected: ${finalAnswers[index]} (${finalAnswers[index] !== null ? question.options[finalAnswers[index]] : 'No answer'})`);
-      console.log(`  Correct answer: ${question.correctAnswer} (${question.options[question.correctAnswer]})`);
-      console.log(`  Is correct: ${finalAnswers[index] !== null && finalAnswers[index] === question.correctAnswer}`);
-    });
-
-    // Calculate score and detailed results
     const score = finalAnswers.reduce((total: number, answer, index) => {
       if (answer !== null && answer === quiz.questions[index].correctAnswer) {
         return total + 1;
@@ -169,36 +141,180 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
       detailedResults
     };
 
-    console.log("Final quiz results:", quizResults);
-    console.log("=== End Quiz Completion Debug ===");
-    
-    // Submit quiz results to server for statistics tracking
     try {
       const contentType = localStorage.getItem('lastContentType') || 'text';
       await submitQuizResults(userId, {
         ...quiz,
         contentType: contentType
       }, quizResults);
-      console.log("Quiz results successfully submitted to server");
     } catch (error) {
       console.error("Failed to submit quiz results:", error);
-      // Continue with local storage even if server submission fails
     }
-    
-    // Store results in localStorage for immediate display
+
     localStorage.setItem('quizResults', JSON.stringify(quizResults));
-    
     onQuizCompleted();
   };
+
+  if (phase === "result") {
+    const correct = isCurrentAnswerCorrect();
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 pb-20">
+        <div className="max-w-md mx-auto px-4 py-6">
+          <div className="text-center mb-6">
+            <div className="bg-blue-100 rounded-full px-4 py-2 text-blue-800 inline-block">
+              <span className="text-sm font-medium">
+                問題 {currentQuestionIndex + 1} / {quiz.questions.length}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center justify-center min-h-[60vh]">
+            <div
+              className={`flex flex-col items-center transition-all duration-500 ${
+                resultAnimating ? "scale-50 opacity-0" : "scale-100 opacity-100"
+              }`}
+            >
+              {correct ? (
+                <>
+                  <CheckCircle className="w-28 h-28 text-green-500 mb-6" strokeWidth={2.5} />
+                  <h1 className="text-6xl font-black text-green-500 mb-4 tracking-wider">
+                    正解
+                  </h1>
+                  <p className="text-green-600 text-lg font-medium">すばらしい！</p>
+                </>
+              ) : (
+                <>
+                  <XCircle className="w-28 h-28 text-red-500 mb-6" strokeWidth={2.5} />
+                  <h1 className="text-6xl font-black text-red-500 mb-4 tracking-wider">
+                    不正解
+                  </h1>
+                  <p className="text-red-600 text-lg font-medium">
+                    正解は {String.fromCharCode(65 + currentQuestion.correctAnswer)}: {currentQuestion.options[currentQuestion.correctAnswer]}
+                  </p>
+                </>
+              )}
+            </div>
+
+            <Button
+              onClick={handleGoToExplanation}
+              className="mt-12 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white border-0 shadow-lg px-10 py-4 rounded-2xl font-bold text-lg"
+            >
+              次へ
+              <ChevronRight className="w-5 h-5 ml-2" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (phase === "explanation") {
+    const correct = isCurrentAnswerCorrect();
+    const userAnswer = userAnswers[currentQuestionIndex];
+    const isLastQuestion = currentQuestionIndex === quiz.questions.length - 1;
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 pb-20">
+        <div className="max-w-md mx-auto px-4 py-6">
+          <div className="text-center mb-6">
+            <div className="bg-blue-100 rounded-full px-4 py-2 text-blue-800 inline-block">
+              <span className="text-sm font-medium">
+                問題 {currentQuestionIndex + 1} / {quiz.questions.length} — 解説
+              </span>
+            </div>
+          </div>
+
+          <Card className="bg-white shadow-lg border border-gray-200">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-6 leading-relaxed">
+                {currentQuestion.question}
+              </h3>
+
+              <div className="space-y-3 mb-6">
+                {currentQuestion.options.map((option, index) => {
+                  const isCorrectOption = index === currentQuestion.correctAnswer;
+                  const isUserChoice = index === userAnswer;
+                  let borderColor = "border-gray-200 bg-gray-50";
+                  let textColor = "text-gray-600";
+                  let badgeColor = "bg-gray-200 text-gray-700";
+
+                  if (isCorrectOption) {
+                    borderColor = "border-green-400 bg-green-50";
+                    textColor = "text-green-800";
+                    badgeColor = "bg-green-500 text-white";
+                  } else if (isUserChoice && !correct) {
+                    borderColor = "border-red-400 bg-red-50";
+                    textColor = "text-red-800";
+                    badgeColor = "bg-red-500 text-white";
+                  }
+
+                  return (
+                    <div
+                      key={index}
+                      className={`p-4 rounded-xl border-2 ${borderColor} transition-all`}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${badgeColor}`}>
+                          {String.fromCharCode(65 + index)}
+                        </div>
+                        <span className={`font-medium text-left flex-1 ${textColor}`}>
+                          {option}
+                        </span>
+                        {isCorrectOption && (
+                          <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                        )}
+                        {isUserChoice && !isCorrectOption && (
+                          <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+                <h4 className="text-blue-800 font-bold text-base mb-2 flex items-center">
+                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  解説
+                </h4>
+                <p className="text-blue-900 leading-relaxed text-sm">
+                  {currentQuestion.explanation}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="flex gap-4 mt-6">
+            <Button
+              variant="outline"
+              onClick={handleBackToResult}
+              className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50 py-4 rounded-xl font-semibold text-base"
+            >
+              <ChevronLeft className="w-5 h-5 mr-1" />
+              戻る
+            </Button>
+            <Button
+              onClick={handleNextQuestion}
+              className="flex-1 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white border-0 shadow-lg py-4 rounded-xl font-bold text-base"
+            >
+              {isLastQuestion ? "結果を見る" : "次へ進む"}
+              <ArrowRight className="w-5 h-5 ml-1" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 pb-20">
       <div className="max-w-md mx-auto px-4 py-6">
-        {/* Progress Header */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
-            <CircularProgress 
-              value={currentQuestionIndex + 1} 
+            <CircularProgress
+              value={currentQuestionIndex + 1}
               max={quiz.questions.length}
               size={140}
               className="mb-4"
@@ -213,7 +329,7 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
               </div>
             </CircularProgress>
           </div>
-          
+
           <div className="flex justify-center items-center space-x-4 mb-4">
             <div className="bg-blue-100 rounded-full px-4 py-2 text-blue-800">
               <span className="text-sm font-medium">
@@ -231,17 +347,13 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
           </div>
         </div>
 
-        {/* Quiz Card */}
         <Card className="bg-white shadow-lg border border-gray-200">
           <CardContent className="p-8">
-
-            {/* Question */}
             <div className="mb-8 text-center">
               <h3 className="text-2xl font-semibold text-gray-800 mb-8" data-testid="question-text">
                 {currentQuestion.question}
               </h3>
 
-              {/* Answer Options */}
               <div className="space-y-4">
                 {currentQuestion.options.map((option, index) => (
                   <button
@@ -268,44 +380,6 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
                     </div>
                   </button>
                 ))}
-              </div>
-            </div>
-
-            {/* Quiz Controls */}
-            <div className="pt-6 border-t border-gray-200">
-              <div className="grid grid-cols-3 gap-3 items-center">
-                <Button
-                  variant="outline"
-                  onClick={handlePreviousQuestion}
-                  disabled={currentQuestionIndex === 0}
-                  className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 text-sm px-3 py-2 w-full justify-center"
-                  data-testid="button-previous"
-                >
-                  <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  前の問題
-                </Button>
-                
-                <Button
-                  variant="outline"
-                  onClick={handleSkipQuestion}
-                  className="border-gray-300 text-gray-700 hover:bg-gray-50 text-sm px-3 py-2 w-full justify-center"
-                  data-testid="button-skip"
-                >
-                  スキップ
-                </Button>
-                
-                <Button
-                  onClick={handleNextQuestion}
-                  className="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white border-0 shadow-lg px-3 py-2 rounded-xl font-semibold text-sm w-full justify-center"
-                  data-testid="button-next"
-                >
-                  {currentQuestionIndex === quiz.questions.length - 1 ? "完了" : "次の問題"}
-                  <svg className="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                  </svg>
-                </Button>
               </div>
             </div>
           </CardContent>
