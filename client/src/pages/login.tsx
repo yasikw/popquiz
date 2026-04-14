@@ -1,13 +1,7 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Eye, EyeOff, BookOpen, Sparkles, Trophy, Users } from "lucide-react";
-import bgImage from "@assets/BG_1754455391940.png";
+import { Eye, EyeOff } from "lucide-react";
 import logoImage from "@assets/AIquiz logo_1754457435636.png";
 
 interface LoginPageProps {
@@ -17,13 +11,12 @@ interface LoginPageProps {
 export default function LoginPage({ onLogin }: LoginPageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const { toast } = useToast();
 
-  // Login form state
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
-  // Register form state
   const [registerUsername, setRegisterUsername] = useState("");
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
@@ -46,7 +39,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
       const userData = await response.json();
       
-      // Store JWT tokens
       if (userData.accessToken) {
         localStorage.setItem('accessToken', userData.accessToken);
       }
@@ -109,7 +101,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
       const userData = await response.json();
       
-      // Store JWT tokens
       if (userData.accessToken) {
         localStorage.setItem('accessToken', userData.accessToken);
       }
@@ -135,216 +126,291 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   };
 
   return (
-    <div 
-      className="min-h-screen flex flex-col relative bg-cover bg-center bg-no-repeat"
+    <div
+      className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden"
       style={{
-        '--bg-image': `url(${bgImage})`,
-        backgroundImage: 'var(--bg-image)'
-      } as React.CSSProperties}
+        backgroundColor: '#fdf6e3',
+        backgroundImage: `
+          radial-gradient(at 0% 0%, rgba(255, 112, 159, 0.15) 0px, transparent 50%),
+          radial-gradient(at 100% 0%, rgba(116, 247, 241, 0.15) 0px, transparent 50%),
+          radial-gradient(at 100% 100%, rgba(255, 215, 9, 0.15) 0px, transparent 50%),
+          radial-gradient(at 0% 100%, rgba(168, 39, 90, 0.1) 0px, transparent 50%)
+        `,
+        fontFamily: "'Plus Jakarta Sans', 'Noto Sans JP', sans-serif",
+        color: '#322f22',
+      }}
     >
-      {/* Overlay for better text readability */}
-      <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]"></div>
-      <div className="relative z-10 min-h-screen flex flex-col">
-      {/* Header */}
-      <div className="flex-shrink-0 text-center py-12">
-        <div className="flex items-center justify-center mb-6">
-          <img 
-            src={logoImage} 
-            alt="AI Quiz Logo" 
-            className="w-40 h-24 object-contain drop-shadow-lg"
-          />
+      <div className="fixed top-1/4 -left-12 w-32 h-32 rounded-full opacity-30 blur-3xl -z-10" style={{ backgroundColor: '#ffd709' }} />
+      <div className="fixed bottom-1/4 -right-12 w-48 h-48 rounded-full opacity-30 blur-3xl -z-10" style={{ backgroundColor: '#74f7f1' }} />
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-10 blur-3xl -z-10" style={{ backgroundColor: '#ff709f' }} />
+
+      <header className="fixed top-0 w-full z-50 flex items-center justify-center px-6 h-20">
+        <div className="flex items-center gap-2">
+          <img src={logoImage} alt="AI Quiz Logo" className="h-10 object-contain" />
         </div>
-        <p className="text-gray-700 text-lg font-medium">
-          AIが作る、あなただけの学習体験
-        </p>
-      </div>
+      </header>
 
-      {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center px-4 pb-12">
-        <div className="w-full max-w-md">
-          <Card className="bg-white/90 backdrop-blur-md border-0 shadow-2xl">
-            <CardHeader className="text-center pb-4">
-              <CardTitle className="text-2xl font-bold text-gray-800">
-                始めましょう
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="login" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-6">
-                  <TabsTrigger value="login" className="text-sm">
-                    ログイン
-                  </TabsTrigger>
-                  <TabsTrigger value="register" className="text-sm">
-                    新規登録
-                  </TabsTrigger>
-                </TabsList>
+      <main className="w-full max-w-md mt-8 flex flex-col gap-8">
+        <section className="text-center space-y-3">
+          <h1 className="text-5xl font-extrabold tracking-tight" style={{ color: '#322f22' }}>
+            さあ、<span className="italic" style={{ color: '#a8275a' }}>始めよう！</span>
+          </h1>
+          <p className="font-medium text-lg" style={{ color: '#5f5b4d' }}>
+            AIが作る、あなただけの学習体験
+          </p>
+        </section>
 
-                <TabsContent value="login" className="space-y-4">
-                  <form onSubmit={handleLogin} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="login-username" className="text-sm font-medium text-gray-700">
-                        ユーザー名
-                      </Label>
-                      <Input
-                        id="login-username"
-                        type="text"
-                        value={loginUsername}
-                        onChange={(e) => setLoginUsername(e.target.value)}
-                        placeholder="ユーザー名を入力"
-                        className="bg-white/70 border-gray-200"
-                        required
-                        data-testid="input-login-username"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="login-password" className="text-sm font-medium text-gray-700">
-                        パスワード
-                      </Label>
-                      <div className="relative">
-                        <Input
-                          id="login-password"
-                          type={showPassword ? "text" : "password"}
-                          value={loginPassword}
-                          onChange={(e) => setLoginPassword(e.target.value)}
-                          placeholder="パスワードを入力"
-                          className="bg-white/70 border-gray-200 pr-10"
-                          required
-                          data-testid="input-login-password"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                        >
-                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                        </button>
-                      </div>
-                    </div>
-
-                    <Button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-2.5 shadow-lg transition-all duration-200"
-                      disabled={isLoading}
-                      data-testid="button-login"
-                    >
-                      {isLoading ? "ログイン中..." : "ログイン"}
-                    </Button>
-                  </form>
-                </TabsContent>
-
-                <TabsContent value="register" className="space-y-4">
-                  <form onSubmit={handleRegister} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="register-username" className="text-sm font-medium text-gray-700">
-                        ユーザー名
-                      </Label>
-                      <Input
-                        id="register-username"
-                        type="text"
-                        value={registerUsername}
-                        onChange={(e) => setRegisterUsername(e.target.value)}
-                        placeholder="ユーザー名を入力"
-                        className="bg-white/70 border-gray-200"
-                        required
-                        data-testid="input-register-username"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="register-email" className="text-sm font-medium text-gray-700">
-                        メールアドレス（オプション）
-                      </Label>
-                      <Input
-                        id="register-email"
-                        type="email"
-                        value={registerEmail}
-                        onChange={(e) => setRegisterEmail(e.target.value)}
-                        placeholder="email@example.com"
-                        className="bg-white/70 border-gray-200"
-                        data-testid="input-register-email"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="register-password" className="text-sm font-medium text-gray-700">
-                        パスワード（6文字以上）
-                      </Label>
-                      <div className="relative">
-                        <Input
-                          id="register-password"
-                          type={showPassword ? "text" : "password"}
-                          value={registerPassword}
-                          onChange={(e) => setRegisterPassword(e.target.value)}
-                          placeholder="パスワードを入力"
-                          className="bg-white/70 border-gray-200 pr-10"
-                          required
-                          data-testid="input-register-password"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                        >
-                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="confirm-password" className="text-sm font-medium text-gray-700">
-                        パスワード確認
-                      </Label>
-                      <Input
-                        id="confirm-password"
-                        type={showPassword ? "text" : "password"}
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        placeholder="パスワードを再入力"
-                        className="bg-white/70 border-gray-200"
-                        required
-                        data-testid="input-confirm-password"
-                      />
-                    </div>
-
-                    <Button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-2.5 shadow-lg transition-all duration-200"
-                      disabled={isLoading}
-                      data-testid="button-register"
-                    >
-                      {isLoading ? "登録中..." : "新規登録"}
-                    </Button>
-                  </form>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-
-          {/* Features */}
-          <div className="mt-8 grid grid-cols-3 gap-4">
-            <div className="text-center">
-              <div className="bg-white/60 backdrop-blur-sm p-4 rounded-xl shadow-lg mb-2">
-                <Sparkles className="h-8 w-8 mx-auto text-blue-600" />
-              </div>
-              <p className="text-sm text-gray-600 font-medium">AI生成</p>
-            </div>
-            <div className="text-center">
-              <div className="bg-white/60 backdrop-blur-sm p-4 rounded-xl shadow-lg mb-2">
-                <Trophy className="h-8 w-8 mx-auto text-purple-600" />
-              </div>
-              <p className="text-sm text-gray-600 font-medium">進捗追跡</p>
-            </div>
-            <div className="text-center">
-              <div className="bg-white/60 backdrop-blur-sm p-4 rounded-xl shadow-lg mb-2">
-                <Users className="h-8 w-8 mx-auto text-green-600" />
-              </div>
-              <p className="text-sm text-gray-600 font-medium">個別対応</p>
-            </div>
+        <div
+          className="backdrop-blur-2xl p-8 space-y-6"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            borderRadius: '2rem',
+            boxShadow: '0 32px 64px rgba(50, 47, 34, 0.06)',
+          }}
+        >
+          <div className="grid grid-cols-2 gap-1 p-1 rounded-2xl" style={{ backgroundColor: '#eae2cb' }}>
+            <button
+              onClick={() => setActiveTab("login")}
+              className="py-3 px-4 font-bold text-sm transition-all duration-300"
+              style={{
+                borderRadius: '1.25rem',
+                backgroundColor: activeTab === "login" ? '#ffffff' : 'transparent',
+                color: activeTab === "login" ? '#a8275a' : '#5f5b4d',
+                boxShadow: activeTab === "login" ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
+              }}
+            >
+              ログイン
+            </button>
+            <button
+              onClick={() => setActiveTab("register")}
+              className="py-3 px-4 font-bold text-sm transition-all duration-300"
+              style={{
+                borderRadius: '1.25rem',
+                backgroundColor: activeTab === "register" ? '#ffffff' : 'transparent',
+                color: activeTab === "register" ? '#a8275a' : '#5f5b4d',
+                boxShadow: activeTab === "register" ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
+              }}
+            >
+              新規登録
+            </button>
           </div>
+
+          {activeTab === "login" && (
+            <form onSubmit={handleLogin} className="space-y-5">
+              <div className="space-y-2">
+                <label className="block text-sm font-bold ml-4" style={{ color: '#5f5b4d' }}>
+                  ユーザー名
+                </label>
+                <input
+                  type="text"
+                  value={loginUsername}
+                  onChange={(e) => setLoginUsername(e.target.value)}
+                  placeholder="ユーザー名を入力"
+                  required
+                  data-testid="input-login-username"
+                  className="w-full border-none focus:ring-4 rounded-2xl p-4 font-semibold transition-all outline-none"
+                  style={{
+                    backgroundColor: '#eae2cb',
+                    color: '#322f22',
+                    focusRingColor: 'rgba(168, 39, 90, 0.1)',
+                  }}
+                  onFocus={(e) => e.target.style.boxShadow = '0 0 0 4px rgba(168, 39, 90, 0.1)'}
+                  onBlur={(e) => e.target.style.boxShadow = 'none'}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-bold ml-4" style={{ color: '#5f5b4d' }}>
+                  パスワード
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    placeholder="パスワードを入力"
+                    required
+                    data-testid="input-login-password"
+                    className="w-full border-none focus:ring-4 rounded-2xl p-4 pr-12 font-semibold transition-all outline-none"
+                    style={{ backgroundColor: '#eae2cb', color: '#322f22' }}
+                    onFocus={(e) => e.target.style.boxShadow = '0 0 0 4px rgba(168, 39, 90, 0.1)'}
+                    onBlur={(e) => e.target.style.boxShadow = 'none'}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
+                    style={{ color: '#7b7767' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#a8275a')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#7b7767')}
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                data-testid="button-login"
+                className="w-full py-5 font-extrabold text-xl transition-all duration-300 active:scale-[0.98] disabled:opacity-60"
+                style={{
+                  borderRadius: '1rem',
+                  background: 'linear-gradient(135deg, #a8275a, #ff709f)',
+                  color: '#ffeff1',
+                  boxShadow: '0 8px 20px rgba(168, 39, 90, 0.25)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 12px 24px rgba(168, 39, 90, 0.35)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(168, 39, 90, 0.25)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                {isLoading ? "ログイン中..." : "Let's Play!"}
+              </button>
+            </form>
+          )}
+
+          {activeTab === "register" && (
+            <form onSubmit={handleRegister} className="space-y-5">
+              <div className="space-y-2">
+                <label className="block text-sm font-bold ml-4" style={{ color: '#5f5b4d' }}>
+                  ユーザー名
+                </label>
+                <input
+                  type="text"
+                  value={registerUsername}
+                  onChange={(e) => setRegisterUsername(e.target.value)}
+                  placeholder="ユーザー名を入力"
+                  required
+                  data-testid="input-register-username"
+                  className="w-full border-none rounded-2xl p-4 font-semibold transition-all outline-none"
+                  style={{ backgroundColor: '#eae2cb', color: '#322f22' }}
+                  onFocus={(e) => e.target.style.boxShadow = '0 0 0 4px rgba(168, 39, 90, 0.1)'}
+                  onBlur={(e) => e.target.style.boxShadow = 'none'}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-bold ml-4" style={{ color: '#5f5b4d' }}>
+                  メールアドレス（任意）
+                </label>
+                <input
+                  type="email"
+                  value={registerEmail}
+                  onChange={(e) => setRegisterEmail(e.target.value)}
+                  placeholder="email@example.com"
+                  data-testid="input-register-email"
+                  className="w-full border-none rounded-2xl p-4 font-semibold transition-all outline-none"
+                  style={{ backgroundColor: '#eae2cb', color: '#322f22' }}
+                  onFocus={(e) => e.target.style.boxShadow = '0 0 0 4px rgba(168, 39, 90, 0.1)'}
+                  onBlur={(e) => e.target.style.boxShadow = 'none'}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-bold ml-4" style={{ color: '#5f5b4d' }}>
+                  パスワード（6文字以上）
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={registerPassword}
+                    onChange={(e) => setRegisterPassword(e.target.value)}
+                    placeholder="パスワードを入力"
+                    required
+                    data-testid="input-register-password"
+                    className="w-full border-none rounded-2xl p-4 pr-12 font-semibold transition-all outline-none"
+                    style={{ backgroundColor: '#eae2cb', color: '#322f22' }}
+                    onFocus={(e) => e.target.style.boxShadow = '0 0 0 4px rgba(168, 39, 90, 0.1)'}
+                    onBlur={(e) => e.target.style.boxShadow = 'none'}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
+                    style={{ color: '#7b7767' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#a8275a')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#7b7767')}
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-bold ml-4" style={{ color: '#5f5b4d' }}>
+                  パスワード確認
+                </label>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="パスワードを再入力"
+                  required
+                  data-testid="input-confirm-password"
+                  className="w-full border-none rounded-2xl p-4 font-semibold transition-all outline-none"
+                  style={{ backgroundColor: '#eae2cb', color: '#322f22' }}
+                  onFocus={(e) => e.target.style.boxShadow = '0 0 0 4px rgba(168, 39, 90, 0.1)'}
+                  onBlur={(e) => e.target.style.boxShadow = 'none'}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                data-testid="button-register"
+                className="w-full py-5 font-extrabold text-xl transition-all duration-300 active:scale-[0.98] disabled:opacity-60"
+                style={{
+                  borderRadius: '1rem',
+                  background: 'linear-gradient(135deg, #a8275a, #ff709f)',
+                  color: '#ffeff1',
+                  boxShadow: '0 8px 20px rgba(168, 39, 90, 0.25)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 12px 24px rgba(168, 39, 90, 0.35)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(168, 39, 90, 0.25)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                {isLoading ? "登録中..." : "はじめる！"}
+              </button>
+            </form>
+          )}
         </div>
-      </div>
-      </div>
+
+        <p className="text-center font-semibold" style={{ color: '#5f5b4d' }}>
+          {activeTab === "login" ? (
+            <>
+              はじめてですか？
+              <button
+                onClick={() => setActiveTab("register")}
+                className="font-extrabold ml-1 hover:underline transition-all decoration-2 underline-offset-4"
+                style={{ color: '#a8275a' }}
+              >
+                アカウント作成
+              </button>
+            </>
+          ) : (
+            <>
+              アカウントをお持ちですか？
+              <button
+                onClick={() => setActiveTab("login")}
+                className="font-extrabold ml-1 hover:underline transition-all decoration-2 underline-offset-4"
+                style={{ color: '#a8275a' }}
+              >
+                ログイン
+              </button>
+            </>
+          )}
+        </p>
+      </main>
     </div>
   );
 }

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QuizPop - Welcome Back</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-tertiary": "#bcfffb",
+                "surface": "#fdf6e3",
+                "on-primary-container": "#4c0022",
+                "primary-container": "#ff709f",
+                "tertiary-fixed-dim": "#64e8e3",
+                "background": "#fdf6e3",
+                "on-error": "#ffefef",
+                "primary": "#a8275a",
+                "on-tertiary-fixed": "#004745",
+                "on-secondary-fixed-variant": "#665500",
+                "error": "#b41340",
+                "primary-fixed": "#ff709f",
+                "tertiary-fixed": "#74f7f1",
+                "tertiary-dim": "#005957",
+                "secondary-fixed": "#ffd709",
+                "on-secondary": "#fff2cd",
+                "error-dim": "#a70138",
+                "on-primary-fixed-variant": "#5d002b",
+                "on-primary-fixed": "#000000",
+                "surface-container-highest": "#e4ddc5",
+                "surface-tint": "#a8275a",
+                "secondary-fixed-dim": "#efc900",
+                "inverse-on-surface": "#a29d8c",
+                "surface-container": "#efe8d2",
+                "on-secondary-fixed": "#453900",
+                "surface-container-lowest": "#ffffff",
+                "surface-dim": "#dcd4bb",
+                "tertiary-container": "#74f7f1",
+                "error-container": "#f74b6d",
+                "surface-bright": "#fdf6e3",
+                "on-tertiary-container": "#005c59",
+                "inverse-surface": "#100e05",
+                "outline-variant": "#b2ad9c",
+                "secondary-container": "#ffd709",
+                "primary-dim": "#98184f",
+                "secondary-dim": "#5e4e00",
+                "on-surface-variant": "#5f5b4d",
+                "inverse-primary": "#ff6b9d",
+                "surface-container-low": "#f8f0dc",
+                "on-tertiary-fixed-variant": "#006764",
+                "on-secondary-container": "#5b4b00",
+                "surface-variant": "#e4ddc5",
+                "outline": "#7b7767",
+                "tertiary": "#006764",
+                "surface-container-high": "#eae2cb",
+                "secondary": "#6c5a00",
+                "on-error-container": "#510017",
+                "on-surface": "#322f22",
+                "on-primary": "#ffeff1",
+                "primary-fixed-dim": "#f16092",
+                "on-background": "#322f22"
+            },
+            "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Plus Jakarta Sans"],
+                "label": ["Plus Jakarta Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-mesh {
+            background-color: #fdf6e3;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 112, 159, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(116, 247, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(255, 215, 9, 0.15) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(168, 39, 90, 0.1) 0px, transparent 50%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-mesh min-h-screen flex flex-col items-center justify-center p-6 text-on-surface">
+<!-- Top Navigation Bar (Suppressed for transactional screen, but Brand Anchor Logo used) -->
+<header class="fixed top-0 w-full z-50 flex items-center justify-center px-6 h-20">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#a8275a] text-3xl" data-icon="bubble_chart">bubble_chart</span>
+<span class="text-2xl font-black text-[#a8275a] tracking-tight font-headline">QuizPop</span>
+</div>
+</header>
+<main class="w-full max-w-md mt-16 flex flex-col gap-8">
+<!-- Welcome Title Section -->
+<section class="text-center space-y-3">
+<h1 class="text-5xl font-extrabold tracking-tight text-on-surface">
+                Ready to <span class="text-primary italic">Pop?</span>
+</h1>
+<p class="text-on-surface-variant font-medium text-lg">
+                Your daily dose of brain-boggling trivia starts here.
+            </p>
+</section>
+<!-- Form Container -->
+<div class="bg-surface-container-lowest/80 backdrop-blur-2xl rounded-xl p-8 shadow-[0_32px_64px_rgba(50,47,34,0.06)] space-y-8">
+<!-- Social Login Cluster -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-3 bg-surface-container-low hover:bg-surface-container-high transition-all duration-300 py-4 px-6 rounded-lg font-bold text-on-surface active:scale-95">
+<img alt="Google Logo" class="w-6 h-6" data-alt="Official Google G logo in brand colors on a white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmAxJRRRO9zh6NMp19ZGG6eR_CX8ycwHGr7anc57mrKLJk4xEkVCkXVlPW2weZu7bj_fX2fLyOBix66EeZXq6iBoESNIkL4gEV9iALDLXjO0blu02g783eWo47HEcmst7Ti03Wsxwhj3x4jqwIYnDXgDJux1L-2hjRb9AxDx1WII1bmgquoeorVNeK1PxjPUzbdTz24GCTLShflpnEqWTAO6B6S0tnwdx4VNDqbI_CQ2BTC4y9IUet1xvrUZwy2HUW_By9DSAY_zA"/>
+<span>Google</span>
+</button>
+<button class="flex items-center justify-center gap-3 bg-surface-container-low hover:bg-surface-container-high transition-all duration-300 py-4 px-6 rounded-lg font-bold text-on-surface active:scale-95">
+<span class="material-symbols-outlined text-2xl" data-icon="apple" style="font-variation-settings: 'FILL' 1;">ios</span>
+<span>Apple</span>
+</button>
+</div>
+<!-- Divider -->
+<div class="flex items-center gap-4">
+<div class="h-[2px] flex-1 bg-surface-container-highest/50"></div>
+<span class="text-xs font-bold uppercase tracking-widest text-outline">Or via email</span>
+<div class="h-[2px] flex-1 bg-surface-container-highest/50"></div>
+</div>
+<!-- Login Form -->
+<form class="space-y-5" onsubmit="return false;">
+<div class="space-y-2">
+<label class="block text-sm font-bold text-on-surface-variant ml-4">Email Address</label>
+<input class="w-full bg-surface-container-high border-none focus:ring-4 focus:ring-primary/10 rounded-lg p-4 font-semibold text-on-surface placeholder:text-outline transition-all" placeholder="you@example.com" type="email"/>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between items-center ml-4">
+<label class="text-sm font-bold text-on-surface-variant">Password</label>
+<a class="text-xs font-bold text-primary-dim hover:underline transition-all" href="#">Forgot Password?</a>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-high border-none focus:ring-4 focus:ring-primary/10 rounded-lg p-4 font-semibold text-on-surface placeholder:text-outline transition-all" placeholder="••••••••" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary py-5 rounded-lg font-extrabold text-xl shadow-[0_8px_20px_rgba(168,39,90,0.25)] hover:shadow-[0_12px_24px_rgba(168,39,90,0.35)] hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] transition-all duration-300" type="submit">
+                    Let's Play!
+                </button>
+</form>
+</div>
+<!-- Footer Links -->
+<p class="text-center font-semibold text-on-surface-variant">
+            New to QuizPop? 
+            <a class="text-primary font-extrabold ml-1 hover:underline transition-all decoration-2 underline-offset-4" href="#">Create Account</a>
+</p>
+</main>
+<!-- Decorative Floating Elements -->
+<div class="fixed top-1/4 -left-12 w-32 h-32 bg-secondary-container rounded-full opacity-30 blur-3xl -z-10"></div>
+<div class="fixed bottom-1/4 -right-12 w-48 h-48 bg-tertiary-container rounded-full opacity-30 blur-3xl -z-10"></div>
+<!-- Image Card Decoration -->
+<div class="fixed bottom-12 right-12 hidden lg:block w-64 h-80 rounded-xl overflow-hidden shadow-2xl rotate-6 hover:rotate-0 transition-transform duration-500">
+<img alt="Vibrant Abstract Pop Art" class="w-full h-full object-cover" data-alt="Close-up of vibrant 3D spheres in shades of pink, yellow and mint floating in a warm cream space with soft shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvsQ2C__hcNbEZNjBTNqCqI_2IF4oZs8JKhkrWnwEBcNNF_epi6Mz55VOsMTqH5z45spsuHS28zd9fmtLoWCA73Cjzwv-UKMKbT77Lz0Aq3_fBwoGMglGbRncZ3uRgjCANo4dKOkKCkaPP1Lfk2jBpvmJU8WQtxiFQj4L1RMewbhh8gFWmEN60Uc_eol4BXmahu3UDbcMfkWyy0tno520-DnkFTmVIbrVLfLAT1WgDkmbVX-s-tSQF6xeN9bTJGOGXCObBPvj3d_4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-white">
+<p class="text-xs font-bold uppercase tracking-widest opacity-80">Season 04</p>
+<p class="text-lg font-black leading-tight">New Trivia<br/>Dropping Daily</p>
+</div>
+</div>
+</body></html>
