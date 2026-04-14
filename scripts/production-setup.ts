@@ -56,7 +56,6 @@ async function setupProduction(options: SetupOptions = {}) {
       const secrets = generateSecureSecrets();
       
       console.log('🔐 Generated secure secrets:');
-      console.log(`JWT_SECRET=${secrets.jwtSecret}`);
       console.log(`SESSION_SECRET=${secrets.sessionSecret}`);
       console.log('\n⚠️  IMPORTANT: Copy these secrets to your .env.production file');
       console.log('⚠️  NEVER commit these secrets to version control');
