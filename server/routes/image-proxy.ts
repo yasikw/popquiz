@@ -4,7 +4,7 @@
  */
 
 import { Router, Request, Response } from 'express';
-import rateLimit from 'express-rate-limit';
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import { z } from 'zod';
 import { imageProxy } from '../services/image-proxy';
 import { securityLogger, SecurityEventType, SecurityLogLevel } from '../utils/securityLogger';
@@ -25,7 +25,7 @@ const imageProxyRateLimit = rateLimit({
   legacyHeaders: false,
   // Enhanced key generation with IPv6 support
   keyGenerator: (req, res) => {
-    const ip = req.ip || req.connection?.remoteAddress || 'unknown';
+    const ip = ipKeyGenerator(req);
     const userAgent = req.get('User-Agent')?.slice(0, 50) || 'unknown';
     return `${ip}-${userAgent}`;
   },
