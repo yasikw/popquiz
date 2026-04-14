@@ -98,14 +98,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use('/api', cspRouter);
   
   // Image proxy routes
-  app.use('/api/image', imageProxyRouter);
+  app.use('/api/image', imageUrlValidationMiddleware, imageProxyRouter);
   
   // セキュリティ監視ミドルウェアを全体に適用
   app.use(abnormalTrafficDetection);
-  app.use(authFailureMonitoring);
   app.use(securityHeadersMonitoring);
   app.use(sessionHijackDetection);
-  app.use(imageUrlValidationMiddleware); // Image URL security validation
   
   // Configure Express to trust proxy headers for proper IP detection
   // Use specific trust proxy setting for better security
@@ -183,7 +181,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/auth/login", authRateLimit, validateInput(authLoginSchema), async (req, res) => {
+  app.post("/api/auth/login", authRateLimit, authFailureMonitoring, validateInput(authLoginSchema), async (req, res) => {
     try {
       const { username, password } = req.body;
 

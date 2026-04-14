@@ -1,4 +1,5 @@
 import fs from 'fs';
+import fsPromises from 'fs/promises';
 import path from 'path';
 import { securityLogger } from './securityLogger';
 
@@ -27,7 +28,7 @@ export class LogAnalyzer {
         return this.getEmptyStats(timeRange);
       }
 
-      const logContent = fs.readFileSync(logFile, 'utf8');
+      const logContent = await fsPromises.readFile(logFile, 'utf8');
       const lines = logContent.trim().split('\n').filter(line => line.trim());
       
       const now = Date.now();
@@ -139,7 +140,7 @@ export class LogAnalyzer {
         return [];
       }
 
-      const logContent = fs.readFileSync(logFile, 'utf8');
+      const logContent = await fsPromises.readFile(logFile, 'utf8');
       const lines = logContent.trim().split('\n').filter(line => line.trim());
       
       const alerts = [];
@@ -191,7 +192,7 @@ export class LogAnalyzer {
     const recommendations: string[] = [];
 
     try {
-      const logStats = securityLogger.getLogStats();
+      const logStats = await securityLogger.getLogStats();
       
       // ログファイルサイズのチェック
       if (logStats.totalSize > 50 * 1024 * 1024) { // 50MB
@@ -266,7 +267,7 @@ export class LogAnalyzer {
         return { foundIssues, recommendations };
       }
 
-      const logContent = fs.readFileSync(logFile, 'utf8');
+      const logContent = await fsPromises.readFile(logFile, 'utf8');
       const lines = logContent.split('\n');
 
       const sensitivePatterns = [

@@ -82,27 +82,22 @@ export function abnormalTrafficDetection(req: ExtendedRequest, res: Response, ne
     }
   }
 
-  // リクエストボディの怪しいパターンをチェック
-  if (!suspiciousActivity && req.body) {
+  if (!suspiciousActivity && req.body && typeof req.body === 'object' && ['POST', 'PUT', 'PATCH'].includes(req.method)) {
     const bodyStr = JSON.stringify(req.body).toLowerCase();
-    const suspiciousPatterns = [
-      /union.*select/,
-      /drop.*table/,
-      /delete.*from/,
-      /insert.*into/,
-      /update.*set/,
-      /<script/,
-      /javascript:/,
-      /eval\(/,
-      /settimeout\(/,
-      /setinterval\(/
-    ];
+    if (bodyStr.length < 50000) {
+      const suspiciousPatterns = [
+        /union.*select/,
+        /drop.*table/,
+        /<script/,
+        /javascript:/,
+      ];
 
-    for (const pattern of suspiciousPatterns) {
-      if (pattern.test(bodyStr)) {
-        suspiciousActivity = true;
-        reason = 'Suspicious payload pattern detected';
-        break;
+      for (const pattern of suspiciousPatterns) {
+        if (pattern.test(bodyStr)) {
+          suspiciousActivity = true;
+          reason = 'Suspicious payload pattern detected';
+          break;
+        }
       }
     }
   }

@@ -1,4 +1,5 @@
 import fs from 'fs';
+import fsPromises from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
 
@@ -111,33 +112,36 @@ class SecurityLogger {
     this.alertThresholds.set(SecurityEventType.SUSPICIOUS_ACTIVITY, 3); // 3回怪しい活動
   }
 
-  private rotateLogsIfNeeded(): void {
+  private async rotateLogsIfNeeded(): Promise<void> {
     try {
-      if (!fs.existsSync(this.logFile)) {
+      try {
+        await fsPromises.access(this.logFile);
+      } catch {
         return;
       }
 
-      const stats = fs.statSync(this.logFile);
+      const stats = await fsPromises.stat(this.logFile);
       if (stats.size < this.maxLogSize) {
         return;
       }
 
-      // 既存のローテーションファイルをシフト
       for (let i = this.maxLogFiles - 1; i > 0; i--) {
         const oldFile = `${this.logFile}.${i}`;
         const newFile = `${this.logFile}.${i + 1}`;
         
-        if (fs.existsSync(oldFile)) {
+        try {
+          await fsPromises.access(oldFile);
           if (i === this.maxLogFiles - 1) {
-            fs.unlinkSync(oldFile); // 最古のファイルを削除
+            await fsPromises.unlink(oldFile);
           } else {
-            fs.renameSync(oldFile, newFile);
+            await fsPromises.rename(oldFile, newFile);
           }
+        } catch {
+          // file doesn't exist, skip
         }
       }
 
-      // 現在のログファイルをローテーション
-      fs.renameSync(this.logFile, `${this.logFile}.1`);
+      await fsPromises.rename(this.logFile, `${this.logFile}.1`);
     } catch (error) {
       console.error('Log rotation failed:', error);
     }
@@ -200,10 +204,14 @@ class SecurityLogger {
 
   private writeLogEntry(entry: SecurityLogEntry): void {
     try {
-      this.rotateLogsIfNeeded();
-      
       const logLine = JSON.stringify(entry) + '\n';
-      fs.appendFileSync(this.logFile, logLine, 'utf8');
+      fs.appendFile(this.logFile, logLine, 'utf8', (err) => {
+        if (err) {
+          console.error('Failed to write security log:', err);
+          return;
+        }
+        this.rotateLogsIfNeeded().catch(e => console.error('Log rotation failed:', e));
+      });
     } catch (error) {
       console.error('Failed to write security log:', error);
     }
@@ -320,17 +328,18 @@ class SecurityLogger {
   }
 
   // ログファイルの統計情報を取得
-  public getLogStats(): { totalSize: number; fileCount: number; lastModified?: Date } {
+  public async getLogStats(): Promise<{ totalSize: number; fileCount: number; lastModified?: Date }> {
     try {
       let totalSize = 0;
       let fileCount = 0;
       let lastModified: Date | undefined;
 
-      const files = fs.readdirSync(this.logDirectory).filter(file => file.startsWith('security.log'));
+      const allFiles = await fsPromises.readdir(this.logDirectory);
+      const files = allFiles.filter(file => file.startsWith('security.log'));
       
       for (const file of files) {
         const filePath = path.join(this.logDirectory, file);
-        const stats = fs.statSync(filePath);
+        const stats = await fsPromises.stat(filePath);
         totalSize += stats.size;
         fileCount++;
         
