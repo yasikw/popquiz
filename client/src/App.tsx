@@ -55,11 +55,11 @@ function Router() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600">
-            {isLoading ? '読み込み中...' : 'セキュリティ設定を初期化中...'}
+            {isLoading ? 'Loading...' : 'Initializing security...'}
           </p>
           {csrfError && (
             <p className="text-red-600 mt-2 text-sm">
-              セキュリティエラー: {csrfError}
+              Security error: {csrfError}
             </p>
           )}
         </div>
