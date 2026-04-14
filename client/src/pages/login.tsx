@@ -33,7 +33,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'ログインに失敗しました');
+        throw new Error(errorData.message || 'Login failed');
       }
 
       const userData = await response.json();
@@ -48,13 +48,13 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       onLogin(userData.user.username, userData.user.id);
       
       toast({
-        title: "ログイン成功",
-        description: `${userData.user.username}さん、おかえりなさい！`,
+        title: "Welcome back!",
+        description: `Hey ${userData.user.username}, good to see you!`,
       });
     } catch (error) {
       toast({
-        title: "ログインエラー",
-        description: error instanceof Error ? error.message : "ログインに失敗しました",
+        title: "Login Error",
+        description: error instanceof Error ? error.message : "Login failed",
         variant: "destructive",
       });
     } finally {
@@ -68,8 +68,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
     if (registerPassword !== confirmPassword) {
       toast({
-        title: "エラー",
-        description: "パスワードが一致しません",
+        title: "Error",
+        description: "Passwords do not match",
         variant: "destructive",
       });
       setIsLoading(false);
@@ -78,8 +78,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
     if (registerPassword.length < 6) {
       toast({
-        title: "エラー",
-        description: "パスワードは6文字以上で入力してください",
+        title: "Error",
+        description: "Password must be at least 6 characters",
         variant: "destructive",
       });
       setIsLoading(false);
@@ -95,7 +95,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'ユーザー登録に失敗しました');
+        throw new Error(errorData.message || 'Registration failed');
       }
 
       const userData = await response.json();
@@ -110,13 +110,13 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       onLogin(userData.user.username, userData.user.id);
 
       toast({
-        title: "登録成功",
-        description: `${userData.user.username}さん、ようこそ！`,
+        title: "Welcome!",
+        description: `Hey ${userData.user.username}, welcome to QuizPop!`,
       });
     } catch (error) {
       toast({
-        title: "登録エラー",
-        description: error instanceof Error ? error.message : "ユーザー登録に失敗しました",
+        title: "Registration Error",
+        description: error instanceof Error ? error.message : "Registration failed",
         variant: "destructive",
       });
     } finally {
@@ -155,10 +155,10 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       <main className="w-full max-w-md mt-8 flex flex-col gap-8">
         <section className="text-center space-y-3">
           <h1 className="text-5xl font-extrabold tracking-tight" style={{ color: '#322f22' }}>
-            さあ、<span className="italic" style={{ color: '#a8275a' }}>始めよう！</span>
+            Ready to <span className="italic" style={{ color: '#a8275a' }}>Pop?</span>
           </h1>
           <p className="font-medium text-lg" style={{ color: '#5f5b4d' }}>
-            AIが作る、あなただけの学習体験
+            Your daily dose of brain-boggling trivia starts here.
           </p>
         </section>
 
@@ -181,7 +181,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                 boxShadow: activeTab === "login" ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
               }}
             >
-              ログイン
+              Sign In
             </button>
             <button
               onClick={() => setActiveTab("register")}
@@ -193,7 +193,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                 boxShadow: activeTab === "register" ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
               }}
             >
-              新規登録
+              Sign Up
             </button>
           </div>
 
@@ -201,13 +201,13 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
             <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-2">
                 <label className="block text-sm font-bold ml-4" style={{ color: '#5f5b4d' }}>
-                  ユーザー名
+                  Username
                 </label>
                 <input
                   type="text"
                   value={loginUsername}
                   onChange={(e) => setLoginUsername(e.target.value)}
-                  placeholder="ユーザー名を入力"
+                  placeholder="Enter your username"
                   required
                   data-testid="input-login-username"
                   className="w-full border-none focus:ring-4 rounded-2xl p-4 font-semibold transition-all outline-none"
@@ -223,14 +223,14 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
               <div className="space-y-2">
                 <label className="block text-sm font-bold ml-4" style={{ color: '#5f5b4d' }}>
-                  パスワード
+                  Password
                 </label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
-                    placeholder="パスワードを入力"
+                    placeholder="••••••••"
                     required
                     data-testid="input-login-password"
                     className="w-full border-none focus:ring-4 rounded-2xl p-4 pr-12 font-semibold transition-all outline-none"
@@ -271,7 +271,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                {isLoading ? "ログイン中..." : "Let's Play!"}
+                {isLoading ? "Signing in..." : "Let's Play!"}
               </button>
             </form>
           )}
@@ -280,13 +280,13 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
             <form onSubmit={handleRegister} className="space-y-5">
               <div className="space-y-2">
                 <label className="block text-sm font-bold ml-4" style={{ color: '#5f5b4d' }}>
-                  ユーザー名
+                  Username
                 </label>
                 <input
                   type="text"
                   value={registerUsername}
                   onChange={(e) => setRegisterUsername(e.target.value)}
-                  placeholder="ユーザー名を入力"
+                  placeholder="Choose a username"
                   required
                   data-testid="input-register-username"
                   className="w-full border-none rounded-2xl p-4 font-semibold transition-all outline-none"
@@ -298,13 +298,13 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
               <div className="space-y-2">
                 <label className="block text-sm font-bold ml-4" style={{ color: '#5f5b4d' }}>
-                  メールアドレス（任意）
+                  Email Address (optional)
                 </label>
                 <input
                   type="email"
                   value={registerEmail}
                   onChange={(e) => setRegisterEmail(e.target.value)}
-                  placeholder="email@example.com"
+                  placeholder="you@example.com"
                   data-testid="input-register-email"
                   className="w-full border-none rounded-2xl p-4 font-semibold transition-all outline-none"
                   style={{ backgroundColor: '#eae2cb', color: '#322f22' }}
@@ -315,14 +315,14 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
               <div className="space-y-2">
                 <label className="block text-sm font-bold ml-4" style={{ color: '#5f5b4d' }}>
-                  パスワード（6文字以上）
+                  Password (min. 6 characters)
                 </label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
                     value={registerPassword}
                     onChange={(e) => setRegisterPassword(e.target.value)}
-                    placeholder="パスワードを入力"
+                    placeholder="••••••••"
                     required
                     data-testid="input-register-password"
                     className="w-full border-none rounded-2xl p-4 pr-12 font-semibold transition-all outline-none"
@@ -345,13 +345,13 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
               <div className="space-y-2">
                 <label className="block text-sm font-bold ml-4" style={{ color: '#5f5b4d' }}>
-                  パスワード確認
+                  Confirm Password
                 </label>
                 <input
                   type={showPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="パスワードを再入力"
+                  placeholder="••••••••"
                   required
                   data-testid="input-confirm-password"
                   className="w-full border-none rounded-2xl p-4 font-semibold transition-all outline-none"
@@ -381,7 +381,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                {isLoading ? "登録中..." : "はじめる！"}
+                {isLoading ? "Creating account..." : "Let's Go!"}
               </button>
             </form>
           )}
@@ -390,24 +390,24 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         <p className="text-center font-semibold" style={{ color: '#5f5b4d' }}>
           {activeTab === "login" ? (
             <>
-              はじめてですか？
+              New to QuizPop?
               <button
                 onClick={() => setActiveTab("register")}
                 className="font-extrabold ml-1 hover:underline transition-all decoration-2 underline-offset-4"
                 style={{ color: '#a8275a' }}
               >
-                アカウント作成
+                Create Account
               </button>
             </>
           ) : (
             <>
-              アカウントをお持ちですか？
+              Already have an account?
               <button
                 onClick={() => setActiveTab("login")}
                 className="font-extrabold ml-1 hover:underline transition-all decoration-2 underline-offset-4"
                 style={{ color: '#a8275a' }}
               >
-                ログイン
+                Sign In
               </button>
             </>
           )}
