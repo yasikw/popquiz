@@ -155,59 +155,6 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     onQuizCompleted();
   };
 
-  if (phase === "result") {
-    const correct = isCurrentAnswerCorrect();
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 pb-20">
-        <div className="max-w-md mx-auto px-4 py-6">
-          <div className="text-center mb-6">
-            <div className="bg-blue-100 rounded-full px-4 py-2 text-blue-800 inline-block">
-              <span className="text-sm font-medium">
-                問題 {currentQuestionIndex + 1} / {quiz.questions.length}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center justify-center min-h-[60vh]">
-            <div
-              className={`flex flex-col items-center transition-all duration-500 ${
-                resultAnimating ? "scale-50 opacity-0" : "scale-100 opacity-100"
-              }`}
-            >
-              {correct ? (
-                <>
-                  <CheckCircle className="w-28 h-28 text-green-500 mb-6" strokeWidth={2.5} />
-                  <h1 className="text-6xl font-black text-green-500 mb-4 tracking-wider">
-                    正解
-                  </h1>
-                  <p className="text-green-600 text-lg font-medium">すばらしい！</p>
-                </>
-              ) : (
-                <>
-                  <XCircle className="w-28 h-28 text-red-500 mb-6" strokeWidth={2.5} />
-                  <h1 className="text-6xl font-black text-red-500 mb-4 tracking-wider">
-                    不正解
-                  </h1>
-                  <p className="text-red-600 text-lg font-medium">
-                    正解は {String.fromCharCode(65 + currentQuestion.correctAnswer)}: {currentQuestion.options[currentQuestion.correctAnswer]}
-                  </p>
-                </>
-              )}
-            </div>
-
-            <Button
-              onClick={handleGoToExplanation}
-              className="mt-12 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white border-0 shadow-lg px-10 py-4 rounded-2xl font-bold text-lg"
-            >
-              次へ
-              <ChevronRight className="w-5 h-5 ml-2" />
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   if (phase === "explanation") {
     const correct = isCurrentAnswerCorrect();
     const userAnswer = userAnswers[currentQuestionIndex];
@@ -308,8 +255,10 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     );
   }
 
+  const correct = isCurrentAnswerCorrect();
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 pb-20 relative">
       <div className="max-w-md mx-auto px-4 py-6">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
@@ -359,11 +308,12 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
                   <button
                     key={index}
                     onClick={() => handleAnswerSelect(index)}
+                    disabled={phase === "result"}
                     className={`w-full p-6 rounded-2xl border transition-all duration-300 ${
                       selectedAnswer === index
                         ? "bg-blue-50 border-blue-300 shadow-lg"
                         : "bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-gray-300"
-                    }`}
+                    } ${phase === "result" ? "pointer-events-none" : ""}`}
                     data-testid={`answer-option-${index}`}
                   >
                     <div className="flex items-center space-x-4">
@@ -385,6 +335,44 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
           </CardContent>
         </Card>
       </div>
+
+      {phase === "result" && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div
+            className={`flex flex-col items-center transition-all duration-500 ${
+              resultAnimating ? "scale-50 opacity-0" : "scale-100 opacity-100"
+            }`}
+          >
+            {correct ? (
+              <>
+                <CheckCircle className="w-28 h-28 text-green-400 mb-6 drop-shadow-lg" strokeWidth={2.5} />
+                <h1 className="text-7xl font-black text-green-400 mb-4 tracking-wider drop-shadow-lg">
+                  正解
+                </h1>
+                <p className="text-green-300 text-xl font-medium">すばらしい！</p>
+              </>
+            ) : (
+              <>
+                <XCircle className="w-28 h-28 text-red-400 mb-6 drop-shadow-lg" strokeWidth={2.5} />
+                <h1 className="text-7xl font-black text-red-400 mb-4 tracking-wider drop-shadow-lg">
+                  不正解
+                </h1>
+                <p className="text-red-300 text-xl font-medium text-center px-6">
+                  正解は {String.fromCharCode(65 + currentQuestion.correctAnswer)}: {currentQuestion.options[currentQuestion.correctAnswer]}
+                </p>
+              </>
+            )}
+          </div>
+
+          <Button
+            onClick={handleGoToExplanation}
+            className="mt-12 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white border-0 shadow-lg px-10 py-4 rounded-2xl font-bold text-lg"
+          >
+            次へ
+            <ChevronRight className="w-5 h-5 ml-2" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
