@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Eye, EyeOff } from "lucide-react";
-import logoImage from "@assets/AIquiz logo_1754457435636.png";
+import { Eye, EyeOff, Sparkles } from "lucide-react";
 
 interface LoginPageProps {
   onLogin: (username: string, userId: string) => void;
@@ -145,8 +144,11 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-10 blur-3xl -z-10" style={{ backgroundColor: '#ff709f' }} />
 
       <header className="fixed top-0 w-full z-50 flex items-center justify-center px-6 h-20">
-        <div className="flex items-center gap-2">
-          <img src={logoImage} alt="AI Quiz Logo" className="h-10 object-contain" />
+        <div className="flex items-center gap-2.5">
+          <Sparkles className="w-7 h-7" style={{ color: '#a8275a' }} strokeWidth={2.5} />
+          <span className="text-2xl font-black tracking-tight" style={{ color: '#a8275a', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            AI Quiz
+          </span>
         </div>
       </header>
 
