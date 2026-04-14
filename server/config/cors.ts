@@ -12,16 +12,11 @@ const getAllowedOrigins = (): string[] => {
   const nodeEnv = process.env.NODE_ENV;
   
   if (nodeEnv === 'production') {
-    // 本番環境: 指定ドメインのみ許可
-    const productionOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+    const productionOrigins = process.env.ALLOWED_ORIGINS?.split(',').map(o => o.trim()) || [];
     
-    // デフォルトの本番ドメインを追加（必要に応じて調整）
-    const defaultProductionOrigins = [
-      'https://your-production-domain.com',
-      'https://api.your-production-domain.com'
-    ];
-    
-    return [...productionOrigins, ...defaultProductionOrigins].filter(Boolean);
+    const replitDomains = (process.env.REPLIT_DOMAINS?.split(',') || []).map(domain => `https://${domain.trim()}`);
+
+    return [...productionOrigins, ...replitDomains].filter(Boolean);
   } else {
     // 開発環境: ALLOWED_ORIGINS環境変数があればそれを使用、なければデフォルト
     const customOrigins = process.env.ALLOWED_ORIGINS?.split(',').map(origin => origin.trim()) || [];
@@ -125,7 +120,7 @@ export const strictCorsConfig: CorsOptions = {
   // Only specific origins for sensitive operations
   origin: (origin, callback) => {
     const strictOrigins = process.env.NODE_ENV === 'production' 
-      ? getAllowedOrigins().filter(o => o.includes('your-production-domain.com'))
+      ? getAllowedOrigins()
       : getAllowedOrigins().filter(o => o.includes('localhost') || o.includes('127.0.0.1'));
     
     if (!origin || strictOrigins.includes(origin)) {
