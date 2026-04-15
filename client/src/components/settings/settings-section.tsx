@@ -1,10 +1,4 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { updateUser } from "@/lib/api";
 import { type User, type UserSettings } from "@shared/schema";
@@ -23,20 +17,17 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [defaultDifficulty, setDefaultDifficulty] = useState("intermediate");
-  const [timeLimit, setTimeLimit] = useState("60");
+  const [timeLimit, setTimeLimit] = useState(30);
   const [questionCount, setQuestionCount] = useState("10");
-  const [autoNext, setAutoNext] = useState(true);
   const { toast } = useToast();
 
   const queryClient = useQueryClient();
 
-  // Load settings from database
   const { data: userSettings, isLoading: settingsLoading } = useQuery({
     queryKey: [`/api/users/${user?.id}/settings`],
     enabled: !!user?.id,
   });
 
-  // Update user info when user prop changes
   useEffect(() => {
     if (user) {
       setUsername(user.username || "");
@@ -44,386 +35,339 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
     }
   }, [user]);
 
-  // Update state when settings are loaded
   useEffect(() => {
     if (userSettings && typeof userSettings === 'object' && 'defaultDifficulty' in userSettings) {
       const settings = userSettings as UserSettings;
       setDefaultDifficulty(settings.defaultDifficulty || "intermediate");
-      setTimeLimit(settings.timeLimit?.toString() || "60");
-      setQuestionCount(settings.questionCount?.toString() || "5");
+      setTimeLimit(settings.timeLimit || 30);
+      setQuestionCount(settings.questionCount?.toString() || "10");
     }
   }, [userSettings]);
 
   const handleSaveUserSettings = async () => {
     if (!user) {
-      toast({
-        title: "エラー",
-        description: "ユーザーが見つかりません",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "User not found", variant: "destructive" });
       return;
     }
-
     try {
       const updatedUser = await updateUser(user.id, { username, email });
       onUserUpdate(updatedUser);
-      toast({
-        title: "成功",
-        description: "ユーザー設定を保存しました",
-      });
+      toast({ title: "Success", description: "User settings saved" });
     } catch (error) {
-      toast({
-        title: "エラー",
-        description: "設定の保存に失敗しました",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "Failed to save settings", variant: "destructive" });
     }
   };
 
   const handleChangePassword = async () => {
     if (!user) {
-      toast({
-        title: "エラー",
-        description: "ユーザーが見つかりません",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "User not found", variant: "destructive" });
       return;
     }
-
     if (!newPassword || newPassword.length < 6) {
-      toast({
-        title: "エラー",
-        description: "新しいパスワードは6文字以上で入力してください",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "Password must be at least 6 characters", variant: "destructive" });
       return;
     }
-
     if (newPassword !== confirmPassword) {
-      toast({
-        title: "エラー",
-        description: "新しいパスワードと確認用パスワードが一致しません",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "Passwords do not match", variant: "destructive" });
       return;
     }
-
     try {
       const response = await fetch('/api/users/change-password', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: user.id,
-          currentPassword,
-          newPassword,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, currentPassword, newPassword }),
       });
-
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'パスワード変更に失敗しました');
+        throw new Error(errorData.message || 'Failed to change password');
       }
-
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-
-      toast({
-        title: "成功",
-        description: "パスワードを変更しました",
-      });
+      toast({ title: "Success", description: "Password changed successfully" });
     } catch (error) {
       toast({
-        title: "エラー",
-        description: error instanceof Error ? error.message : "パスワード変更に失敗しました",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to change password",
         variant: "destructive",
       });
     }
   };
 
-  // Mutation for updating user settings
   const updateSettingsMutation = useMutation({
     mutationFn: async (settingsData: Partial<UserSettings>) => {
       return apiRequest("PUT", `/api/users/${user?.id}/settings`, settingsData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/users/${user?.id}/settings`] });
-      toast({
-        title: "成功",
-        description: "クイズ設定を保存しました",
-      });
+      toast({ title: "Success", description: "Quiz settings saved" });
     },
-    onError: (error: any) => {
-      toast({
-        title: "エラー",
-        description: "設定の保存に失敗しました",
-        variant: "destructive",
-      });
+    onError: () => {
+      toast({ title: "Error", description: "Failed to save settings", variant: "destructive" });
     },
   });
 
-  const handleSaveQuizSettings = () => {
-    if (!user?.id) {
-      toast({
-        title: "エラー",
-        description: "ユーザーが見つかりません",
-        variant: "destructive",
-      });
-      return;
+  const handleSaveAll = () => {
+    handleSaveUserSettings();
+    if (user?.id) {
+      const settingsData = {
+        defaultDifficulty: defaultDifficulty as "beginner" | "intermediate" | "advanced",
+        timeLimit,
+        questionCount: parseInt(questionCount),
+      };
+      updateSettingsMutation.mutate(settingsData);
     }
-
-    const settingsData = {
-      defaultDifficulty: defaultDifficulty as "beginner" | "intermediate" | "advanced",
-      timeLimit: parseInt(timeLimit),
-      questionCount: parseInt(questionCount),
-    };
-    
-    updateSettingsMutation.mutate(settingsData);
   };
 
   const handleExportData = () => {
-    toast({
-      title: "準備中",
-      description: "データエクスポート機能は準備中です",
-    });
+    toast({ title: "Coming Soon", description: "Export feature is under development" });
   };
 
   const handleImportData = () => {
-    toast({
-      title: "準備中", 
-      description: "データインポート機能は準備中です",
-    });
+    toast({ title: "Coming Soon", description: "Import feature is under development" });
   };
 
   const handleClearData = () => {
-    toast({
-      title: "確認",
-      description: "データ削除機能は準備中です",
-    });
+    toast({ title: "Confirm", description: "Delete feature is under development" });
+  };
+
+  const inputStyle: React.CSSProperties = {
+    backgroundColor: '#e4ddc5',
+    border: 'none',
+    borderRadius: '0.75rem',
+    padding: '0.75rem 1rem',
+    width: '100%',
+    fontSize: '0.95rem',
+    fontWeight: 500,
+    color: '#322f22',
+    outline: 'none',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+  };
+
+  const sectionStyle: React.CSSProperties = {
+    backgroundColor: '#f8f0dc',
+    borderRadius: '1rem',
+    padding: '2rem',
   };
 
   return (
-    <section className="mb-12">
-      <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">設定</h3>
-      
-      <div className="grid grid-cols-1 gap-8 max-w-2xl mx-auto">
-        {/* User Settings */}
-        <Card className="bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
-          <CardContent className="p-6">
-            <h4 className="text-lg font-semibold text-gray-800 mb-4">ユーザー設定</h4>
+    <div
+      className="min-h-screen pb-32"
+      style={{
+        backgroundColor: '#fdf6e3',
+        fontFamily: "'Plus Jakarta Sans', 'Noto Sans JP', sans-serif",
+        color: '#322f22',
+      }}
+    >
+      <div className="max-w-xl mx-auto px-6 py-8 space-y-10">
+        <section>
+          <h2 className="text-3xl font-bold tracking-tight" style={{ color: '#322f22' }}>Settings</h2>
+          <p className="mt-1" style={{ color: '#5f5b4d' }}>Manage your profile and quiz preferences</p>
+        </section>
+
+        <div className="space-y-6">
+          <section style={sectionStyle} className="space-y-6">
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined" style={{ color: '#a8275a' }}>person</span>
+              <h3 className="text-xl font-bold">User Settings</h3>
+            </div>
             <div className="space-y-4">
-              <div>
-                <Label htmlFor="username" className="text-sm font-medium text-gray-700">
-                  ユーザー名
-                </Label>
-                <Input
-                  id="username"
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold px-2">Username</label>
+                <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="bg-gray-50/60 border-gray-300/60 text-gray-800 placeholder-gray-500"
+                  style={inputStyle}
                   data-testid="input-username"
+                  onFocus={(e) => e.target.style.boxShadow = '0 0 0 3px rgba(168, 39, 90, 0.15)'}
+                  onBlur={(e) => e.target.style.boxShadow = 'none'}
                 />
               </div>
-              
-              <div>
-                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-                  メールアドレス
-                </Label>
-                <Input
-                  id="email"
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold px-2">Email Address</label>
+                <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-gray-50/60 border-gray-300/60 text-gray-800 placeholder-gray-500"
+                  placeholder="you@example.com"
+                  style={inputStyle}
                   data-testid="input-email"
+                  onFocus={(e) => e.target.style.boxShadow = '0 0 0 3px rgba(168, 39, 90, 0.15)'}
+                  onBlur={(e) => e.target.style.boxShadow = 'none'}
                 />
               </div>
-
-              <Button 
-                onClick={handleSaveUserSettings}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0 shadow-md"
-                data-testid="button-save-user-settings"
-              >
-                設定を保存
-              </Button>
             </div>
-          </CardContent>
-        </Card>
+          </section>
 
-        {/* パスワード変更セクション */}
-        <Card className="bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
-          <CardContent className="p-6">
-            <h4 className="text-lg font-semibold text-gray-800 mb-4">パスワード変更</h4>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="currentPassword" className="text-sm font-medium text-gray-700">
-                  現在のパスワード
-                </Label>
-                <Input
-                  id="currentPassword"
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="bg-gray-50/60 border-gray-300/60 text-gray-800 placeholder-gray-500"
-                  data-testid="input-current-password"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="newPassword" className="text-sm font-medium text-gray-700">
-                  新しいパスワード (6文字以上)
-                </Label>
-                <Input
-                  id="newPassword"
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="bg-gray-50/60 border-gray-300/60 text-gray-800 placeholder-gray-500"
-                  data-testid="input-new-password"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
-                  新しいパスワード（確認）
-                </Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="bg-gray-50/60 border-gray-300/60 text-gray-800 placeholder-gray-500"
-                  data-testid="input-confirm-password"
-                />
-              </div>
-
-              <Button 
-                onClick={handleChangePassword}
-                className="w-full bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white border-0 shadow-md"
-                data-testid="button-change-password"
-              >
-                パスワードを変更
-              </Button>
+          <section style={sectionStyle} className="space-y-6">
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined" style={{ color: '#006764' }}>settings_suggest</span>
+              <h3 className="text-xl font-bold">Quiz Settings</h3>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Quiz Settings */}
-        <Card className="bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
-          <CardContent className="p-6">
-            <h4 className="text-lg font-semibold text-gray-800 mb-4">クイズ設定</h4>
-            <div className="space-y-4">
-              <div>
-                <Label className="text-sm font-medium text-gray-700">デフォルト難易度</Label>
-                <Select value={defaultDifficulty} onValueChange={setDefaultDifficulty}>
-                  <SelectTrigger className="bg-gray-50/60 border-gray-300/60 text-gray-800" data-testid="select-default-difficulty">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white/40 border-gray-200/60">
-                    <SelectItem value="beginner" className="text-gray-800 hover:bg-gray-100">初級</SelectItem>
-                    <SelectItem value="intermediate" className="text-gray-800 hover:bg-gray-100">中級</SelectItem>
-                    <SelectItem value="advanced" className="text-gray-800 hover:bg-gray-100">上級</SelectItem>
-                  </SelectContent>
-                </Select>
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold px-2">Default Difficulty</label>
+                <select
+                  value={defaultDifficulty}
+                  onChange={(e) => setDefaultDifficulty(e.target.value)}
+                  style={inputStyle}
+                  className="cursor-pointer"
+                  data-testid="select-default-difficulty"
+                >
+                  <option value="beginner">Easy</option>
+                  <option value="intermediate">Medium</option>
+                  <option value="advanced">Hard</option>
+                </select>
               </div>
-              
-              <div>
-                <Label htmlFor="time-limit" className="text-sm font-medium text-gray-700">
-                  1問あたりの制限時間（秒）
-                </Label>
-                <Input
-                  id="time-limit"
-                  type="number"
+
+              <div className="space-y-2">
+                <div className="flex justify-between items-center px-2">
+                  <label className="text-sm font-semibold">Time Limit</label>
+                  <span className="text-xs font-bold" style={{ color: '#005957' }}>{timeLimit}s</span>
+                </div>
+                <input
+                  type="range"
+                  min="10"
+                  max="60"
+                  step="5"
                   value={timeLimit}
-                  onChange={(e) => setTimeLimit(e.target.value)}
-                  min="30"
-                  max="120"
-                  className="bg-gray-50/60 border-gray-300/60 text-gray-800 placeholder-gray-500"
+                  onChange={(e) => setTimeLimit(parseInt(e.target.value))}
+                  className="w-full h-3 rounded-full appearance-none cursor-pointer"
+                  style={{ backgroundColor: '#e4ddc5', accentColor: '#006764' }}
                   data-testid="input-time-limit"
                 />
               </div>
 
-              <div>
-                <Label className="text-sm font-medium text-gray-700">問題数</Label>
-                <Select value={questionCount} onValueChange={setQuestionCount}>
-                  <SelectTrigger className="bg-gray-50/60 border-gray-300/60 text-gray-800" data-testid="select-question-count">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white/40 border-gray-200/60">
-                    <SelectItem value="5" className="text-gray-800 hover:bg-gray-100">5問</SelectItem>
-                    <SelectItem value="10" className="text-gray-800 hover:bg-gray-100">10問</SelectItem>
-                    <SelectItem value="15" className="text-gray-800 hover:bg-gray-100">15問</SelectItem>
-                    <SelectItem value="20" className="text-gray-800 hover:bg-gray-100">20問</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold px-2">Question Count</label>
+                <div className="flex gap-2">
+                  {["10", "20", "50"].map((count) => (
+                    <button
+                      key={count}
+                      onClick={() => setQuestionCount(count)}
+                      className="flex-1 py-2.5 rounded-lg font-bold text-sm transition-all duration-200"
+                      style={{
+                        backgroundColor: questionCount === count ? '#006764' : '#e4ddc5',
+                        color: questionCount === count ? '#bcfffb' : '#322f22',
+                      }}
+                      data-testid={`button-question-count-${count}`}
+                    >
+                      {count}
+                    </button>
+                  ))}
+                </div>
               </div>
-
-              <div className="flex items-center space-x-3">
-                <Checkbox
-                  id="auto-next"
-                  checked={autoNext}
-                  onCheckedChange={(checked) => setAutoNext(checked as boolean)}
-                  className="border-gray-300 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
-                  data-testid="checkbox-auto-next"
-                />
-                <Label htmlFor="auto-next" className="text-sm text-gray-700">
-                  回答後自動で次の問題に進む
-                </Label>
-              </div>
-
-              <Button 
-                onClick={handleSaveQuizSettings}
-                disabled={updateSettingsMutation.isPending || settingsLoading}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white border-0 shadow-md disabled:opacity-50"
-                data-testid="button-save-quiz-settings"
-              >
-                {updateSettingsMutation.isPending ? "保存中..." : "設定を保存"}
-              </Button>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </section>
 
-      {/* Data Management */}
-      <Card className="mt-8 bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
-        <CardContent className="p-6">
-          <h4 className="text-lg font-semibold text-gray-800 mb-4">データ管理</h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button
-              variant="outline"
-              onClick={handleExportData}
-              className="flex items-center justify-center space-x-2 bg-gray-50/60 border-gray-300/60 text-gray-700 hover:bg-gray-100/60 hover:border-gray-400/60"
-              data-testid="button-export-data"
-            >
-              <i className="fas fa-download"></i>
-              <span>データをエクスポート</span>
-            </Button>
-            
-            <Button
-              variant="outline" 
-              onClick={handleImportData}
-              className="flex items-center justify-center space-x-2 bg-gray-50/60 border-gray-300/60 text-gray-700 hover:bg-gray-100/60 hover:border-gray-400/60"
-              data-testid="button-import-data"
-            >
-              <i className="fas fa-upload"></i>
-              <span>データをインポート</span>
-            </Button>
-            
-            <Button
-              variant="outline"
-              onClick={handleClearData}
-              className="flex items-center justify-center space-x-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0 shadow-md"
-              data-testid="button-clear-data"
-            >
-              <i className="fas fa-trash"></i>
-              <span>全データを削除</span>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </section>
+          <section style={sectionStyle} className="space-y-6">
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined" style={{ color: '#a8275a' }}>lock_reset</span>
+              <h3 className="text-xl font-bold">Change Password</h3>
+            </div>
+            <div className="space-y-4">
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Current Password"
+                style={inputStyle}
+                data-testid="input-current-password"
+                onFocus={(e) => e.target.style.boxShadow = '0 0 0 3px rgba(168, 39, 90, 0.15)'}
+                onBlur={(e) => e.target.style.boxShadow = 'none'}
+              />
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="New Password"
+                style={inputStyle}
+                data-testid="input-new-password"
+                onFocus={(e) => e.target.style.boxShadow = '0 0 0 3px rgba(168, 39, 90, 0.15)'}
+                onBlur={(e) => e.target.style.boxShadow = 'none'}
+              />
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm New Password"
+                style={inputStyle}
+                data-testid="input-confirm-password"
+                onFocus={(e) => e.target.style.boxShadow = '0 0 0 3px rgba(168, 39, 90, 0.15)'}
+                onBlur={(e) => e.target.style.boxShadow = 'none'}
+              />
+              <button
+                onClick={handleChangePassword}
+                className="w-full py-3.5 rounded-lg font-bold text-white shadow-md transition-all duration-300 active:scale-[0.98]"
+                style={{
+                  background: 'linear-gradient(135deg, #a8275a, #ff709f)',
+                  boxShadow: '0 4px 12px rgba(168, 39, 90, 0.25)',
+                }}
+                data-testid="button-change-password"
+              >
+                Update Password
+              </button>
+            </div>
+          </section>
+
+          <section style={sectionStyle} className="space-y-6">
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined" style={{ color: '#b41340' }}>database</span>
+              <h3 className="text-xl font-bold">Data Management</h3>
+            </div>
+            <p className="text-sm" style={{ color: '#5f5b4d' }}>
+              Manage your quiz history, awards, and account data safely.
+            </p>
+            <div className="space-y-3">
+              <button
+                onClick={handleExportData}
+                className="flex items-center justify-center gap-2 w-full py-4 rounded-lg font-bold transition-colors"
+                style={{ backgroundColor: '#e4ddc5', color: '#322f22' }}
+                data-testid="button-export-data"
+              >
+                <span className="material-symbols-outlined text-xl">download</span>
+                Export Data
+              </button>
+              <button
+                onClick={handleImportData}
+                className="flex items-center justify-center gap-2 w-full py-4 rounded-lg font-bold transition-colors"
+                style={{ backgroundColor: '#e4ddc5', color: '#322f22' }}
+                data-testid="button-import-data"
+              >
+                <span className="material-symbols-outlined text-xl">upload</span>
+                Import Data
+              </button>
+              <button
+                onClick={handleClearData}
+                className="flex items-center justify-center gap-2 w-full py-4 rounded-lg font-bold transition-all"
+                style={{ backgroundColor: '#f74b6d', color: '#510017' }}
+                data-testid="button-clear-data"
+              >
+                <span className="material-symbols-outlined text-xl">delete_forever</span>
+                Delete All
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <div className="flex justify-center pt-4">
+          <button
+            onClick={handleSaveAll}
+            disabled={updateSettingsMutation.isPending || settingsLoading}
+            className="flex items-center gap-3 px-12 py-4 rounded-full font-extrabold text-lg shadow-xl transition-all duration-300 active:scale-95 disabled:opacity-60"
+            style={{
+              backgroundColor: '#ffd709',
+              color: '#5b4b00',
+              boxShadow: '0 8px 24px rgba(255, 215, 9, 0.3)',
+            }}
+            data-testid="button-save-all"
+          >
+            {updateSettingsMutation.isPending ? "Saving..." : "Save All Changes"}
+            <span className="material-symbols-outlined">check_circle</span>
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
