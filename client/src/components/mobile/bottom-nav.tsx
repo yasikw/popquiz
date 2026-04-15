@@ -5,7 +5,8 @@ interface BottomNavProps {
 
 const navItems = [
   { id: "home", label: "Play", icon: "videogame_asset" },
-  { id: "stats", label: "Rank", icon: "leaderboard" },
+  { id: "stats", label: "Stats", icon: "bar_chart" },
+  { id: "ranking", label: "Rank", icon: "leaderboard" },
   { id: "results", label: "Store", icon: "local_mall" },
   { id: "settings", label: "Me", icon: "face" },
 ];
@@ -29,7 +30,7 @@ export default function BottomNav({ activeSection, onSectionChange }: BottomNavP
           <button
             key={item.id}
             onClick={() => onSectionChange(item.id)}
-            className="flex flex-col items-center justify-center px-5 py-2 transition-all duration-200 active:scale-95"
+            className="flex flex-col items-center justify-center px-4 py-2 transition-all duration-200 active:scale-95"
             style={{
               borderRadius: '9999px',
               backgroundColor: isActive ? '#ffd709' : 'transparent',

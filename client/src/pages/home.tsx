@@ -4,6 +4,7 @@ import Header from "@/components/layout/header";
 import QuizInterface from "@/components/quiz/quiz-interface";
 import ResultsSection from "@/components/quiz/results-section";
 import StatsSection from "@/components/stats/stats-section";
+import RankingSection from "@/components/ranking/ranking-section";
 import SettingsSection from "@/components/settings/settings-section";
 import LoadingOverlay from "@/components/ui/loading-overlay";
 import CardStack from "@/components/mobile/card-stack";
@@ -92,6 +93,10 @@ export default function Home({ user, onLogout }: HomeProps) {
 
         {activeSection === "stats" && (
           <StatsSection userId={user.id} />
+        )}
+
+        {activeSection === "ranking" && (
+          <RankingSection userId={user.id} username={user.username} />
         )}
 
         {activeSection === "settings" && (
