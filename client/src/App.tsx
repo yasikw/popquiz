@@ -10,7 +10,6 @@ import LoginPage from "@/pages/login";
 import ImageDemo from "@/pages/ImageDemo";
 import NotFound from "@/pages/not-found";
 import { type User } from "@shared/schema";
-import bgImage from "@assets/BG_1754455391940.png";
 
 function Router() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -85,11 +84,14 @@ function App() {
     <div 
       className="min-h-screen"
       style={{
-        backgroundImage: `url(${bgImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed'
+        backgroundColor: '#fdf6e3',
+        backgroundImage: `
+          radial-gradient(at 0% 0%, rgba(255, 112, 159, 0.15) 0px, transparent 50%),
+          radial-gradient(at 100% 0%, rgba(116, 247, 241, 0.15) 0px, transparent 50%),
+          radial-gradient(at 100% 100%, rgba(255, 215, 9, 0.15) 0px, transparent 50%),
+          radial-gradient(at 0% 100%, rgba(168, 39, 90, 0.1) 0px, transparent 50%)
+        `,
+        backgroundAttachment: 'fixed',
       }}
     >
       <QueryClientProvider client={queryClient}>

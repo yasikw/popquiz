@@ -154,7 +154,6 @@ export default function SettingsSection({ user, onUserUpdate }: SettingsSectionP
     <div
       className="min-h-screen pb-32"
       style={{
-        backgroundColor: '#fdf6e3',
         fontFamily: "'Plus Jakarta Sans', 'Noto Sans JP', sans-serif",
         color: '#322f22',
       }}

@@ -9,7 +9,6 @@ import LoadingOverlay from "@/components/ui/loading-overlay";
 import CardStack from "@/components/mobile/card-stack";
 import BottomNav from "@/components/mobile/bottom-nav";
 import { type GeneratedQuiz, type User } from "@shared/schema";
-import bgImage from "@assets/BG_1754455391940.png";
 
 interface HomeProps {
   user: User;
