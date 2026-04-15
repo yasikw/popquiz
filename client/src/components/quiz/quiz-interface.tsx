@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import CircularProgress from "@/components/ui/circular-progress";
 import { type GeneratedQuiz } from "@shared/schema";
 import { submitQuizResults } from "@/lib/api";
-import { CheckCircle, XCircle, ChevronRight, ChevronLeft, ArrowRight } from "lucide-react";
 
 interface QuizInterfaceProps {
   quiz: GeneratedQuiz;
@@ -13,6 +9,8 @@ interface QuizInterfaceProps {
 }
 
 type QuizPhase = "answering" | "result" | "explanation";
+
+const OPTION_LETTERS = ["A", "B", "C", "D", "E", "F"];
 
 export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInterfaceProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -30,9 +28,11 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
   const [resultAnimating, setResultAnimating] = useState(false);
 
   const currentQuestion = quiz.questions[currentQuestionIndex];
+  const totalQuestions = quiz.questions.length;
+  const answeredCount = userAnswers.filter((a) => a !== null).length;
 
   useEffect(() => {
-    const savedSettings = localStorage.getItem('quizSettings');
+    const savedSettings = localStorage.getItem("quizSettings");
     if (savedSettings) {
       const settings = JSON.parse(savedSettings);
       setTimeLimit(settings.timeLimit || 60);
@@ -68,12 +68,10 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (phase !== "answering") return;
-
     setSelectedAnswer(answerIndex);
     const newAnswers = [...userAnswers];
     newAnswers[currentQuestionIndex] = answerIndex;
     setUserAnswers(newAnswers);
-
     showResult();
   };
 
@@ -88,13 +86,8 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     return answer !== null && answer !== undefined && answer === currentQuestion.correctAnswer;
   };
 
-  const handleGoToExplanation = () => {
-    setPhase("explanation");
-  };
-
-  const handleBackToResult = () => {
-    setPhase("result");
-  };
+  const handleGoToExplanation = () => setPhase("explanation");
+  const handleBackToResult = () => setPhase("result");
 
   const handleNextQuestion = () => {
     const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
@@ -102,7 +95,7 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     newTimes[currentQuestionIndex] = timeSpent;
     setQuestionTimes(newTimes);
 
-    if (currentQuestionIndex < quiz.questions.length - 1) {
+    if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setPhase("answering");
       setSelectedAnswer(null);
@@ -111,15 +104,36 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     }
   };
 
-  const handleQuizCompleteWithData = async (finalAnswers: (number | null)[], currentTimes: number[]) => {
+  const handlePrevQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setPhase("answering");
+    }
+  };
+
+  const handleSkipQuestion = () => {
+    const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
+    const newTimes = [...questionTimes];
+    newTimes[currentQuestionIndex] = timeSpent;
+    setQuestionTimes(newTimes);
+
+    if (currentQuestionIndex < totalQuestions - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setPhase("answering");
+      setSelectedAnswer(null);
+    }
+  };
+
+  const handleQuizCompleteWithData = async (
+    finalAnswers: (number | null)[],
+    currentTimes: number[]
+  ) => {
     const finalTimeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
     const finalTimes = [...currentTimes];
     finalTimes[currentQuestionIndex] = finalTimeSpent;
 
     const score = finalAnswers.reduce((total: number, answer, index) => {
-      if (answer !== null && answer === quiz.questions[index].correctAnswer) {
-        return total + 1;
-      }
+      if (answer !== null && answer === quiz.questions[index].correctAnswer) return total + 1;
       return total;
     }, 0);
 
@@ -135,121 +149,194 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     const totalTime = finalTimes.reduce((sum, time) => sum + time, 0);
     const quizResults = {
       score,
-      totalQuestions: quiz.questions.length,
-      percentage: Math.round((score / quiz.questions.length) * 100),
+      totalQuestions: totalQuestions,
+      percentage: Math.round((score / totalQuestions) * 100),
       totalTimeSpent: totalTime,
-      detailedResults
+      detailedResults,
     };
 
     try {
-      const contentType = localStorage.getItem('lastContentType') || 'text';
-      await submitQuizResults(userId, {
-        ...quiz,
-        contentType: contentType
-      }, quizResults);
+      const contentType = localStorage.getItem("lastContentType") || "text";
+      await submitQuizResults(userId, { ...quiz, contentType }, quizResults);
     } catch (error) {
       console.error("Failed to submit quiz results:", error);
     }
 
-    localStorage.setItem('quizResults', JSON.stringify(quizResults));
+    localStorage.setItem("quizResults", JSON.stringify(quizResults));
     onQuizCompleted();
   };
+
+  const progressPercent = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+  const circumference = 2 * Math.PI * 28;
+  const strokeDashoffset = circumference - (progressPercent / 100) * circumference;
+  const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+  const seconds = String(timeLeft % 60).padStart(2, "0");
+  const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
+
+  const renderProgressRing = (score: number) => (
+    <div className="relative w-16 h-16">
+      <svg className="w-full h-full" viewBox="0 0 64 64">
+        <circle
+          cx="32" cy="32" r="28"
+          fill="transparent"
+          stroke="#e4ddc5"
+          strokeWidth="6"
+        />
+        <circle
+          cx="32" cy="32" r="28"
+          fill="transparent"
+          stroke="#a8275a"
+          strokeWidth="6"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          style={{
+            transform: "rotate(-90deg)",
+            transformOrigin: "50% 50%",
+            transition: "stroke-dashoffset 0.35s",
+          }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-sm" style={{ fontWeight: 900, color: '#a8275a' }}>{score}</span>
+      </div>
+    </div>
+  );
 
   if (phase === "explanation") {
     const correct = isCurrentAnswerCorrect();
     const userAnswer = userAnswers[currentQuestionIndex];
-    const isLastQuestion = currentQuestionIndex === quiz.questions.length - 1;
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 pb-20">
-        <div className="max-w-md mx-auto px-4 py-6">
-          <div className="text-center mb-6">
-            <div className="bg-blue-100 rounded-full px-4 py-2 text-blue-800 inline-block">
-              <span className="text-sm font-medium">
-                問題 {currentQuestionIndex + 1} / {quiz.questions.length} — 解説
-              </span>
+      <div className="space-y-8 pb-32">
+        {/* Status Row */}
+        <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-4">
+            {renderProgressRing(answeredCount)}
+            <div>
+              <p className="text-xs font-bold tracking-wider" style={{ color: '#5f5b4d' }}>EXPLANATION</p>
+              <p className="text-xl" style={{ fontWeight: 900, color: '#322f22' }}>
+                {currentQuestionIndex + 1}/{totalQuestions}
+              </p>
             </div>
           </div>
+        </div>
 
-          <Card className="bg-white shadow-lg border border-gray-200">
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-6 leading-relaxed">
-                {currentQuestion.question}
-              </h3>
+        {/* Question + Options with Results */}
+        <section className="relative">
+          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full blur-2xl" style={{ backgroundColor: 'rgba(0,103,100,0.1)' }} />
+          <div
+            className="relative overflow-hidden p-8"
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '1rem',
+              boxShadow: '0 16px 32px rgba(50, 47, 34, 0.08)',
+            }}
+          >
+            <div className="absolute top-0 left-0 w-full h-2" style={{ background: 'linear-gradient(to right, #a8275a, #ff709f)' }} />
 
-              <div className="space-y-3 mb-6">
-                {currentQuestion.options.map((option, index) => {
-                  const isCorrectOption = index === currentQuestion.correctAnswer;
-                  const isUserChoice = index === userAnswer;
-                  let borderColor = "border-gray-200 bg-gray-50";
-                  let textColor = "text-gray-600";
-                  let badgeColor = "bg-gray-200 text-gray-700";
+            <h2
+              className="text-xl leading-tight tracking-tight mb-6"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 900, color: '#322f22' }}
+            >
+              {currentQuestion.question}
+            </h2>
 
-                  if (isCorrectOption) {
-                    borderColor = "border-green-400 bg-green-50";
-                    textColor = "text-green-800";
-                    badgeColor = "bg-green-500 text-white";
-                  } else if (isUserChoice && !correct) {
-                    borderColor = "border-red-400 bg-red-50";
-                    textColor = "text-red-800";
-                    badgeColor = "bg-red-500 text-white";
-                  }
+            <div className="space-y-3 mb-6">
+              {currentQuestion.options.map((option, index) => {
+                const isCorrectOption = index === currentQuestion.correctAnswer;
+                const isUserChoice = index === userAnswer;
+                let bg = '#f8f0dc';
+                let borderCol = 'transparent';
+                let textCol = '#322f22';
+                let badgeBg = '#e4ddc5';
+                let badgeText = '#a8275a';
 
-                  return (
+                if (isCorrectOption) {
+                  bg = '#74f7f1';
+                  borderCol = '#006764';
+                  textCol = '#005c59';
+                  badgeBg = '#006764';
+                  badgeText = '#ffffff';
+                } else if (isUserChoice && !correct) {
+                  bg = '#ffeff1';
+                  borderCol = '#b41340';
+                  textCol = '#510017';
+                  badgeBg = '#b41340';
+                  badgeText = '#ffffff';
+                }
+
+                return (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 p-5 transition-all"
+                    style={{
+                      borderRadius: '0.75rem',
+                      backgroundColor: bg,
+                      border: `2px solid ${borderCol}`,
+                    }}
+                  >
                     <div
-                      key={index}
-                      className={`p-4 rounded-xl border-2 ${borderColor} transition-all`}
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0"
+                      style={{ fontWeight: 900, backgroundColor: badgeBg, color: badgeText }}
                     >
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${badgeColor}`}>
-                          {String.fromCharCode(65 + index)}
-                        </div>
-                        <span className={`font-medium text-left flex-1 ${textColor}`}>
-                          {option}
-                        </span>
-                        {isCorrectOption && (
-                          <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                        )}
-                        {isUserChoice && !isCorrectOption && (
-                          <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                        )}
-                      </div>
+                      {OPTION_LETTERS[index]}
                     </div>
-                  );
-                })}
-              </div>
+                    <span className="flex-grow text-lg font-bold" style={{ color: textCol }}>
+                      {option}
+                    </span>
+                    {isCorrectOption && (
+                      <span className="material-symbols-outlined" style={{ color: '#006764', fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                    )}
+                    {isUserChoice && !isCorrectOption && (
+                      <span className="material-symbols-outlined" style={{ color: '#b41340', fontVariationSettings: "'FILL' 1" }}>cancel</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
-                <h4 className="text-blue-800 font-bold text-base mb-2 flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                  解説
-                </h4>
-                <p className="text-blue-900 leading-relaxed text-sm">
-                  {currentQuestion.explanation}
-                </p>
+            {/* Explanation Box */}
+            <div
+              className="p-5"
+              style={{
+                backgroundColor: 'rgba(116, 247, 241, 0.15)',
+                borderRadius: '0.75rem',
+              }}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <span className="material-symbols-outlined" style={{ color: '#006764' }}>lightbulb</span>
+                <h4 className="font-bold" style={{ color: '#006764' }}>Explanation</h4>
               </div>
-            </CardContent>
-          </Card>
-
-          <div className="flex gap-4 mt-6">
-            <Button
-              variant="outline"
-              onClick={handleBackToResult}
-              className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50 py-4 rounded-xl font-semibold text-base"
-            >
-              <ChevronLeft className="w-5 h-5 mr-1" />
-              戻る
-            </Button>
-            <Button
-              onClick={handleNextQuestion}
-              className="flex-1 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white border-0 shadow-lg py-4 rounded-xl font-bold text-base"
-            >
-              {isLastQuestion ? "結果を見る" : "次へ進む"}
-              <ArrowRight className="w-5 h-5 ml-1" />
-            </Button>
+              <p className="text-sm leading-relaxed" style={{ color: '#005c59' }}>
+                {currentQuestion.explanation}
+              </p>
+            </div>
           </div>
+        </section>
+
+        {/* Action Controls */}
+        <div className="grid grid-cols-2 gap-4 pb-8">
+          <button
+            onClick={handleBackToResult}
+            className="flex flex-col items-center justify-center gap-2 py-4 font-bold transition-colors active:scale-95"
+            style={{ backgroundColor: '#efe8d2', color: '#5f5b4d', borderRadius: '0.75rem' }}
+          >
+            <span className="material-symbols-outlined">arrow_back</span>
+            <span className="text-xs">Back</span>
+          </button>
+          <button
+            onClick={handleNextQuestion}
+            className="flex flex-col items-center justify-center gap-2 py-4 text-white font-bold transition-all active:scale-95"
+            style={{
+              background: 'linear-gradient(135deg, #a8275a, #ff709f)',
+              borderRadius: '0.75rem',
+              boxShadow: '0 4px 12px rgba(168, 39, 90, 0.25)',
+            }}
+          >
+            <span className="material-symbols-outlined">arrow_forward</span>
+            <span className="text-xs">{isLastQuestion ? "See Results" : "Next"}</span>
+          </button>
         </div>
       </div>
     );
@@ -258,86 +345,176 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
   const correct = isCurrentAnswerCorrect();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 pb-20 relative">
-      <div className="max-w-md mx-auto px-4 py-6">
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-6">
-            <CircularProgress
-              value={currentQuestionIndex + 1}
-              max={quiz.questions.length}
-              size={140}
-              className="mb-4"
-            >
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-1">
-                  {Math.round(((currentQuestionIndex + 1) / quiz.questions.length) * 100)}
-                </div>
-                <div className="text-xs text-gray-500 font-medium">
-                  完了
-                </div>
-              </div>
-            </CircularProgress>
-          </div>
-
-          <div className="flex justify-center items-center space-x-4 mb-4">
-            <div className="bg-blue-100 rounded-full px-4 py-2 text-blue-800">
-              <span className="text-sm font-medium">
-                問題 {currentQuestionIndex + 1} / {quiz.questions.length}
-              </span>
-            </div>
-            <div className="bg-green-100 rounded-full px-4 py-2 text-green-800 flex items-center space-x-2">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-              </svg>
-              <span className="text-sm font-medium" data-testid="time-remaining">
-                {String(Math.floor(timeLeft / 60)).padStart(2, '0')}:{String(timeLeft % 60).padStart(2, '0')}
-              </span>
-            </div>
+    <div className="space-y-8 pb-32 relative">
+      {/* Status Row */}
+      <div className="flex items-center justify-between px-2">
+        <div className="flex items-center gap-4">
+          {renderProgressRing(answeredCount)}
+          <div>
+            <p className="text-xs font-bold tracking-wider" style={{ color: '#5f5b4d' }}>COMPLETED</p>
+            <p className="text-xl" style={{ fontWeight: 900, color: '#322f22' }}>
+              {currentQuestionIndex + 1}/{totalQuestions}
+            </p>
           </div>
         </div>
 
-        <Card className="bg-white shadow-lg border border-gray-200">
-          <CardContent className="p-8">
-            <div className="mb-8 text-center">
-              <h3 className="text-2xl font-semibold text-gray-800 mb-8" data-testid="question-text">
-                {currentQuestion.question}
-              </h3>
-
-              <div className="space-y-4">
-                {currentQuestion.options.map((option, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    disabled={phase === "result"}
-                    className={`w-full p-6 rounded-2xl border transition-all duration-300 ${
-                      selectedAnswer === index
-                        ? "bg-blue-50 border-blue-300 shadow-lg"
-                        : "bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-gray-300"
-                    } ${phase === "result" ? "pointer-events-none" : ""}`}
-                    data-testid={`answer-option-${index}`}
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
-                          selectedAnswer === index
-                            ? "bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-lg"
-                            : "bg-gray-200 text-gray-700 border border-gray-300"
-                        }`}
-                      >
-                        {String.fromCharCode(65 + index)}
-                      </div>
-                      <span className="text-gray-800 font-medium text-left flex-1">{option}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Timer */}
+        <div
+          className="px-5 py-3 flex items-center gap-3"
+          style={{
+            backgroundColor: 'rgba(255, 215, 9, 0.3)',
+            borderRadius: '1rem',
+          }}
+        >
+          <span
+            className="material-symbols-outlined"
+            style={{ color: '#6c5a00', animation: timeLeft <= 10 ? 'pulse 1s infinite' : 'none' }}
+          >
+            schedule
+          </span>
+          <span
+            className="text-2xl tabular-nums"
+            style={{ fontWeight: 900, color: '#5b4b00' }}
+            data-testid="time-remaining"
+          >
+            {minutes}:{seconds}
+          </span>
+        </div>
       </div>
 
+      {/* Question Card */}
+      <section className="relative">
+        <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full blur-2xl" style={{ backgroundColor: 'rgba(0,103,100,0.1)' }} />
+        <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full blur-2xl" style={{ backgroundColor: 'rgba(168,39,90,0.1)' }} />
+
+        <div
+          className="relative overflow-hidden p-8"
+          style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '1rem',
+            boxShadow: '0 16px 32px rgba(50, 47, 34, 0.08)',
+          }}
+        >
+          <div className="absolute top-0 left-0 w-full h-2" style={{ background: 'linear-gradient(to right, #a8275a, #ff709f)' }} />
+
+          <span
+            className="inline-block px-4 py-1 rounded-full text-xs font-bold mb-6"
+            style={{ backgroundColor: '#74f7f1', color: '#005c59' }}
+          >
+            QUIZ
+          </span>
+
+          <h2
+            className="text-2xl leading-tight tracking-tight"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 900, color: '#322f22' }}
+            data-testid="question-text"
+          >
+            {currentQuestion.question}
+          </h2>
+        </div>
+      </section>
+
+      {/* Answer Options */}
+      <div className="grid grid-cols-1 gap-4">
+        {currentQuestion.options.map((option, index) => {
+          const isSelected = selectedAnswer === index;
+          return (
+            <button
+              key={index}
+              onClick={() => handleAnswerSelect(index)}
+              disabled={phase === "result"}
+              className="group w-full flex items-center gap-4 p-5 transition-all active:scale-[0.98] duration-200 text-left"
+              style={{
+                borderRadius: '0.75rem',
+                backgroundColor: isSelected ? '#74f7f1' : '#f8f0dc',
+                border: isSelected ? '2px solid #006764' : '2px solid transparent',
+                boxShadow: isSelected ? '0 4px 12px rgba(0, 103, 100, 0.1)' : 'none',
+                pointerEvents: phase === "result" ? "none" : "auto",
+              }}
+              data-testid={`answer-option-${index}`}
+            >
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0 transition-colors"
+                style={{
+                  fontWeight: 900,
+                  backgroundColor: isSelected ? '#006764' : '#e4ddc5',
+                  color: isSelected ? '#bcfffb' : '#a8275a',
+                }}
+              >
+                {OPTION_LETTERS[index]}
+              </div>
+              <span
+                className="flex-grow text-lg font-bold"
+                style={{ color: isSelected ? '#005c59' : '#322f22' }}
+              >
+                {option}
+              </span>
+              {isSelected && (
+                <span
+                  className="material-symbols-outlined"
+                  style={{ color: '#006764', fontVariationSettings: "'FILL' 1" }}
+                >
+                  check_circle
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Action Controls */}
+      <div className="grid grid-cols-3 gap-4 pb-8">
+        <button
+          onClick={handlePrevQuestion}
+          disabled={currentQuestionIndex === 0}
+          className="flex flex-col items-center justify-center gap-2 py-4 font-bold transition-colors active:scale-95"
+          style={{
+            backgroundColor: '#efe8d2',
+            color: currentQuestionIndex === 0 ? '#b2ad9c' : '#5f5b4d',
+            borderRadius: '0.75rem',
+            opacity: currentQuestionIndex === 0 ? 0.5 : 1,
+          }}
+        >
+          <span className="material-symbols-outlined">arrow_back</span>
+          <span className="text-xs">Previous</span>
+        </button>
+        <button
+          onClick={handleSkipQuestion}
+          disabled={isLastQuestion}
+          className="flex flex-col items-center justify-center gap-2 py-4 font-bold transition-colors active:scale-95"
+          style={{
+            backgroundColor: '#efe8d2',
+            color: isLastQuestion ? '#b2ad9c' : '#5f5b4d',
+            borderRadius: '0.75rem',
+            opacity: isLastQuestion ? 0.5 : 1,
+          }}
+        >
+          <span className="material-symbols-outlined">fast_forward</span>
+          <span className="text-xs">Skip</span>
+        </button>
+        <button
+          onClick={phase === "answering" ? undefined : handleGoToExplanation}
+          className="flex flex-col items-center justify-center gap-2 py-4 text-white font-bold transition-all active:scale-95"
+          style={{
+            background: phase === "result" ? 'linear-gradient(135deg, #a8275a, #ff709f)' : '#efe8d2',
+            color: phase === "result" ? '#ffffff' : '#b2ad9c',
+            borderRadius: '0.75rem',
+            boxShadow: phase === "result" ? '0 4px 12px rgba(168, 39, 90, 0.25)' : 'none',
+            cursor: phase === "result" ? 'pointer' : 'default',
+          }}
+        >
+          <span className="material-symbols-outlined">arrow_forward</span>
+          <span className="text-xs">Next</span>
+        </button>
+      </div>
+
+      {/* Result Overlay */}
       {phase === "result" && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center"
+          style={{ backgroundColor: 'rgba(50, 47, 34, 0.6)', backdropFilter: 'blur(8px)' }}
+          onClick={handleGoToExplanation}
+        >
           <div
             className={`flex flex-col items-center transition-all duration-500 ${
               resultAnimating ? "scale-50 opacity-0" : "scale-100 opacity-100"
@@ -345,32 +522,56 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
           >
             {correct ? (
               <>
-                <CheckCircle className="w-28 h-28 text-green-400 mb-6 drop-shadow-lg" strokeWidth={2.5} />
-                <h1 className="text-7xl font-black text-green-400 mb-4 tracking-wider drop-shadow-lg">
-                  正解
+                <span
+                  className="material-symbols-outlined mb-6"
+                  style={{ fontSize: 112, color: '#74f7f1', fontVariationSettings: "'FILL' 1", filter: 'drop-shadow(0 4px 12px rgba(0,103,100,0.3))' }}
+                >
+                  check_circle
+                </span>
+                <h1
+                  className="text-6xl mb-4 tracking-wider"
+                  style={{ fontWeight: 900, color: '#74f7f1', fontFamily: "'Plus Jakarta Sans', sans-serif", textShadow: '0 4px 12px rgba(0,103,100,0.3)' }}
+                >
+                  Correct!
                 </h1>
-                <p className="text-green-300 text-xl font-medium">すばらしい！</p>
+                <p className="text-xl font-medium" style={{ color: 'rgba(188, 255, 251, 0.8)' }}>Great job!</p>
               </>
             ) : (
               <>
-                <XCircle className="w-28 h-28 text-red-400 mb-6 drop-shadow-lg" strokeWidth={2.5} />
-                <h1 className="text-7xl font-black text-red-400 mb-4 tracking-wider drop-shadow-lg">
-                  不正解
+                <span
+                  className="material-symbols-outlined mb-6"
+                  style={{ fontSize: 112, color: '#f74b6d', fontVariationSettings: "'FILL' 1", filter: 'drop-shadow(0 4px 12px rgba(183,19,64,0.3))' }}
+                >
+                  cancel
+                </span>
+                <h1
+                  className="text-6xl mb-4 tracking-wider"
+                  style={{ fontWeight: 900, color: '#f74b6d', fontFamily: "'Plus Jakarta Sans', sans-serif", textShadow: '0 4px 12px rgba(183,19,64,0.3)' }}
+                >
+                  Incorrect
                 </h1>
-                <p className="text-red-300 text-xl font-medium text-center px-6">
-                  正解は {String.fromCharCode(65 + currentQuestion.correctAnswer)}: {currentQuestion.options[currentQuestion.correctAnswer]}
+                <p className="text-xl font-medium text-center px-6" style={{ color: 'rgba(255, 239, 241, 0.8)' }}>
+                  Answer: {OPTION_LETTERS[currentQuestion.correctAnswer]} — {currentQuestion.options[currentQuestion.correctAnswer]}
                 </p>
               </>
             )}
           </div>
 
-          <Button
-            onClick={handleGoToExplanation}
-            className="mt-12 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white border-0 shadow-lg px-10 py-4 rounded-2xl font-bold text-lg"
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleGoToExplanation();
+            }}
+            className="mt-12 px-10 py-4 text-white font-bold text-lg flex items-center gap-2 active:scale-95 transition-transform"
+            style={{
+              background: 'linear-gradient(135deg, #a8275a, #ff709f)',
+              borderRadius: '2rem',
+              boxShadow: '0 8px 24px rgba(168, 39, 90, 0.3)',
+            }}
           >
-            次へ
-            <ChevronRight className="w-5 h-5 ml-2" />
-          </Button>
+            Continue
+            <span className="material-symbols-outlined">arrow_forward</span>
+          </button>
         </div>
       )}
     </div>

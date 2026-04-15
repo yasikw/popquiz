@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PopQuiz! - Japanese History</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#510017",
+                    "on-background": "#322f22",
+                    "on-secondary": "#fff2cd",
+                    "on-tertiary-container": "#005c59",
+                    "surface": "#fdf6e3",
+                    "on-secondary-fixed": "#453900",
+                    "inverse-on-surface": "#a29d8c",
+                    "surface-container": "#efe8d2",
+                    "inverse-primary": "#ff6b9d",
+                    "tertiary-dim": "#005957",
+                    "outline": "#7b7767",
+                    "surface-variant": "#e4ddc5",
+                    "on-primary-container": "#4c0022",
+                    "surface-container-low": "#f8f0dc",
+                    "primary-dim": "#98184f",
+                    "primary": "#a8275a",
+                    "error": "#b41340",
+                    "primary-fixed": "#ff709f",
+                    "on-primary-fixed-variant": "#5d002b",
+                    "secondary-dim": "#5e4e00",
+                    "secondary-container": "#ffd709",
+                    "on-surface-variant": "#5f5b4d",
+                    "on-error": "#ffefef",
+                    "surface-tint": "#a8275a",
+                    "secondary-fixed": "#ffd709",
+                    "secondary-fixed-dim": "#efc900",
+                    "on-tertiary": "#bcfffb",
+                    "tertiary-fixed-dim": "#64e8e3",
+                    "on-secondary-fixed-variant": "#665500",
+                    "surface-bright": "#fdf6e3",
+                    "background": "#fdf6e3",
+                    "on-primary": "#ffeff1",
+                    "on-surface": "#322f22",
+                    "surface-dim": "#dcd4bb",
+                    "secondary": "#6c5a00",
+                    "on-tertiary-fixed-variant": "#006764",
+                    "tertiary": "#006764",
+                    "primary-fixed-dim": "#f16092",
+                    "primary-container": "#ff709f",
+                    "surface-container-high": "#eae2cb",
+                    "outline-variant": "#b2ad9c",
+                    "on-secondary-container": "#5b4b00",
+                    "surface-container-highest": "#e4ddc5",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed": "#000000",
+                    "error-container": "#f74b6d",
+                    "error-dim": "#a70138",
+                    "tertiary-fixed": "#74f7f1",
+                    "inverse-surface": "#100e05",
+                    "on-tertiary-fixed": "#004745",
+                    "tertiary-container": "#74f7f1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Plus Jakarta Sans"],
+                    "label": ["Plus Jakarta Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            vertical-align: middle;
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="w-full top-0 px-6 py-4 bg-[#fdf6e3] dark:bg-stone-900 sticky z-40">
+<div class="flex justify-between items-center w-full max-w-xl mx-auto">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#a8275a] dark:text-[#ff709f] text-2xl" data-icon="bubble_chart">bubble_chart</span>
+<h1 class="font-['Plus_Jakarta_Sans'] font-bold tracking-tight text-2xl font-black text-[#a8275a] dark:text-[#ff709f]">PopQuiz!</h1>
+</div>
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden border-2 border-primary/20 hover:scale-105 transition-transform active:scale-95 duration-200 cursor-pointer">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Close up portrait of a cheerful young man with short dark hair in a bright studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9h4BgA5_euYJfHCHasbMpexmSrnRWSufh8lqGCnBRVhA-TImJ62vpntNQusvlIXPJzl2xL76Bggkd-UNt-Y7t1UWIDXWJN_AFEJ7fYYVGSqawQJoBkUKnPmIz9sErpGzaWOdd4JqsTwoTYuBKiaorAUTpjkYUo6sClKyqNW4kGGXkdXC8nzpm-2_lJMcVT-839oTlssjr9XjhNjjwscbyVutdXaZk2QZ2HogsExHDmU6getD4Bz9CODOfLTvd0ODVovaHqtJvrMc"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center px-6 pt-4 pb-32 max-w-xl mx-auto w-full gap-8">
+<!-- Status Row: Progress & Timer -->
+<div class="w-full flex items-center justify-between gap-4 px-2">
+<!-- Progress Ring -->
+<div class="flex items-center gap-4">
+<div class="relative w-16 h-16">
+<svg class="w-full h-full">
+<circle class="text-surface-container-highest" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-primary progress-ring-circle" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175.92" stroke-dashoffset="140.7" stroke-linecap="round" stroke-width="6"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-sm font-extrabold text-primary">20</span>
+</div>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant tracking-wider">COMPLETED</p>
+<p class="text-xl font-black text-on-surface">1/5</p>
+</div>
+</div>
+<!-- Timer Well -->
+<div class="bg-secondary-container/30 px-5 py-3 rounded-xl flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary animate-pulse" data-icon="schedule">schedule</span>
+<span class="font-black text-2xl text-on-secondary-container tabular-nums">00:47</span>
+</div>
+</div>
+<!-- Question Card -->
+<section class="w-full relative">
+<!-- Decorative Blobs -->
+<div class="absolute -top-6 -right-6 w-24 h-24 bg-tertiary/10 rounded-full blur-2xl"></div>
+<div class="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_16px_32px_rgba(50,47,34,0.08)] relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary to-primary-container"></div>
+<span class="inline-block px-4 py-1 bg-tertiary-container text-on-tertiary-container rounded-full text-xs font-bold mb-6">HISTORY</span>
+<h2 class="text-2xl md:text-3xl font-black text-on-surface leading-tight tracking-tight">
+                    During which period did Japan see the rise of the Samurai class as the dominant military force?
+                </h2>
+<div class="mt-8 flex justify-center">
+<img alt="Japanese History Illustration" class="w-full h-48 object-cover rounded-lg" data-alt="Traditional Japanese pagoda and stone lanterns in a serene Zen garden during spring with cherry blossoms" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4Qq4MlgH6mZhTEcB0tkfnRRnZkjo6xCoX6Yk6Lz8s22l1yWczAecDGrY5O54Tvrd9p7xCIl8wXHPXMciAIn4ezBkrNp0kAsHu4s2Hy7BxnHzunEeSiRBkyYBifvt8rXgx3yKvHgTbVRJxTfBLooOeNNkb47V3cPCrhSlNm90oZTQKkrHSlxlIY6kG_IFbSsaldUhpXeeQxf_ZjTcSxsMNMSRPZSoJLjQqmzkqAmx6f-fr3eLx-pUhcP0aizYnkL55BDRFDX4Ag4s"/>
+</div>
+</div>
+</section>
+<!-- Options Bento Grid -->
+<div class="w-full grid grid-cols-1 gap-4">
+<!-- Option A -->
+<button class="group w-full flex items-center gap-4 bg-surface-container-low hover:bg-tertiary-container/30 p-5 rounded-lg transition-all active:scale-[0.98] duration-200 text-left border-2 border-transparent hover:border-tertiary/20">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center font-black text-xl text-primary group-hover:bg-tertiary-container group-hover:text-on-tertiary-container transition-colors">A</div>
+<span class="flex-grow text-lg font-bold text-on-surface">Heian Period</span>
+</button>
+<!-- Option B (Selected State Example) -->
+<button class="group w-full flex items-center gap-4 bg-tertiary-container p-5 rounded-lg transition-all active:scale-[0.98] duration-200 text-left border-2 border-tertiary shadow-[0_4px_12px_rgba(0,103,100,0.1)]">
+<div class="w-12 h-12 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center font-black text-xl">B</div>
+<span class="flex-grow text-lg font-bold text-on-tertiary-container">Kamakura Period</span>
+<span class="material-symbols-outlined text-tertiary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</button>
+<!-- Option C -->
+<button class="group w-full flex items-center gap-4 bg-surface-container-low hover:bg-tertiary-container/30 p-5 rounded-lg transition-all active:scale-[0.98] duration-200 text-left border-2 border-transparent hover:border-tertiary/20">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center font-black text-xl text-primary group-hover:bg-tertiary-container group-hover:text-on-tertiary-container transition-colors">C</div>
+<span class="flex-grow text-lg font-bold text-on-surface">Edo Period</span>
+</button>
+<!-- Option D -->
+<button class="group w-full flex items-center gap-4 bg-surface-container-low hover:bg-tertiary-container/30 p-5 rounded-lg transition-all active:scale-[0.98] duration-200 text-left border-2 border-transparent hover:border-tertiary/20">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center font-black text-xl text-primary group-hover:bg-tertiary-container group-hover:text-on-tertiary-container transition-colors">D</div>
+<span class="flex-grow text-lg font-bold text-on-surface">Meiji Restoration</span>
+</button>
+</div>
+<!-- Action Controls -->
+<div class="w-full grid grid-cols-3 gap-4 pb-8">
+<button class="flex flex-col items-center justify-center gap-2 py-4 bg-surface-container text-on-surface-variant font-bold rounded-lg hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+<span class="text-xs">Previous</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 py-4 bg-surface-container text-on-surface-variant font-bold rounded-lg hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="fast_forward">fast_forward</span>
+<span class="text-xs">Skip</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 py-4 bg-gradient-to-br from-primary to-primary-container text-white font-bold rounded-lg shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+<span class="text-xs">Next</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#fdf6e3]/80 dark:bg-stone-900/80 backdrop-blur-xl shadow-[0_-8px_24px_rgba(50,47,34,0.08)]">
+<a class="flex flex-col items-center justify-center bg-[#ffd709] text-[#322f22] rounded-full px-6 py-2 transition-all animate-bounce-short" href="#">
+<span class="material-symbols-outlined" data-icon="videogame_asset" style="font-variation-settings: 'FILL' 1;">videogame_asset</span>
+<span class="font-['Plus_Jakarta_Sans'] text-xs font-semibold">Play</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#322f22]/60 dark:text-[#fdf6e3]/60 px-4 py-2 hover:bg-[#74f7f1]/20 rounded-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-['Plus_Jakarta_Sans'] text-xs font-semibold">Rank</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#322f22]/60 dark:text-[#fdf6e3]/60 px-4 py-2 hover:bg-[#74f7f1]/20 rounded-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="local_mall">local_mall</span>
+<span class="font-['Plus_Jakarta_Sans'] text-xs font-semibold">Store</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#322f22]/60 dark:text-[#fdf6e3]/60 px-4 py-2 hover:bg-[#74f7f1]/20 rounded-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="face">face</span>
+<span class="font-['Plus_Jakarta_Sans'] text-xs font-semibold">Me</span>
+</a>
+</nav>
+</body></html>
