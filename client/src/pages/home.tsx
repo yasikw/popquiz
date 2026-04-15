@@ -47,7 +47,7 @@ export default function Home({ user, onLogout }: HomeProps) {
   };
 
   return (
-    <div className="min-h-screen pb-20 relative max-w-md mx-auto">
+    <div className="min-h-screen pb-20 relative max-w-xl mx-auto">
 
       <div className="relative z-10 min-h-screen pb-20">
       <Header 
@@ -57,7 +57,7 @@ export default function Home({ user, onLogout }: HomeProps) {
         onLogout={onLogout}
       />
       
-      <main className="max-w-md mx-auto px-4 py-6 pt-20">
+      <main className="max-w-xl mx-auto px-6 py-8 pt-20">
         {activeSection === "home" && (
           <>
             {/* Mobile Card Stack */}

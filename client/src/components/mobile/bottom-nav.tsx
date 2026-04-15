@@ -3,34 +3,57 @@ interface BottomNavProps {
   onSectionChange: (section: string) => void;
 }
 
-export default function BottomNav({ activeSection, onSectionChange }: BottomNavProps) {
-  const navItems = [
-    { id: "home", label: "ホーム", icon: "fas fa-home" },
-    { id: "stats", label: "統計", icon: "fas fa-chart-bar" },
-    { id: "settings", label: "設定", icon: "fas fa-cog" },
-  ];
+const navItems = [
+  { id: "home", label: "Play", icon: "videogame_asset" },
+  { id: "stats", label: "Rank", icon: "leaderboard" },
+  { id: "results", label: "Store", icon: "local_mall" },
+  { id: "settings", label: "Me", icon: "face" },
+];
 
+export default function BottomNav({ activeSection, onSectionChange }: BottomNavProps) {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
-      <div className="max-w-md mx-auto">
-        <div className="flex justify-around py-2">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => onSectionChange(item.id)}
-              className={`flex flex-col items-center space-y-1 px-4 py-2 rounded-lg transition-colors ${
-                activeSection === item.id
-                  ? "text-blue-600 bg-blue-50"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-              data-testid={`nav-${item.id}`}
+    <nav
+      className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3"
+      style={{
+        backgroundColor: 'rgba(253, 246, 227, 0.8)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        borderTopLeftRadius: '3rem',
+        borderTopRightRadius: '3rem',
+        boxShadow: '0 -8px 24px rgba(50, 47, 34, 0.08)',
+      }}
+    >
+      {navItems.map((item) => {
+        const isActive = activeSection === item.id;
+        return (
+          <button
+            key={item.id}
+            onClick={() => onSectionChange(item.id)}
+            className="flex flex-col items-center justify-center px-5 py-2 transition-all duration-200 active:scale-95"
+            style={{
+              borderRadius: '9999px',
+              backgroundColor: isActive ? '#ffd709' : 'transparent',
+              color: isActive ? '#322f22' : 'rgba(50, 47, 34, 0.5)',
+            }}
+            data-testid={`nav-${item.id}`}
+          >
+            <span
+              className="material-symbols-outlined text-2xl"
+              style={{
+                fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0",
+              }}
             >
-              <i className={`${item.icon} text-lg`}></i>
-              <span className="text-xs font-medium">{item.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+              {item.icon}
+            </span>
+            <span
+              className="text-xs font-semibold"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              {item.label}
+            </span>
+          </button>
+        );
+      })}
     </nav>
   );
 }
