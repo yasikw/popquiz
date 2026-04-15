@@ -1,440 +1,270 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { getUserStats, getUserSessionsWithQuestions } from "@/lib/api";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
 
 interface StatsSectionProps {
   userId?: string;
 }
 
-export default function StatsSection({ userId }: StatsSectionProps) {
+const QUIZ_ICONS = ["biotech", "architecture", "rocket_launch", "psychology", "menu_book", "science", "calculate", "language", "public", "history_edu"];
+const ICON_BG_COLORS = ["#ffd709", "#74f7f1", "rgba(255, 112, 159, 0.2)", "#eae2cb", "#ffd709", "#74f7f1"];
 
+export default function StatsSection({ userId }: StatsSectionProps) {
   const { data: stats } = useQuery({
-    queryKey: ['/api/users', userId, 'stats'],
-    queryFn: () => userId ? getUserStats(userId) : null,
+    queryKey: ["/api/users", userId, "stats"],
+    queryFn: () => (userId ? getUserStats(userId) : null),
     enabled: !!userId,
-    staleTime: 0, // Always fetch fresh data
+    staleTime: 0,
     refetchOnWindowFocus: true,
   });
 
   const { data: sessionsWithQuestions } = useQuery({
-    queryKey: ['/api/users', userId, 'sessions-with-questions'],
-    queryFn: () => userId ? getUserSessionsWithQuestions(userId) : null,
+    queryKey: ["/api/users", userId, "sessions-with-questions"],
+    queryFn: () => (userId ? getUserSessionsWithQuestions(userId) : null),
     enabled: !!userId,
-    staleTime: 0, // Always fetch fresh data
+    staleTime: 0,
     refetchOnWindowFocus: true,
   });
 
-
-
-  // Create content title based on content type
   const getContentTitle = (session: any, questions: Array<{ questionText: string }>) => {
-    // For text content - extract topic from questions since user input wasn't saved
-    if (session.contentType === 'text') {
-      if (questions && questions.length > 0) {
-        const allText = questions.map(q => q.questionText).join(' ');
-        
-        // Enhanced patterns to extract topics from Japanese text questions
-        const topicPatterns = [
-          /日本の([^、。？！\s]{2,8})/g,  // "日本の歴史" etc
-          /([^、。？！\s]{1,8})の歴史/g,  // "XXの歴史"
-          /([^、。？！\s]{1,8})歴史/g,    // "XX歴史"
-          /([^、。？！\s]{2,8})(について|に関して|とは)/g,
-          /([^、。？！\s]{2,6})(県|市|都|府|国|地域)/g,
-          /([^、。？！\s]{2,8})(文化|政治|経済|社会)/g,
-        ];
-        
-        for (const pattern of topicPatterns) {
-          const matches = allText.match(pattern);
-          if (matches && matches.length > 0) {
-            let match = matches[0];
-            
-            // Handle specific patterns
-            if (pattern.source.includes('日本の')) {
-              const japanMatch = allText.match(/日本の([^、。？！\s]{2,8})/);
-              if (japanMatch && japanMatch[1]) {
-                return `日本の${japanMatch[1]}`;
-              }
-            } else if (pattern.source.includes('歴史')) {
-              const historyMatch = allText.match(/([^、。？！\s]{1,8})の歴史/);
-              if (historyMatch && historyMatch[1]) {
-                return `${historyMatch[1]}の歴史`;
-              } else {
-                return '日本の歴史';
-              }
-            } else {
-              // Clean up the extracted topic
-              let topic = match.replace(/(について|に関して|とは|が|の)$/, '');
-              if (topic && topic.length > 1) {
-                return topic;
-              }
-            }
-          }
-        }
-        
-        // Fallback to extracting key terms
-        const firstWords = questions[0].questionText.substring(0, 15);
-        return `${firstWords.replace(/[？！。、]/g, '')}...`;
-      }
-      return 'テキストクイズ';
+    if (questions && questions.length > 0) {
+      const firstQ = questions[0].questionText;
+      const words = firstQ.split(/[\s,?.!]+/).filter((w: string) => w.length > 2).slice(0, 3);
+      if (words.length > 0) return words.join(" ");
     }
-    
-    // For PDF content - extract filename or key topics
-    if (session.contentType === 'pdf') {
-      if (questions && questions.length > 0) {
-        const allText = questions.map(q => q.questionText).join(' ');
-        
-        const topicPatterns = [
-          /([^、。？！\s]{3,10})(について|に関して|とは)/g,
-          /([^、。？！\s]{3,8})(県|市|都|府|国)/g,
-          /([^、。？！\s]{3,8})(文化|歴史|伝統)/g,
-        ];
-        
-        for (const pattern of topicPatterns) {
-          const matches = allText.match(pattern);
-          if (matches && matches.length > 0) {
-            const topic = matches[0].replace(/(について|に関して|とは)/, '');
-            return `PDFクイズ: ${topic}`;
-          }
-        }
-        
-        const firstWords = questions[0].questionText.substring(0, 15);
-        return `PDFクイズ: ${firstWords}...`;
-      }
-      return 'PDFクイズ';
-    }
-    
-    // For YouTube content - use video title or URL
-    if (session.contentType === 'youtube') {
-      return session.title && session.title !== 'AIクイズ' ? 
-        `YouTube: ${session.title}` : 'YouTubeクイズ';
-    }
-    
-    return session.title || 'クイズ';
+    if (session.contentType === "pdf") return "PDF Quiz";
+    if (session.contentType === "youtube") return "YouTube Quiz";
+    return "Text Quiz";
   };
 
-  // Calculate real statistics from sessions
+  const getDifficultyLabel = (d: string) => {
+    if (d === "beginner") return "Novice";
+    if (d === "intermediate") return "Intermediate";
+    if (d === "advanced") return "Advanced";
+    return d;
+  };
+
+  const getTimeAgo = (dateStr: string) => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    const days = Math.floor(hrs / 24);
+    if (days === 1) return "Yesterday";
+    return `${days} days ago`;
+  };
+
   const calculateStats = (sessions: any[]) => {
     if (!sessions || sessions.length === 0) {
-      return {
-        totalScore: 0,
-        completedQuizzes: 0,
-        averageAccuracy: 0,
-        beginnerAccuracy: 0,
-        intermediateAccuracy: 0,
-        advancedAccuracy: 0,
-      };
+      return { totalScore: 0, completedQuizzes: 0, averageAccuracy: 0, beginnerAccuracy: 0, intermediateAccuracy: 0, advancedAccuracy: 0 };
     }
-
-    const totalScore = sessions.reduce((sum, session) => sum + session.score, 0);
-    const completedQuizzes = sessions.length;
-    
-    const difficultyGroups = {
-      beginner: sessions.filter(s => s.difficulty === 'beginner'),
-      intermediate: sessions.filter(s => s.difficulty === 'intermediate'),
-      advanced: sessions.filter(s => s.difficulty === 'advanced'),
-    };
-
-    const calculateAccuracy = (sessionsGroup: any[]) => {
-      if (sessionsGroup.length === 0) return 0;
-      const totalAccuracy = sessionsGroup.reduce((sum, session) => 
-        sum + (session.score / session.totalQuestions * 100), 0);
-      return Math.round(totalAccuracy / sessionsGroup.length);
-    };
-
-    const beginnerAccuracy = calculateAccuracy(difficultyGroups.beginner);
-    const intermediateAccuracy = calculateAccuracy(difficultyGroups.intermediate);
-    const advancedAccuracy = calculateAccuracy(difficultyGroups.advanced);
-    
-    const overallAccuracy = sessions.reduce((sum, session) => 
-      sum + (session.score / session.totalQuestions * 100), 0) / sessions.length;
-
+    const totalScore = sessions.reduce((s, se) => s + se.score, 0);
+    const calcAcc = (arr: any[]) => arr.length === 0 ? 0 : Math.round(arr.reduce((s, se) => s + (se.score / se.totalQuestions) * 100, 0) / arr.length);
     return {
       totalScore,
-      completedQuizzes,
-      averageAccuracy: Math.round(overallAccuracy),
-      beginnerAccuracy,
-      intermediateAccuracy,
-      advancedAccuracy,
+      completedQuizzes: sessions.length,
+      averageAccuracy: calcAcc(sessions),
+      beginnerAccuracy: calcAcc(sessions.filter((s) => s.difficulty === "beginner")),
+      intermediateAccuracy: calcAcc(sessions.filter((s) => s.difficulty === "intermediate")),
+      advancedAccuracy: calcAcc(sessions.filter((s) => s.difficulty === "advanced")),
     };
   };
 
-  // Prepare chart data
-  const prepareChartData = (sessions: any[]) => {
-    if (!sessions || sessions.length === 0) return [];
-    
-    return sessions
-      .slice(-10) // Last 10 sessions
-      .map((session, index) => ({
-        session: `#${index + 1}`,
-        accuracy: Math.round((session.score / session.totalQuestions) * 100),
-        score: session.score,
-        date: new Date(session.completedAt).toLocaleDateString('ja-JP'),
-      }));
-  };
+  const uniqueSessions = sessionsWithQuestions
+    ? sessionsWithQuestions.reduce((acc: any[], session: any) => {
+        const existing = acc.find(
+          (s: any) =>
+            s.contentType === session.contentType &&
+            s.difficulty === session.difficulty &&
+            s.score === session.score &&
+            Math.abs(new Date(s.completedAt).getTime() - new Date(session.completedAt).getTime()) < 60000
+        );
+        if (!existing) acc.push(session);
+        return acc;
+      }, [])
+    : [];
 
-  const displayStats = sessionsWithQuestions ? calculateStats(sessionsWithQuestions) : stats || {
-    totalScore: 0,
-    completedQuizzes: 0,
-    averageAccuracy: 0,
-    beginnerAccuracy: 0,
-    intermediateAccuracy: 0,
-    advancedAccuracy: 0,
-  };
-  
-  // Group sessions by unique combinations to avoid duplicates
-  const uniqueSessions = sessionsWithQuestions ? 
-    sessionsWithQuestions.reduce((acc: any[], session: any) => {
-      // Check if we already have a similar session (same content, difficulty, score)
-      const existing = acc.find(s => 
-        s.contentType === session.contentType &&
-        s.difficulty === session.difficulty &&
-        s.score === session.score &&
-        Math.abs(new Date(s.completedAt).getTime() - new Date(session.completedAt).getTime()) < 60000 // within 1 minute
-      );
-      
-      if (!existing) {
-        acc.push(session);
-      }
-      return acc;
-    }, []) : [];
-    
-  const displaySessions = uniqueSessions;
-  const chartData = prepareChartData(displaySessions);
+  const displayStats = sessionsWithQuestions ? calculateStats(sessionsWithQuestions) : stats || { totalScore: 0, completedQuizzes: 0, averageAccuracy: 0, beginnerAccuracy: 0, intermediateAccuracy: 0, advancedAccuracy: 0 };
 
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "beginner": return "bg-green-100 text-green-800";
-      case "intermediate": return "bg-orange-100 text-orange-800"; 
-      case "advanced": return "bg-red-100 text-red-800";
-      default: return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getDifficultyLabel = (difficulty: string) => {
-    switch (difficulty) {
-      case "beginner": return "初級";
-      case "intermediate": return "中級";
-      case "advanced": return "上級";
-      default: return difficulty;
-    }
-  };
+  const masteryLevels = [
+    { label: "Novice", value: displayStats.beginnerAccuracy, color: "#74f7f1" },
+    { label: "Intermediate", value: displayStats.intermediateAccuracy, color: "#ffd709" },
+    { label: "Advanced", value: displayStats.advancedAccuracy, color: "#ff709f" },
+  ];
 
   return (
-    <section className="mb-12">
-      <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">学習統計</h3>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Performance Chart */}
-        <Card className="bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
-          <CardContent className="p-6">
-            <h4 className="text-lg font-semibold text-gray-800 mb-4">成績の推移</h4>
-            <div className="h-64">
-              {chartData.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis 
-                      dataKey="session" 
-                      stroke="#6b7280"
-                      fontSize={12}
-                    />
-                    <YAxis 
-                      domain={[0, 100]}
-                      stroke="#6b7280"
-                      fontSize={12}
-                    />
-                    <Tooltip 
-                      contentStyle={{
-                        backgroundColor: '#f9fafb',
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '8px'
-                      }}
-                      labelFormatter={(label) => `セッション ${label}`}
-                      formatter={(value: any, name: string) => [
-                        name === 'accuracy' ? `${value}%` : value,
-                        name === 'accuracy' ? '正答率' : 'スコア'
-                      ]}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="accuracy" 
-                      stroke="#3b82f6" 
-                      strokeWidth={3}
-                      dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
-                      activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 2 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-full bg-gray-50 rounded-xl flex items-center justify-center">
-                  <div className="text-center text-gray-500">
-                    <i className="fas fa-chart-line text-4xl mb-2"></i>
-                    <p>クイズを完了すると</p>
-                    <p className="text-sm">成績の推移が表示されます</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+    <div className="space-y-8 pb-32">
+      {/* Title */}
+      <section>
+        <h2
+          className="text-3xl tracking-tight mb-2"
+          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, color: "#322f22" }}
+        >
+          Learning Stats
+        </h2>
+        <p className="font-medium" style={{ color: "#5f5b4d" }}>
+          Keep pushing your boundaries!
+        </p>
+      </section>
 
-        {/* Statistics Summary */}
-        <Card className="bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
-          <CardContent className="p-6">
-            <h4 className="text-lg font-semibold text-gray-800 mb-4">学習サマリー</h4>
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">総合スコア</span>
-                <span className="text-2xl font-bold text-blue-600" data-testid="total-score">
-                  {displayStats.totalScore}
-                </span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">完了したクイズ</span>
-                <span className="text-lg font-semibold text-gray-800" data-testid="completed-quizzes">
-                  {displayStats.completedQuizzes}
-                </span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">平均正答率</span>
-                <span className="text-lg font-semibold text-purple-600" data-testid="average-accuracy">
-                  {displayStats.averageAccuracy}%
-                </span>
-              </div>
-
-              <div className="pt-4 border-t border-gray-300">
-                <h5 className="font-medium text-gray-800 mb-3">難易度別成績</h5>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-green-500 rounded-full shadow-sm"></div>
-                      <span className="text-sm text-gray-600">初級</span>
-                    </div>
-                    <span className="text-sm font-medium text-gray-800" data-testid="beginner-accuracy">
-                      {displayStats.beginnerAccuracy}%
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-orange-500 rounded-full shadow-sm"></div>
-                      <span className="text-sm text-gray-600">中級</span>
-                    </div>
-                    <span className="text-sm font-medium text-gray-800" data-testid="intermediate-accuracy">
-                      {displayStats.intermediateAccuracy}%
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-purple-500 rounded-full shadow-sm"></div>
-                      <span className="text-sm text-gray-600">上級</span>
-                    </div>
-                    <span className="text-sm font-medium text-gray-800" data-testid="advanced-accuracy">
-                      {displayStats.advancedAccuracy}%
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Quiz History */}
-      <Card className="mt-8 bg-white/30 border border-gray-200/40 shadow-md backdrop-blur-sm">
-        <CardContent className="p-6">
-          <h4 className="text-lg font-semibold text-gray-800 mb-4">最近のクイズ履歴</h4>
-          <div className="overflow-x-auto">
-            <div className="min-w-full">
-              <table className="w-full text-sm">
-                <thead className="border-b border-gray-300">
-                  <tr className="text-left text-gray-600">
-                    <th className="pb-3 pr-4 min-w-[120px]">日時</th>
-                    <th className="pb-3 pr-4 min-w-[200px]">コンテンツ</th>
-                    <th className="pb-3 pr-4 min-w-[80px]">難易度</th>
-                    <th className="pb-3 pr-4 min-w-[80px]">正答率</th>
-                    <th className="pb-3 pr-4 min-w-[80px]">所要時間</th>
-                    <th className="pb-3 min-w-[80px]">スコア</th>
-                  </tr>
-                </thead>
-              <tbody className="divide-y divide-gray-200">
-                {displaySessions.length > 0 ? (
-                  displaySessions.slice(0, 10).map((session) => (
-                    <tr key={session.id} className="hover:bg-gray-50/50 text-gray-800">
-                      <td className="py-3 pr-4" data-testid={`session-date-${session.id}`}>
-                        <div className="whitespace-nowrap">
-                          {new Date(session.completedAt).toLocaleDateString('ja-JP', { 
-                            month: 'short', 
-                            day: 'numeric' 
-                          })}
-                        </div>
-                        <div className="text-xs text-gray-500 whitespace-nowrap">
-                          {new Date(session.completedAt).toLocaleTimeString('ja-JP', { 
-                            hour: '2-digit', 
-                            minute: '2-digit' 
-                          })}
-                        </div>
-                      </td>
-                      <td className="py-3 pr-4" data-testid={`session-title-${session.id}`}>
-                        <div className="max-w-[200px]">
-                          <div className="font-medium text-gray-800 truncate">
-                            {getContentTitle(session, session.questions || [])}
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            {session.questions?.length || 0}問のクイズ
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-3 pr-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getDifficultyColor(session.difficulty)}`}>
-                          {getDifficultyLabel(session.difficulty)}
-                        </span>
-                      </td>
-                      <td className="py-3 pr-4" data-testid={`session-accuracy-${session.id}`}>
-                        <div className="text-center">
-                          <div className="font-semibold">
-                            {Math.round((session.score / session.totalQuestions) * 100)}%
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-3 pr-4" data-testid={`session-time-${session.id}`}>
-                        <div className="text-center whitespace-nowrap">
-                          {formatTime(session.timeSpent)}
-                        </div>
-                      </td>
-                      <td className="py-3" data-testid={`session-score-${session.id}`}>
-                        <div className="text-center font-semibold">
-                          {session.score}/{session.totalQuestions}
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={6} className="py-8 text-center text-gray-500">
-                      <div className="flex flex-col items-center">
-                        <i className="fas fa-history text-2xl mb-2"></i>
-                        <p>まだクイズを完了していません</p>
-                        <p className="text-sm">ホーム画面でクイズを開始してください</p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-              </table>
-            </div>
+      {/* Bento Grid */}
+      <section className="grid grid-cols-2 gap-4">
+        {/* Total Score - full width */}
+        <div
+          className="col-span-2 p-6 flex flex-col justify-between min-h-[160px] relative overflow-hidden"
+          style={{ backgroundColor: "#ff709f", borderRadius: "1rem" }}
+        >
+          <div className="relative z-10">
+            <span className="font-bold text-sm uppercase tracking-wider" style={{ color: "#4c0022" }}>
+              Total Score
+            </span>
+            <p className="text-5xl mt-2" style={{ fontWeight: 900, color: "#4c0022" }} data-testid="total-score">
+              {displayStats.totalScore.toLocaleString()}
+            </p>
           </div>
-        </CardContent>
-      </Card>
-    </section>
+          <div className="relative z-10 flex items-center gap-2 font-bold" style={{ color: "rgba(76, 0, 34, 0.7)" }}>
+            <span className="material-symbols-outlined">trending_up</span>
+            <span>{displayStats.completedQuizzes > 0 ? `${displayStats.completedQuizzes} quizzes completed` : "Start your first quiz!"}</span>
+          </div>
+          <div className="absolute -right-4 -bottom-4 opacity-20">
+            <span className="material-symbols-outlined" style={{ fontSize: 120, fontVariationSettings: "'FILL' 1" }}>
+              stars
+            </span>
+          </div>
+        </div>
+
+        {/* Completed */}
+        <div className="p-6 flex flex-col justify-between" style={{ backgroundColor: "#ffd709", borderRadius: "1rem" }}>
+          <span className="font-bold text-sm uppercase" style={{ color: "#5b4b00" }}>Completed</span>
+          <div>
+            <p className="text-4xl" style={{ fontWeight: 900, color: "#5b4b00" }} data-testid="completed-quizzes">
+              {displayStats.completedQuizzes}
+            </p>
+            <p className="text-xs font-bold" style={{ color: "rgba(91, 75, 0, 0.6)" }}>Quizzes</p>
+          </div>
+        </div>
+
+        {/* Accuracy */}
+        <div className="p-6 flex flex-col justify-between" style={{ backgroundColor: "#74f7f1", borderRadius: "1rem" }}>
+          <span className="font-bold text-sm uppercase" style={{ color: "#005c59" }}>Accuracy</span>
+          <div>
+            <p className="text-4xl" style={{ fontWeight: 900, color: "#005c59" }} data-testid="average-accuracy">
+              {displayStats.averageAccuracy}%
+            </p>
+            <p className="text-xs font-bold" style={{ color: "rgba(0, 92, 89, 0.6)" }}>Average</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Performance Trend */}
+      <section className="p-6" style={{ backgroundColor: "#f8f0dc", borderRadius: "1rem" }}>
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="font-bold text-lg" style={{ color: "#322f22" }}>Performance Trend</h3>
+          <span className="material-symbols-outlined" style={{ color: "#7b7767" }}>query_stats</span>
+        </div>
+        <div
+          className="h-48 w-full flex flex-col items-center justify-center space-y-2"
+          style={{
+            border: "2px dashed #b2ad9c",
+            borderRadius: "0.75rem",
+            backgroundColor: "rgba(255,255,255,0.5)",
+          }}
+        >
+          <span className="material-symbols-outlined text-4xl" style={{ color: "#b2ad9c" }}>bar_chart</span>
+          <p className="text-sm font-semibold" style={{ color: "#5f5b4d" }}>
+            {uniqueSessions.length > 0 ? `${uniqueSessions.length} sessions recorded` : "No trends to show yet"}
+          </p>
+          <p className="text-xs" style={{ color: "#7b7767" }}>Keep playing to unlock weekly insights</p>
+        </div>
+      </section>
+
+      {/* Mastery Levels */}
+      <section className="space-y-4">
+        <h3 className="font-bold text-lg" style={{ color: "#322f22" }}>Mastery Levels</h3>
+        <div className="p-6 space-y-6" style={{ backgroundColor: "#e4ddc5", borderRadius: "1rem" }}>
+          {masteryLevels.map((level) => (
+            <div key={level.label} className="space-y-2">
+              <div className="flex justify-between items-end">
+                <span className="font-bold" style={{ color: "#322f22" }}>{level.label}</span>
+                <span className="text-xs" style={{ fontWeight: 900, color: "#5f5b4d" }}>{level.value}%</span>
+              </div>
+              <div className="h-3 w-full overflow-hidden" style={{ backgroundColor: "#efe8d2", borderRadius: "9999px" }}>
+                <div
+                  className="h-full transition-all duration-500"
+                  style={{
+                    width: `${Math.max(level.value, 2)}%`,
+                    backgroundColor: level.color,
+                    borderRadius: "9999px",
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Recent Quizzes */}
+      <section className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="font-bold text-lg" style={{ color: "#322f22" }}>Recent Quizzes</h3>
+          {uniqueSessions.length > 5 && (
+            <button className="text-sm font-bold" style={{ color: "#a8275a" }}>View All</button>
+          )}
+        </div>
+
+        <div className="space-y-3">
+          {uniqueSessions.length > 0 ? (
+            uniqueSessions.slice(0, 5).map((session: any, index: number) => (
+              <div
+                key={session.id || index}
+                className="p-4 flex items-center justify-between transition-transform active:scale-[0.98]"
+                style={{
+                  backgroundColor: "#ffffff",
+                  borderRadius: "0.75rem",
+                  boxShadow: "0 2px 6px rgba(50, 47, 34, 0.05)",
+                }}
+              >
+                <div className="flex items-center gap-4">
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: ICON_BG_COLORS[index % ICON_BG_COLORS.length] }}
+                  >
+                    <span
+                      className="material-symbols-outlined"
+                      style={{ color: index % 2 === 0 ? "#5b4b00" : "#005c59" }}
+                    >
+                      {QUIZ_ICONS[index % QUIZ_ICONS.length]}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="font-bold" style={{ color: "#322f22" }}>
+                      {getContentTitle(session, session.questions || [])}
+                    </p>
+                    <p className="text-xs font-medium" style={{ color: "#5f5b4d" }}>
+                      {getDifficultyLabel(session.difficulty)} &bull; {getTimeAgo(session.completedAt)}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p style={{ fontWeight: 900, color: "#a8275a" }}>
+                    {session.score}/{session.totalQuestions}
+                  </p>
+                  <p className="text-[10px] uppercase font-bold" style={{ color: "#7b7767" }}>Score</p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div
+              className="p-8 flex flex-col items-center justify-center text-center"
+              style={{ backgroundColor: "#f8f0dc", borderRadius: "0.75rem" }}
+            >
+              <span className="material-symbols-outlined text-4xl mb-2" style={{ color: "#b2ad9c" }}>quiz</span>
+              <p className="font-semibold" style={{ color: "#5f5b4d" }}>No quizzes yet</p>
+              <p className="text-xs" style={{ color: "#7b7767" }}>Complete a quiz to see your history here</p>
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
   );
 }
