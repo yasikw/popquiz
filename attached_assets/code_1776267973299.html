@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QuizPop Leaderboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#bcfffb",
+                        "surface": "#fdf6e3",
+                        "on-primary-container": "#4c0022",
+                        "primary-container": "#ff709f",
+                        "tertiary-fixed-dim": "#64e8e3",
+                        "background": "#fdf6e3",
+                        "on-error": "#ffefef",
+                        "primary": "#a8275a",
+                        "on-tertiary-fixed": "#004745",
+                        "on-secondary-fixed-variant": "#665500",
+                        "error": "#b41340",
+                        "primary-fixed": "#ff709f",
+                        "tertiary-fixed": "#74f7f1",
+                        "tertiary-dim": "#005957",
+                        "secondary-fixed": "#ffd709",
+                        "on-secondary": "#fff2cd",
+                        "error-dim": "#a70138",
+                        "on-primary-fixed-variant": "#5d002b",
+                        "on-primary-fixed": "#000000",
+                        "surface-container-highest": "#e4ddc5",
+                        "surface-tint": "#a8275a",
+                        "secondary-fixed-dim": "#efc900",
+                        "inverse-on-surface": "#a29d8c",
+                        "surface-container": "#efe8d2",
+                        "on-secondary-fixed": "#453900",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#dcd4bb",
+                        "tertiary-container": "#74f7f1",
+                        "error-container": "#f74b6d",
+                        "surface-bright": "#fdf6e3",
+                        "on-tertiary-container": "#005c59",
+                        "inverse-surface": "#100e05",
+                        "outline-variant": "#b2ad9c",
+                        "secondary-container": "#ffd709",
+                        "primary-dim": "#98184f",
+                        "secondary-dim": "#5e4e00",
+                        "on-surface-variant": "#5f5b4d",
+                        "inverse-primary": "#ff6b9d",
+                        "surface-container-low": "#f8f0dc",
+                        "on-tertiary-fixed-variant": "#006764",
+                        "on-secondary-container": "#5b4b00",
+                        "surface-variant": "#e4ddc5",
+                        "outline": "#7b7767",
+                        "tertiary": "#006764",
+                        "surface-container-high": "#eae2cb",
+                        "secondary": "#6c5a00",
+                        "on-error-container": "#510017",
+                        "on-surface": "#322f22",
+                        "on-primary": "#ffeff1",
+                        "primary-fixed-dim": "#f16092",
+                        "on-background": "#322f22"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#fdf6e3]/80 backdrop-blur-xl dark:bg-stone-900/80 flex items-center justify-between px-6 h-16 shadow-[0_16px_32px_rgba(50,47,34,0.08)]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#a8275a] text-2xl" data-icon="bubble_chart">bubble_chart</span>
+<h1 class="font-['Plus_Jakarta_Sans'] font-black tracking-tight text-2xl text-[#a8275a] dark:text-[#ff709f]">QuizPop</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:scale-105 transition-transform active:scale-95 text-[#a8275a]">
+<span class="material-symbols-outlined text-2xl">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center border-2 border-surface-container-highest overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Playful 3D avatar of a smiling man with glasses and trendy hair on a yellow background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCu-XwzMmw16wmsZmKGHwr2BJaQwFN3aqAjNGIQmcsLE1bc2lVOLIW9iFv38hAkkbDQxcUXzG1_N438iy1O4ZzWjhUwmCDpl7jRfU3F8KOU7zYicyGFSW0NHf8f3lWueN_SjPNf8xC9znZ1rWqdUaD2volGz6SNOOw0Bz26QmuKa50RU3QtoTmHKprA1VNouTzZniBWBlqdKoDzpB4PebqKk1cVM25q0DeFC3lHFx_2FdNtLZjYfgiZD9wVxUvftc65dn_kV5vATjE"/>
+</div>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-2xl mx-auto">
+<!-- Toggle Selector -->
+<div class="flex justify-center mb-10">
+<div class="bg-surface-container-low p-1.5 rounded-xl flex items-center w-full max-w-xs shadow-inner">
+<button class="flex-1 py-3 px-6 rounded-lg font-bold text-sm transition-all duration-300 bg-secondary-container text-on-secondary-container shadow-sm">
+                    Global
+                </button>
+<button class="flex-1 py-3 px-6 rounded-lg font-bold text-sm text-on-surface-variant hover:text-on-surface transition-all duration-300">
+                    Friends
+                </button>
+</div>
+</div>
+<!-- Podium Section -->
+<div class="flex items-end justify-center gap-4 mb-12 h-64">
+<!-- Rank 2 -->
+<div class="flex flex-col items-center flex-1 max-w-[100px]">
+<div class="relative mb-4 group">
+<div class="w-16 h-16 rounded-full border-4 border-slate-300 overflow-hidden shadow-lg transform transition-transform group-hover:scale-110">
+<img alt="Player 2" data-alt="Stylized 3D character avatar of a young woman with blue hair and cheerful expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCojs5_Ir3TDUxKmn6fC5KuVOvCUAf0aQnB7f4tQ03OQRhU10WUWG6qYTlwlWI4GvwJ0SV6V0wa805UDMwPm-mt5NMJyRCl4pwdcdI8CuKFh6dtwaPwf1Co3RSzoqe0Px-W72GfJYhclcIeIZNZ_L4sadKxnUiIQbU6U7EaXYQqz7kM7aszFuImYllUkzCtBTIPLLMxknrhtdzMTsYqRUfe1_juiuHpA2HJXZx4ItJCDL5BZ6KYdvJ-3MrWFJSpej01xa6eN5m5Qyo"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-slate-300 text-slate-800 text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-surface shadow-sm">2</div>
+</div>
+<div class="w-full bg-surface-container-high rounded-t-lg h-24 flex flex-col items-center justify-end pb-4 shadow-sm">
+<span class="font-black text-on-surface text-sm">Sarah</span>
+<span class="text-[10px] font-bold text-primary">12,450 pts</span>
+</div>
+</div>
+<!-- Rank 1 -->
+<div class="flex flex-col items-center flex-1 max-w-[120px]">
+<div class="relative mb-4 group">
+<span class="material-symbols-outlined absolute -top-8 left-1/2 -translate-x-1/2 text-secondary-container text-4xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<div class="w-20 h-20 rounded-full border-4 border-secondary-container overflow-hidden shadow-xl transform transition-transform group-hover:scale-110">
+<img alt="Player 1" data-alt="3D animated avatar of a stylish man with a crown accessory and confident smile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDII6Jt6LMDT6GMIW6bPxjeaun4mpli3MFf7zCpB48DMPebab_ZF95_TyRpxDCf7d0dj_1vqoyyygrQu_BC6RY83aj98ZYKbQ5fGaQE9u5D7PbgKJprbU9-4jG76iD3KSmqwba2Xqv6Rbsq3IRezkw23KyORgOWWksnlzqabf3dlLWjg6yzPNbDYG8LQCgNkWVW1IhSJrzfgesIl8T0nui7cjujGl3NVeJRmAh8fSZ0NPT3VwWe4kIbUty5kZHKYkw4PoAxkhMVoR0"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-secondary-container text-on-secondary-container text-[12px] font-black w-8 h-8 rounded-full flex items-center justify-center border-2 border-surface shadow-md">1</div>
+</div>
+<div class="w-full bg-primary text-on-primary rounded-t-xl h-36 flex flex-col items-center justify-end pb-6 shadow-[0_10px_20px_rgba(168,39,90,0.2)]">
+<span class="font-black text-base">Leo Pop</span>
+<span class="text-[11px] font-bold opacity-90 uppercase tracking-widest">15,800 pts</span>
+</div>
+</div>
+<!-- Rank 3 -->
+<div class="flex flex-col items-center flex-1 max-w-[100px]">
+<div class="relative mb-4 group">
+<div class="w-16 h-16 rounded-full border-4 border-orange-300 overflow-hidden shadow-lg transform transition-transform group-hover:scale-110">
+<img alt="Player 3" data-alt="Vibrant 3D avatar of a girl with pink highlights and a wide friendly smile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlyfQH7n9osshSHJCPhGvo2kAa4ecis-tl4bapE5ciYtDj2WNflaqOshqxM7LIQeFM1umOrmonpivrt4qhaZzQYsei-4RBVruNd8I-cRdkbKWruYvUSiOVQqHtNrDaGSSgLW1sxnFQltTLh0KIZh_-6TGFNgc8l67v8B0WPSTL2NrEhAhi6Qj1yQEzPqJZmrWhVsAp_yp0bmn2kWGQogNSxz7bPjYVJGeVBJrN8eCR__nC934iPhZmAO3e2mkNma8HUOavLxAiyjg"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-orange-300 text-orange-900 text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-surface shadow-sm">3</div>
+</div>
+<div class="w-full bg-surface-container-high rounded-t-lg h-20 flex flex-col items-center justify-end pb-4 shadow-sm">
+<span class="font-black text-on-surface text-sm">Mia</span>
+<span class="text-[10px] font-bold text-primary">10,120 pts</span>
+</div>
+</div>
+</div>
+<!-- Ranking List -->
+<div class="space-y-3 mb-12">
+<!-- Item 4 -->
+<div class="bg-surface-container-low hover:bg-surface-container transition-colors p-4 rounded-lg flex items-center gap-4 group">
+<span class="w-8 font-black text-on-surface-variant group-hover:text-primary transition-colors">4</span>
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant border-2 border-surface">
+<img alt="Player 4" data-alt="Minimalist 3D character headshot with blue glasses and a green beanie" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqowL5I4CEWQsP5HpGqGD2C0KVc3Fb86dClbkZ3x-csIH_bsYkxPw-Mh8cEpms3wNCDOuo8qg8GIFPg2jWG09hEIogeSoegJPLd0NUForZuAF4xY5WbANekr_eV8zeEAI58mrW6bgR9MlWzooHtVkksB2k827hZvwRTZIImDQ3CyHj4Xg6BNwVYai3g_BVLbXXNsJRjaCLUs9cMB2yyCmpBwRzHuwcIJNSyROM1Z8K57UfPzj6q09VHSsFSTunOpG4qmZsr-LbQWA"/>
+</div>
+<div class="flex-1">
+<h3 class="font-bold text-on-surface">Alex River</h3>
+<p class="text-xs text-on-surface-variant">Quiz Master Level 12</p>
+</div>
+<div class="text-right">
+<span class="block font-black text-primary">9,840</span>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant opacity-60">Points</span>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="bg-surface-container-low hover:bg-surface-container transition-colors p-4 rounded-lg flex items-center gap-4 group">
+<span class="w-8 font-black text-on-surface-variant group-hover:text-primary transition-colors">5</span>
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant border-2 border-surface">
+<img alt="Player 5" data-alt="Cute 3D female avatar with glasses and a yellow sweater looking happy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_krRCbGgkBNk3O9cXdKftJly7UO9_IOP9dZTKHdsRDivvBgHMdM0Hwrk-cK0y3ROulUhu5w0BSqGsNutqBF0zBGXhhKFksYPTrKYz5-OhoxNgiqe_8LBeifOppzk1TPBgk8U_5na1-zkw7aTOZaj8_lemWOlC_1RPpvW-oq_tsWQ6AIRuxnsVC07seZu9H2i6aIYpiFUxySr2wTHKutnoUeijDZk3dALxcpveoL8TBroS-Ugv7_3npM_i0-YSzxdLkIeb8DIuCeI"/>
+</div>
+<div class="flex-1">
+<h3 class="font-bold text-on-surface">Zoe Chen</h3>
+<p class="text-xs text-on-surface-variant">Science Pro</p>
+</div>
+<div class="text-right">
+<span class="block font-black text-primary">9,210</span>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant opacity-60">Points</span>
+</div>
+</div>
+<!-- Current User Row (Me) -->
+<div class="bg-tertiary-container/30 border-2 border-tertiary-fixed p-4 rounded-lg flex items-center gap-4 scale-[1.02] shadow-md relative">
+<div class="absolute -left-2 -top-2 bg-tertiary text-on-tertiary text-[8px] font-black py-1 px-2 rounded-full uppercase tracking-tighter">Current Rank</div>
+<span class="w-8 font-black text-tertiary">24</span>
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface border-2 border-tertiary-fixed">
+<img alt="Me" data-alt="Friendly 3D male avatar with short hair and a modern grey t-shirt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxqF9Yrv7l5arnOuTi9yXL0HbVI4bvu0-9r6ndKuKH83wfqROHidhjvWHyQTL3KlVqfjz6mNshV55mWsfiJtcYgs5s5_GRB7SDxqI-E3-blsWgJRa_7HLK39PkTWqDS73ptwaKmx7_PVfG_jSo9dQERiNizSPXAWoQ76ujWTNYR7btkWd-49UbWjcUZsIuvBL1HMWspW_uMobnvqy4XdZAlT2OJIoKzTFm26ysVNDPTChrPKRcJnl0Iskle2u_7zjM8ZrWC9CB7c8"/>
+</div>
+<div class="flex-1">
+<h3 class="font-bold text-on-tertiary-container">Felix (You)</h3>
+<p class="text-xs text-on-tertiary-container/70">Keep going! 🔥</p>
+</div>
+<div class="text-right">
+<span class="block font-black text-tertiary">4,550</span>
+<span class="text-[10px] uppercase font-bold text-on-tertiary-container opacity-60">Points</span>
+</div>
+</div>
+<!-- Item 6 -->
+<div class="bg-surface-container-low hover:bg-surface-container transition-colors p-4 rounded-lg flex items-center gap-4 group">
+<span class="w-8 font-black text-on-surface-variant group-hover:text-primary transition-colors">6</span>
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant border-2 border-surface">
+<img alt="Player 6" data-alt="Stylized 3D boy avatar with a baseball cap and cool expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD5tqCKvk0pOTEABkT7nvTVxaGmKo2yyV951EZFGbIRsePj3Rgwv3nycqOXjancDlQd6LxAC_zyChqE526BeiQiIn7_D2aP4XmM0S-HBCDYalWRhJ5rk9XYooSeOvOpbcUJ2LLsvg0RISU9XVSrIiFf65EBnhgTMbXYd9FvfEjsNCWx2RunkhGC9q0nInxXx-Kb1SK2LK4fyb1aWn6p9Mt3cVE8hzlnE9BjpsZUTpRXwJ-7k4tWMQgmmOH0A1JHhvzWvWUAYLOB9k"/>
+</div>
+<div class="flex-1">
+<h3 class="font-bold text-on-surface">Kai Parker</h3>
+<p class="text-xs text-on-surface-variant">Logic Ninja</p>
+</div>
+<div class="text-right">
+<span class="block font-black text-primary">8,890</span>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant opacity-60">Points</span>
+</div>
+</div>
+<!-- Item 7 -->
+<div class="bg-surface-container-low hover:bg-surface-container transition-colors p-4 rounded-lg flex items-center gap-4 group opacity-70">
+<span class="w-8 font-black text-on-surface-variant group-hover:text-primary transition-colors">7</span>
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-variant border-2 border-surface">
+<img alt="Player 7" data-alt="Simple 3D character avatar of a young girl with pigtails and a bright orange shirt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrMEPmJ9HYMZNuzmshUbRnRQsQCXd2eTps6YFya-u8JbMcEtRgIvgqi1jXf0gwtPLYntcgmE-i0qDPqh0LXELByVAaHDM5om44PoNUSBSslHdgb-jQXsdSXfr5XEhNMJpiRdVRtS9_pZ1POIPTHWhoF4yct-IUS6Ox4JVmRiY0JxxgrSHoTpiqIAx619fulsNaoTWCm2vjKFMpsq_zVjYLftr-EApqnO34SHBEMTL2JPOuWiZD239L2SJus7PnYMIMY0G6jYwQRb4"/>
+</div>
+<div class="flex-1">
+<h3 class="font-bold text-on-surface">Emma Watson</h3>
+<p class="text-xs text-on-surface-variant">Daily Streaker</p>
+</div>
+<div class="text-right">
+<span class="block font-black text-primary">8,450</span>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant opacity-60">Points</span>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-[#fdf6e3]/80 backdrop-blur-xl dark:bg-stone-900/80 rounded-t-[3rem] shadow-[0_-8px_24px_rgba(50,47,34,0.05)] z-50">
+<a class="flex flex-col items-center justify-center text-[#322f22]/70 dark:text-stone-400 px-4 py-2 hover:bg-[#74f7f1]/20 rounded-full transition-all duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="sports_esports">sports_esports</span>
+<span class="font-['Plus_Jakarta_Sans'] text-xs font-semibold">Play</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#ffd709] text-[#322f22] rounded-[2rem] px-5 py-2 scale-110 shadow-lg transition-all duration-300 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="leaderboard" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="font-['Plus_Jakarta_Sans'] text-xs font-semibold">Rank</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#322f22]/70 dark:text-stone-400 px-4 py-2 hover:bg-[#74f7f1]/20 rounded-full transition-all duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="local_mall">local_mall</span>
+<span class="font-['Plus_Jakarta_Sans'] text-xs font-semibold">Store</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#322f22]/70 dark:text-stone-400 px-4 py-2 hover:bg-[#74f7f1]/20 rounded-full transition-all duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-xs font-semibold">Me</span>
+</a>
+</nav>
+<!-- Floating Action Decorator -->
+<div class="fixed bottom-28 right-6">
+<button class="w-16 h-16 bg-primary text-on-primary rounded-full shadow-xl flex items-center justify-center transform hover:rotate-12 transition-all duration-300 active:scale-90 border-4 border-surface">
+<span class="material-symbols-outlined text-3xl" data-icon="share">share</span>
+</button>
+</div>
+</body></html>
