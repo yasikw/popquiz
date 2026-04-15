@@ -11,6 +11,57 @@ const ai = new GoogleGenAI({
 // Cache for extracted text to avoid re-processing
 const textCache = new SafeCache();
 
+// Retry helper with exponential backoff and model fallback
+async function callGeminiWithRetry<T>(
+  fn: (model: string) => Promise<T>,
+  primaryModel: string,
+  options?: { maxRetries?: number; fallbackModel?: string }
+): Promise<T> {
+  const maxRetries = options?.maxRetries ?? 3;
+  const fallbackModel = options?.fallbackModel ?? (primaryModel === "gemini-2.5-pro" ? "gemini-2.5-flash" : "gemini-2.0-flash");
+  const models = [primaryModel, fallbackModel];
+  let lastError: Error | null = null;
+
+  for (const model of models) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`Gemini API call: model=${model}, attempt=${attempt}/${maxRetries}`);
+        return await fn(model);
+      } catch (err: any) {
+        lastError = err instanceof Error ? err : new Error(String(err));
+        const msg = lastError.message || "";
+        const isRetryable =
+          msg.includes("503") ||
+          msg.includes("UNAVAILABLE") ||
+          msg.includes("high demand") ||
+          msg.includes("429") ||
+          msg.includes("RESOURCE_EXHAUSTED") ||
+          msg.includes("rate limit") ||
+          msg.includes("overloaded") ||
+          msg.includes("fetch failed") ||
+          msg.includes("ECONNRESET") ||
+          msg.includes("timeout") ||
+          msg.includes("DEADLINE_EXCEEDED");
+
+        if (!isRetryable) {
+          console.error(`Non-retryable error on model=${model}:`, msg);
+          throw lastError;
+        }
+
+        console.warn(`Retryable error on model=${model} attempt=${attempt}: ${msg}`);
+        if (attempt < maxRetries) {
+          const delay = Math.min(1000 * Math.pow(2, attempt - 1) + Math.random() * 1000, 15000);
+          console.log(`Waiting ${Math.round(delay)}ms before retry...`);
+          await new Promise(r => setTimeout(r, delay));
+        }
+      }
+    }
+    console.log(`All retries exhausted for model=${model}, trying fallback...`);
+  }
+
+  throw lastError || new Error("All Gemini API attempts failed");
+}
+
 // Generate cache key for YouTube videos
 function generateYouTubeCacheKey(videoId: string): string {
   return crypto.createHash('md5').update(`youtube-${videoId}`).digest('hex');
@@ -77,16 +128,22 @@ export async function extractTextFromYouTubeWithGemini(videoId: string, original
 - 実際の事例や応用`;
 
       console.log('Generating URL-based content analysis...');
-      const result = await ai.models.generateContent({
-        model: "gemini-2.5-pro",
-        contents: [{ role: "user", parts: [{ text: urlAnalysisPrompt }] }],
-        generationConfig: {
-          temperature: 0.3,
-          maxOutputTokens: 4000,
-        }
-      });
+      const result = await callGeminiWithRetry(
+        async (model) => {
+          const r = await ai.models.generateContent({
+            model,
+            contents: [{ role: "user", parts: [{ text: urlAnalysisPrompt }] }],
+            config: {
+              temperature: 0.3,
+              maxOutputTokens: 4000,
+            }
+          });
+          return r;
+        },
+        "gemini-2.5-flash"
+      );
 
-      extractedText = result.response.text();
+      extractedText = result.text || "";
     }
     
     // If the content is insufficient, try to get more specific information
@@ -107,16 +164,19 @@ export async function extractTextFromYouTubeWithGemini(videoId: string, original
 
 詳細で具体的な学習コンテンツを日本語で提供してください。`;
 
-      const specificResult = await ai.models.generateContent({
-        model: "gemini-2.5-pro",
-        contents: [{ role: "user", parts: [{ text: specificPrompt }] }],
-        generationConfig: {
-          temperature: 0.2,
-          maxOutputTokens: 4000,
-        }
-      });
+      const specificResult = await callGeminiWithRetry(
+        async (model) => ai.models.generateContent({
+          model,
+          contents: [{ role: "user", parts: [{ text: specificPrompt }] }],
+          config: {
+            temperature: 0.2,
+            maxOutputTokens: 4000,
+          }
+        }),
+        "gemini-2.5-flash"
+      );
 
-      const specificContent = specificResult.response.text();
+      const specificContent = specificResult.text || "";
       if (specificContent && specificContent.length > extractedText.length) {
         extractedText = specificContent;
       }
@@ -189,13 +249,16 @@ export async function extractTextFromPDF(pdfBuffer: Buffer, pdfInfo?: any): Prom
 
     console.log('Sending PDF to Gemini API for text extraction...');
     
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: contents,
-      config: {
-        temperature: 0.1, // Lower temperature for more consistent extraction
-      }
-    });
+    const response = await callGeminiWithRetry(
+      async (model) => ai.models.generateContent({
+        model,
+        contents: contents,
+        config: {
+          temperature: 0.1,
+        }
+      }),
+      "gemini-2.5-flash"
+    );
 
     console.log('PDF text extraction completed successfully');
     const extractedText = response.text || "";
@@ -275,36 +338,39 @@ export async function generateQuizFromText(
 
 JSON形式で回答してください。correctAnswerは0-3の数字です。`;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      config: {
-        responseMimeType: "application/json",
-        temperature: 1.0, // Maximum temperature for maximum variation
-        responseSchema: {
-          type: "object",
-          properties: {
-            questions: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  question: { type: "string" },
-                  options: { 
-                    type: "array",
-                    items: { type: "string" }
+    const response = await callGeminiWithRetry(
+      async (model) => ai.models.generateContent({
+        model,
+        config: {
+          responseMimeType: "application/json",
+          temperature: 1.0,
+          responseSchema: {
+            type: "object",
+            properties: {
+              questions: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    question: { type: "string" },
+                    options: { 
+                      type: "array",
+                      items: { type: "string" }
+                    },
+                    correctAnswer: { type: "number" },
+                    explanation: { type: "string" }
                   },
-                  correctAnswer: { type: "number" },
-                  explanation: { type: "string" }
-                },
-                required: ["question", "options", "correctAnswer", "explanation"]
+                  required: ["question", "options", "correctAnswer", "explanation"]
+                }
               }
-            }
-          },
-          required: ["questions"]
-        }
-      },
-      contents: prompt,
-    });
+            },
+            required: ["questions"]
+          }
+        },
+        contents: prompt,
+      }),
+      "gemini-2.5-flash"
+    );
 
     const rawJson = response.text;
     console.log("Gemini raw response:", rawJson);
