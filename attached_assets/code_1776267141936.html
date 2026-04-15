@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#510017",
+                    "on-background": "#322f22",
+                    "on-secondary": "#fff2cd",
+                    "on-tertiary-container": "#005c59",
+                    "surface": "#fdf6e3",
+                    "on-secondary-fixed": "#453900",
+                    "inverse-on-surface": "#a29d8c",
+                    "surface-container": "#efe8d2",
+                    "inverse-primary": "#ff6b9d",
+                    "tertiary-dim": "#005957",
+                    "outline": "#7b7767",
+                    "surface-variant": "#e4ddc5",
+                    "on-primary-container": "#4c0022",
+                    "surface-container-low": "#f8f0dc",
+                    "primary-dim": "#98184f",
+                    "primary": "#a8275a",
+                    "error": "#b41340",
+                    "primary-fixed": "#ff709f",
+                    "on-primary-fixed-variant": "#5d002b",
+                    "secondary-dim": "#5e4e00",
+                    "secondary-container": "#ffd709",
+                    "on-surface-variant": "#5f5b4d",
+                    "on-error": "#ffefef",
+                    "surface-tint": "#a8275a",
+                    "secondary-fixed": "#ffd709",
+                    "secondary-fixed-dim": "#efc900",
+                    "on-tertiary": "#bcfffb",
+                    "tertiary-fixed-dim": "#64e8e3",
+                    "on-secondary-fixed-variant": "#665500",
+                    "surface-bright": "#fdf6e3",
+                    "background": "#fdf6e3",
+                    "on-primary": "#ffeff1",
+                    "on-surface": "#322f22",
+                    "surface-dim": "#dcd4bb",
+                    "secondary": "#6c5a00",
+                    "on-tertiary-fixed-variant": "#006764",
+                    "tertiary": "#006764",
+                    "primary-fixed-dim": "#f16092",
+                    "primary-container": "#ff709f",
+                    "surface-container-high": "#eae2cb",
+                    "outline-variant": "#b2ad9c",
+                    "on-secondary-container": "#5b4b00",
+                    "surface-container-highest": "#e4ddc5",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed": "#000000",
+                    "error-container": "#f74b6d",
+                    "error-dim": "#a70138",
+                    "tertiary-fixed": "#74f7f1",
+                    "inverse-surface": "#100e05",
+                    "on-tertiary-fixed": "#004745",
+                    "tertiary-container": "#74f7f1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Plus Jakarta Sans"],
+                    "label": ["Plus Jakarta Sans"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bouncy-icon {
+            animation: bounce 2s infinite ease-in-out;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Anchor -->
+<header class="w-full top-0 px-6 py-4 bg-surface dark:bg-stone-900 sticky z-50">
+<div class="flex justify-between items-center w-full max-w-xl mx-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#a8275a] dark:text-[#ff709f]" data-icon="bubble_chart">bubble_chart</span>
+<h1 class="text-2xl font-black text-[#a8275a] dark:text-[#ff709f] font-headline tracking-tight">PopQuiz!</h1>
+</div>
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden hover:scale-105 transition-transform active:scale-95 duration-200">
+<img alt="User Profile" data-alt="vibrant 3D avatar of a friendly user character with a colorful background and professional lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOBpQI8hgTyVtv6xBxxRwMYbM6jsSVBH9Gzn-qL27-AajTPY8czXZ-ZAi9CwjbAkpYQlXvpkeQdRWRQ-uqi8RNAWPfvg9xpjTXCRuh_oAaLsA_oN_ovGe331T3q-P_PIvNwct6Rm5X68vYtO2md1HbGuA9Ih7RRzAXW3B0Nja0UYYIxdGBs6YtEn4WsLsCqrEvssGyvNTi9qaHamR3hrauSeBF87_4UUu5UUh1b9RAXKr0RV1mRO68ccLVxuvtfozUTQQqcnF8eH4"/>
+</div>
+</div>
+</header>
+<main class="max-w-xl mx-auto px-6 pt-8 pb-32">
+<!-- Hero Result Section -->
+<section class="text-center mb-12">
+<div class="inline-flex items-center justify-center w-32 h-32 mb-6 rounded-xl bg-secondary-container relative">
+<span class="material-symbols-outlined text-6xl text-secondary bouncy-icon" data-icon="trophy" style="font-variation-settings: 'FILL' 1;">trophy</span>
+<!-- Background Decorative Blobs -->
+<div class="absolute -top-4 -right-4 w-12 h-12 bg-tertiary-container rounded-full opacity-50 blur-xl"></div>
+<div class="absolute -bottom-2 -left-4 w-16 h-16 bg-primary-container rounded-full opacity-30 blur-xl"></div>
+</div>
+<h2 class="text-4xl font-black font-headline text-primary mb-2 tracking-tight">Quiz Completed!</h2>
+<p class="text-on-surface-variant font-semibold">Ouch! That was a tough one. Keep practicing!</p>
+</section>
+<!-- Stats Bento Grid -->
+<section class="grid grid-cols-2 gap-4 mb-12">
+<div class="bg-surface-container-low p-6 rounded-lg flex flex-col items-center justify-center text-center">
+<span class="text-xs uppercase tracking-widest font-bold text-on-surface-variant mb-1">Accuracy</span>
+<span class="text-3xl font-black text-error">0%</span>
+</div>
+<div class="bg-surface-container-low p-6 rounded-lg flex flex-col items-center justify-center text-center">
+<span class="text-xs uppercase tracking-widest font-bold text-on-surface-variant mb-1">Grade</span>
+<div class="w-12 h-12 rounded-full bg-error text-on-error flex items-center justify-center text-2xl font-black">D</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-lg flex flex-col items-center justify-center text-center">
+<span class="text-xs uppercase tracking-widest font-bold text-on-surface-variant mb-1">Correct</span>
+<span class="text-3xl font-black text-on-surface">0/5</span>
+</div>
+<div class="bg-surface-container-low p-6 rounded-lg flex flex-col items-center justify-center text-center">
+<span class="text-xs uppercase tracking-widest font-bold text-on-surface-variant mb-1">Time</span>
+<span class="text-3xl font-black text-on-surface">0:16</span>
+</div>
+</section>
+<!-- Detailed Results List -->
+<section class="space-y-6 mb-12">
+<h3 class="text-xl font-bold font-headline px-2">Detailed Results</h3>
+<!-- Result Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border-l-8 border-error">
+<div class="flex justify-between items-start mb-3">
+<span class="text-sm font-bold text-on-surface-variant">Question 1</span>
+<span class="material-symbols-outlined text-error" data-icon="cancel" style="font-variation-settings: 'FILL' 1;">cancel</span>
+</div>
+<p class="font-bold text-lg mb-4 leading-snug">What is the capital city of Australia?</p>
+<div class="space-y-2">
+<div class="p-3 rounded-full bg-error-container/20 text-on-error-container text-sm font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-xs" data-icon="close">close</span>
+                        Your answer: Sydney
+                    </div>
+<div class="p-3 rounded-full bg-tertiary-container/30 text-on-tertiary-container text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-xs" data-icon="check_circle">check_circle</span>
+                        Correct answer: Canberra
+                    </div>
+</div>
+<p class="mt-4 text-sm text-on-surface-variant italic">Explanation: Canberra was chosen as the capital in 1908 as a compromise between rivals Sydney and Melbourne.</p>
+</div>
+<!-- Result Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border-l-8 border-error">
+<div class="flex justify-between items-start mb-3">
+<span class="text-sm font-bold text-on-surface-variant">Question 2</span>
+<span class="material-symbols-outlined text-error" data-icon="cancel" style="font-variation-settings: 'FILL' 1;">cancel</span>
+</div>
+<p class="font-bold text-lg mb-4 leading-snug">Which planet is known as the Red Planet?</p>
+<div class="space-y-2">
+<div class="p-3 rounded-full bg-error-container/20 text-on-error-container text-sm font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-xs" data-icon="close">close</span>
+                        Your answer: Venus
+                    </div>
+<div class="p-3 rounded-full bg-tertiary-container/30 text-on-tertiary-container text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-xs" data-icon="check_circle">check_circle</span>
+                        Correct answer: Mars
+                    </div>
+</div>
+</div>
+</section>
+<!-- Action Buttons -->
+<section class="grid grid-cols-2 gap-4 mb-8">
+<button class="col-span-2 py-5 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-black text-lg shadow-lg hover:scale-[1.02] active:scale-95 transition-all">
+                Try Again
+            </button>
+<button class="py-4 rounded-xl bg-secondary-container text-on-secondary-container font-bold shadow-md hover:scale-[1.02] active:scale-95 transition-all">
+                New Quiz
+            </button>
+<button class="py-4 rounded-xl bg-surface-container-high text-on-surface font-bold shadow-sm hover:scale-[1.02] active:scale-95 transition-all">
+                View Stats
+            </button>
+<button class="col-span-2 py-4 rounded-xl bg-tertiary-container/50 text-on-tertiary-container font-bold hover:scale-[1.02] active:scale-95 transition-all">
+                Different Quiz
+            </button>
+</section>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#fdf6e3]/80 dark:bg-stone-900/80 backdrop-blur-xl shadow-[0_-8px_24px_rgba(50,47,34,0.08)]">
+<a class="flex flex-col items-center justify-center text-[#322f22]/60 dark:text-[#fdf6e3]/60 px-4 py-2 hover:bg-[#74f7f1]/20 rounded-full transition-all" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="videogame_asset">videogame_asset</span>
+<span class="font-['Plus_Jakarta_Sans'] text-xs font-semibold">Play</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#322f22]/60 dark:text-[#fdf6e3]/60 px-4 py-2 hover:bg-[#74f7f1]/20 rounded-full transition-all" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="leaderboard">leaderboard</span>
+<span class="font-['Plus_Jakarta_Sans'] text-xs font-semibold">Rank</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#322f22]/60 dark:text-[#fdf6e3]/60 px-4 py-2 hover:bg-[#74f7f1]/20 rounded-full transition-all" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="local_mall">local_mall</span>
+<span class="font-['Plus_Jakarta_Sans'] text-xs font-semibold">Store</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#ffd709] text-[#322f22] rounded-full px-6 py-2 transition-all scale-110" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="face">face</span>
+<span class="font-['Plus_Jakarta_Sans'] text-xs font-semibold">Me</span>
+</a>
+</nav>
+</body></html>
