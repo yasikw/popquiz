@@ -8,7 +8,7 @@ export default function LoadingOverlay({ isVisible, message }: LoadingOverlayPro
 
   return (
     <div
-      className="fixed inset-0 flex items-end justify-center z-50 p-6 pb-28"
+      className="fixed inset-0 flex items-center justify-center z-50 p-6"
       style={{ backgroundColor: "rgba(253, 246, 227, 0.85)" }}
       data-testid="loading-overlay"
     >
