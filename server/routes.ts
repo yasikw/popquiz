@@ -434,7 +434,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Unified quiz generation endpoint with security middleware
-  app.post("/api/generate-quiz", quizRateLimit, upload.single('file'), handleMulterError, fileUploadMonitoring, validateInput(quizGenerationSchema), validateFileUpload, async (req: Request, res: Response) => {
+  app.post("/api/generate-quiz", authenticateUser, quizRateLimit, upload.single('file'), handleMulterError, fileUploadMonitoring, validateInput(quizGenerationSchema), validateFileUpload, async (req: Request, res: Response) => {
     try {
       const { contentType, difficulty = "intermediate", youtubeUrl, textContent, questionCount = "5" } = req.body;
       // Quiz generation logging handled by security middleware
