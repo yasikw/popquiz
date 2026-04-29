@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { type GeneratedQuiz } from "@shared/schema";
 import { submitQuizResults } from "@/lib/api";
+import { queryClient } from "@/lib/queryClient";
 
 interface QuizInterfaceProps {
   quiz: GeneratedQuiz;
@@ -158,6 +159,13 @@ export default function QuizInterface({ quiz, userId, onQuizCompleted }: QuizInt
     try {
       const contentType = localStorage.getItem("lastContentType") || "text";
       await submitQuizResults(userId, { ...quiz, contentType }, quizResults);
+
+      // Refresh stats, sessions, and leaderboard so the ranking reflects the new result immediately
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["/api/users", userId, "stats"] }),
+        queryClient.invalidateQueries({ queryKey: ["/api/users", userId, "sessions-with-questions"] }),
+        queryClient.invalidateQueries({ queryKey: ["/api/leaderboard"] }),
+      ]);
     } catch (error) {
       console.error("Failed to submit quiz results:", error);
     }

@@ -130,22 +130,10 @@ export async function updateUserStats(userId: string, stats: Partial<UserStats>)
 
 // Submit quiz results
 export async function submitQuizResults(userId: string, quizData: GeneratedQuiz & { contentType?: string }, results: QuizResultsData) {
-  const response = await fetch('/api/quiz-results', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      userId,
-      quizData,
-      results
-    }),
+  const response = await apiRequest("POST", "/api/quiz-results", {
+    userId,
+    quizData,
+    results,
   });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Failed to submit quiz results: ${errorText}`);
-  }
-
   return response.json();
 }

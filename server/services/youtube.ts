@@ -1,28 +1,49 @@
-import { extractTextFromYouTubeWithGemini } from './gemini';
+import { extractTextFromYouTubeWithGemini, generateContentFromVideoMetadata } from './gemini';
 
-async function fetchTranscriptDirect(videoId: string): Promise<string | null> {
+interface VideoMetadata {
+  title: string;
+  description: string;
+  author?: string;
+  keywords?: string[];
+}
+
+async function fetchVideoData(videoId: string): Promise<{ transcript: string | null; metadata: VideoMetadata | null }> {
   try {
     const { Innertube } = await import('youtubei.js');
     const yt = await Innertube.create({ retrieve_player: false });
     const info = await yt.getInfo(videoId);
-    const transcriptData = await info.getTranscript();
 
-    const segments =
-      transcriptData?.transcript?.content?.body?.initial_segments ?? [];
+    const basic = (info as any).basic_info ?? {};
+    const metadata: VideoMetadata = {
+      title: basic.title ?? '',
+      description: basic.short_description ?? (info as any).secondary_info?.description?.text ?? '',
+      author: basic.author ?? basic.channel?.name ?? '',
+      keywords: basic.keywords ?? [],
+    };
 
-    if (!segments.length) return null;
+    let transcript: string | null = null;
+    try {
+      const transcriptData = await info.getTranscript();
+      const segments =
+        transcriptData?.transcript?.content?.body?.initial_segments ?? [];
 
-    const lines: string[] = [];
-    for (const seg of segments) {
-      const snippet = (seg as any)?.snippet?.text ?? (seg as any)?.snippet?.runs?.map((r: any) => r.text).join('') ?? '';
-      if (snippet.trim()) lines.push(snippet.trim());
+      if (segments.length) {
+        const lines: string[] = [];
+        for (const seg of segments) {
+          const snippet = (seg as any)?.snippet?.text ?? (seg as any)?.snippet?.runs?.map((r: any) => r.text).join('') ?? '';
+          if (snippet.trim()) lines.push(snippet.trim());
+        }
+        const text = lines.join('\n');
+        if (text.length > 50) transcript = text;
+      }
+    } catch (e) {
+      console.log('youtubei.js transcript fetch failed:', (e as Error).message);
     }
 
-    const text = lines.join('\n');
-    return text.length > 50 ? text : null;
+    return { transcript, metadata };
   } catch (e) {
-    console.log('youtubei.js transcript extraction failed:', (e as Error).message);
-    return null;
+    console.log('youtubei.js getInfo failed:', (e as Error).message);
+    return { transcript: null, metadata: null };
   }
 }
 
@@ -91,12 +112,15 @@ export async function extractYouTubeSubtitles(url: string): Promise<string> {
     }
     console.log('Video ID:', videoId);
 
-    // Method 1: youtubei.js transcript
-    console.log('Trying youtubei.js transcript...');
-    const transcript1 = await fetchTranscriptDirect(videoId);
+    // Method 1: youtubei.js — fetch transcript + metadata in one call
+    console.log('Trying youtubei.js (transcript + metadata)...');
+    const { transcript: transcript1, metadata } = await fetchVideoData(videoId);
+
     if (transcript1) {
       console.log('Successfully extracted transcript via youtubei.js, length:', transcript1.length);
-      return transcript1;
+      // Prepend title for context so quiz questions stay on-topic
+      const header = metadata?.title ? `タイトル: ${metadata.title}\n\n` : '';
+      return header + transcript1;
     }
 
     // Method 2: Timed text API
@@ -104,22 +128,48 @@ export async function extractYouTubeSubtitles(url: string): Promise<string> {
     const transcript2 = await fetchTranscriptFromTimedText(videoId);
     if (transcript2) {
       console.log('Successfully extracted transcript via timed text, length:', transcript2.length);
-      return transcript2;
+      const header = metadata?.title ? `タイトル: ${metadata.title}\n\n` : '';
+      return header + transcript2;
     }
 
-    // Method 3: Fallback to Gemini (only if direct methods fail)
-    console.log('Direct transcript extraction failed, falling back to Gemini...');
+    // Method 3: Use real video metadata (title + description) with Gemini
+    // This is far more accurate than guessing from URL alone.
+    if (metadata && (metadata.title || metadata.description)) {
+      console.log('No transcript available. Using real video metadata for content generation.');
+      console.log(`  Title: ${metadata.title}`);
+      console.log(`  Description length: ${metadata.description?.length || 0}`);
+
+      try {
+        const generated = await generateContentFromVideoMetadata(metadata);
+        if (generated && generated.length > 100) {
+          console.log('Generated content from metadata, length:', generated.length);
+          return generated;
+        }
+      } catch (genErr) {
+        console.log('Metadata-based generation failed:', (genErr as Error).message);
+      }
+
+      // Even if Gemini fails, return raw title + description as last resort
+      const fallback = `タイトル: ${metadata.title}\n\n${metadata.description}`.trim();
+      if (fallback.length > 100) {
+        console.log('Returning raw metadata as content, length:', fallback.length);
+        return fallback;
+      }
+    }
+
+    // Method 4: URL-only Gemini guessing (last resort, least accurate)
+    console.log('Falling back to URL-only Gemini extraction...');
     try {
       const extractedText = await extractTextFromYouTubeWithGemini(videoId, url);
       if (extractedText && extractedText.length > 50) {
-        console.log('Successfully extracted text using Gemini, length:', extractedText.length);
+        console.log('Successfully extracted text using URL-only Gemini, length:', extractedText.length);
         return extractedText;
       }
     } catch (geminiError) {
-      console.log('Gemini extraction also failed:', (geminiError as Error).message);
+      console.log('URL-only Gemini extraction also failed:', (geminiError as Error).message);
     }
 
-    throw new Error("Could not extract content from this video. Please try a different video.");
+    throw new Error("この動画から内容を抽出できませんでした。字幕付きの動画をお試しください。");
   } catch (error) {
     console.error('YouTube content extraction error:', error);
     throw new Error(`YouTube video processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);

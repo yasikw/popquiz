@@ -376,7 +376,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Quiz generation from cached content (PDF, YouTube, or Text)
-  app.post("/api/generate-quiz-from-cache", validateInput(z.object({
+  app.post("/api/generate-quiz-from-cache", authenticateUser, validateInput(z.object({
     pdfInfo: z.object({
       name: z.string().min(1, "PDFファイル名は必須です"),
       size: z.number().min(0, "ファイルサイズは0以上である必要があります"),
@@ -491,7 +491,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Content processing and quiz generation
-  app.post("/api/process-pdf", uploadRateLimit, upload.single('pdf'), handleMulterError, fileUploadMonitoring, async (req: Request, res: Response) => {
+  app.post("/api/process-pdf", authenticateUser, uploadRateLimit, upload.single('pdf'), handleMulterError, fileUploadMonitoring, async (req: Request, res: Response) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "PDFファイルが必要です" });
@@ -526,7 +526,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/process-text", uploadRateLimit, upload.single('text'), handleMulterError, fileUploadMonitoring, async (req: Request, res: Response) => {
+  app.post("/api/process-text", authenticateUser, uploadRateLimit, upload.single('text'), handleMulterError, fileUploadMonitoring, async (req: Request, res: Response) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "テキストファイルが必要です" });
@@ -551,7 +551,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/process-youtube", async (req, res) => {
+  app.post("/api/process-youtube", authenticateUser, async (req, res) => {
     try {
       let { url, difficulty = "intermediate", title = "YouTube動画クイズ", questionCount = "5" } = req.body;
       
@@ -790,55 +790,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         { error: error instanceof Error ? error.message : 'Unknown error' }
       );
       res.status(500).json({ message: "統計計算に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
-    }
-  });
-
-  // Submit quiz results (with input sanitization)
-  app.post("/api/quiz-results", async (req, res) => {
-    try {
-      const { userId, quizData, results } = req.body;
-      
-      // Sanitize quiz data inputs
-      const sanitizedQuizData = {
-        ...quizData,
-        title: sanitizeInput(quizData.title || "クイズ"),
-        difficulty: sanitizeInput(quizData.difficulty || "intermediate"),
-        contentType: sanitizeInput(quizData.contentType || "text")
-      };
-      
-      // Create quiz session with sanitized data
-      const sessionData = {
-        userId,
-        title: sanitizedQuizData.title,
-        difficulty: sanitizedQuizData.difficulty,
-        contentType: sanitizedQuizData.contentType,
-        score: results.score,
-        totalQuestions: results.totalQuestions,
-        timeSpent: results.totalTimeSpent,
-      };
-      
-      const session = await storage.createQuizSession(sessionData, userId);
-      
-      // Create questions with user answers (sanitized)
-      const questionsData = results.detailedResults.map((result: any) => ({
-        sessionId: session.id,
-        questionText: sanitizeInput(result.question || ""),
-        options: (quizData.questions.find((q: any) => q.question === result.question)?.options || [])
-          .map((option: string) => sanitizeInput(option)),
-        correctAnswer: sanitizeInput(result.correctAnswer || ""),
-        explanation: sanitizeInput(result.explanation || ""),
-        userAnswer: sanitizeInput(result.userAnswer || ""),
-        timeSpent: result.timeSpent,
-      }));
-      
-      await storage.createQuestions(questionsData, userId);
-      
-      // Update user statistics automatically
-      const updatedStats = await storage.calculateAndUpdateUserStats(userId, userId);
-      
-      res.json({ sessionId: session.id, message: "結果を保存しました" });
-    } catch (error) {
-      res.status(400).json({ message: "結果保存に失敗しました", error: error instanceof Error ? error.message : "Unknown error" });
     }
   });
 

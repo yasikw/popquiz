@@ -205,6 +205,57 @@ export async function extractTextFromYouTubeWithGemini(videoId: string, original
   }
 }
 
+// Generate study content from real YouTube video metadata (title + description).
+// Much more accurate than guessing from URL alone since we have actual video info.
+export async function generateContentFromVideoMetadata(metadata: {
+  title: string;
+  description: string;
+  author?: string;
+  keywords?: string[];
+}): Promise<string> {
+  const { title, description, author, keywords } = metadata;
+
+  // If description is already substantial, use it directly with title as context.
+  // Many educational videos have detailed descriptions that are perfect for quiz generation.
+  const rawCombined = [
+    title ? `タイトル: ${title}` : '',
+    author ? `チャンネル: ${author}` : '',
+    description ? `\n説明:\n${description}` : '',
+  ].filter(Boolean).join('\n');
+
+  // If we have a rich description (> 500 chars), expand it with Gemini for richer quiz content
+  // Otherwise, ask Gemini to elaborate based on the actual title + description
+  const prompt = `以下は YouTube 動画の実際のメタデータです。この動画の内容に忠実に、クイズ作成に適した詳細な学習コンテンツを生成してください。
+
+【動画メタデータ】
+${rawCombined}
+${keywords && keywords.length ? `\nキーワード: ${keywords.slice(0, 10).join(', ')}` : ''}
+
+【重要な指示】
+- 上記のタイトルと説明文に書かれている具体的なトピックのみを扱ってください
+- メタデータに含まれていない無関係な内容は絶対に追加しないでください
+- 説明文中の固有名詞、数値、日付、概念をそのまま活用してください
+- 推測ではなく、与えられた情報をもとに学習コンテンツを構成してください
+- 説明文が短い場合は、その範囲内で扱える知識のみを記述してください
+
+学習コンテンツを日本語で記述してください。`;
+
+  const result = await callGeminiWithRetry(
+    async (model) => ai.models.generateContent({
+      model,
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      config: {
+        temperature: 0.2,
+        maxOutputTokens: 4000,
+      },
+    }),
+    "gemini-2.5-flash"
+  );
+
+  const text = result.text || "";
+  return text.trim();
+}
+
 export async function extractTextFromPDF(pdfBuffer: Buffer, pdfInfo?: any): Promise<string> {
   try {
     console.log('PDF extraction started, buffer size:', pdfBuffer.length);
